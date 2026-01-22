@@ -114,6 +114,106 @@ Example: [model: claude-3.5-sonnet]
 - Breaking changes require ecosystem coordination
 - Integration examples must be executable immediately
 
+## Branch Management - FEATURE BRANCHES ONLY
+
+**NEVER COMMIT DIRECTLY TO MAIN**
+```bash
+# Correct workflow - ALWAYS use feature branches
+git checkout -b feature/your-feature-name
+# Make changes, commit frequently
+git checkout main && git pull origin main
+git push origin feature/your-feature-name
+gh pr create --base main --head feature/your-feature-name
+# Wait for merge, then cleanup
+```
+- All changes made on feature branches only
+- Never commit directly to main branch
+- Feature branches named: `feature/description-of-work`
+- Delete merged branches immediately to prevent confusion
+
+## Git Workflow - STRUCTURED DEVELOPMENT
+
+**COMMIT FREQUENTLY, PRESERVE STATE**
+```bash
+# Standard workflow pattern
+git checkout -b feature/work-description
+# Make logical unit of work
+git add specific-files
+git commit -m "type: Description of changes [model: claude-3.5-sonnet]"
+# Repeat for each logical unit
+git push origin feature/work-description
+gh pr create --base main --head feature/work-description
+```
+- One logical change per commit
+- Descriptive commit messages
+- Model disclosure in every commit
+- Push and create PR early
+- Work incrementally, commit often
+
+## Authentication Handling - GRACEFUL FAILURE
+
+**VALIDATE AUTH BEFORE GITHUB OPERATIONS**
+```bash
+# Required auth check pattern
+gh auth status || echo "Auth issue detected"
+# Handle auth problems gracefully
+# Retry or report auth issues clearly
+```
+- Check `gh auth status` before GitHub operations
+- Handle authentication failures gracefully
+- Report auth issues clearly to user
+- Never assume authentication works
+
+## Cursor Integration - MANDATORY SYNC
+
+**WRAPPER FILES REQUIRED FOR ALL PROMPTS**
+```bash
+# When modifying prompts/ files:
+# 1. Update canonical prompt file
+# 2. Create/update .cursor/prompts/ wrapper
+# 3. Commit both in same commit
+```
+- Every `prompts/` file needs `.cursor/prompts/` wrapper
+- Wrappers created/updated in same commit as canonical files
+- Wrapper points to canonical file path
+- Ensures Cursor IDE integration
+
+## PR Management - REVIEW BEFORE MERGE
+
+**CREATE PR FOR ALL CHANGES**
+```bash
+# PR creation pattern
+gh pr create --title "type: Clear description" \
+             --body "Detailed description of changes" \
+             --base main --head feature/branch-name
+```
+- All feature branches require PR for merge
+- Clear, descriptive PR titles and descriptions
+- Wait for PR merge before continuing work
+- Never merge directly to main without PR
+
+## Branch Cleanup - IMMEDIATE REMOVAL
+
+**DELETE MERGED BRANCHES IMMEDIATELY**
+```bash
+# After PR merge:
+git checkout main && git pull origin main
+git branch -D feature/merged-branch  # Local
+git push origin --delete feature/merged-branch  # Remote
+```
+- Delete local branches after merge
+- Delete remote branches after merge
+- Prevents branch confusion and conflicts
+- Keep repository clean and organized
+
 ---
 
 **These are ENFORCEMENT RULES, not guidelines. Violation constitutes process failure.**
+
+**Workflow Learnings (Updated 2026-01-22)**:
+- Always use feature branches, never direct main commits
+- Clean up merged branches immediately to avoid confusion
+- Handle authentication issues gracefully with status checks
+- Create Cursor wrappers for all prompt modifications
+- Commit frequently to preserve state during development
+- Create PRs for all changes and wait for proper review/merge
