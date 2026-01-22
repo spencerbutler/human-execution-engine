@@ -20,6 +20,12 @@ The enforcement layer defining state machines, scheduling semantics, and determi
 ### 📋 **Core Specifications**
 - [**🎯 HEE**](docs/HEE.md) - Canonical conceptual model specification
 - [**⚙️ HEER**](docs/HEER.md) - Runtime contract and operational semantics
+- [**📋 SPEC**](docs/SPEC.md) - Standards requirements and implementation criteria
+
+### 🔒 **Security Foundation**
+- [**🛡️ SECURITY**](docs/SECURITY.md) - Security requirements and threat model
+- [**✅ Security Validator**](scripts/security_validator.py) - Input validation and compliance testing
+- [**🔍 Security Scanner**](scripts/security_scanner.py) - Automated vulnerability scanning
 
 ### 🛠️ **Implementation & Standards**
 - [**🗺️ Roadmap**](docs/ROADMAP.md) - 7-phase development plan with file trees
