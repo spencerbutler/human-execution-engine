@@ -7,7 +7,7 @@ tier: free
 model_policy:
   primary_execution:
     class: small_instruct
-    model_id: ""   # TODO: set exact Groq model id (smallest instruct)
+    model_id: "llama-3.1-8b-instant"  # selected from /openai/v1/models
     usage:
       - doc_edits
       - formatting
@@ -15,7 +15,7 @@ model_policy:
       - small_diffs
   escalation_planning:
     class: large_instruct
-    model_id: ""   # TODO: set exact Groq model id (largest instruct)
+    model_id: "llama-3.3-70b-versatile"  # selected from /openai/v1/models
     constraints:
       - single_pass_only
       - plan_or_review_only
@@ -24,7 +24,7 @@ model_policy:
       - careful_review
   secondary_reasoning:
     class: medium_moe
-    model_id: ""   # OPTIONAL: set exact Groq MoE model id if you use one
+    model_id: "meta-llama/llama-4-scout-17b-16e-instruct"  # selected from /openai/v1/models (optional middle gear)
     usage:
       - multi_file_light_planning
       - cross_file_synthesis_small_scope
