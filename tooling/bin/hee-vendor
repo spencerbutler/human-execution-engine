@@ -15,8 +15,8 @@ Behavior (vendored mode):
   - prompts/hee/docs/  <- HEE docs/specs
   - docs/hee/          <- pointers + VERSION only (imperative-free)
   - docs/HEE_POLICY.md <- pointer doc (imperative-free)
-  - scripts are not required; uses tooling/bin/hee-sync-cursor-prompts logic by generating .cursor/prompts directly.
-
+  - installs scripts/hee-check.sh (consumer-side check)
+  - derives .cursor/prompts directly (no consumer repo script required)
 Notes:
   - This tool creates/overwrites vendored directories.
   - It creates a branch (default: chore/vendor-hee-policy) and pushes it.
@@ -67,8 +67,7 @@ fi
 git checkout -b "$BRANCH"
 
 rm -rf prompts/hee docs/hee
-mkdir -p prompts/hee/docs docs/hee docs/local prompts/local .cursor/prompts
-
+mkdir -p prompts/hee/docs docs/hee docs/local prompts/local .cursor/prompts scripts
 rsync -a --delete --exclude ".cursor/" "$HEE/prompts/" "prompts/hee/"
 rsync -a --delete "$HEE/docs/" "prompts/hee/docs/"
 
@@ -97,8 +96,10 @@ TXT
 
 cat > docs/hee/VERSION.md <<TXT
 HEE upstream commit: ${HEE_COMMIT}
-Imported: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 TXT
+
+# Install consumer-side check script (vendored asset)
+install -m 0755 "$HEE/tooling/templates/scripts/hee-check.sh" "scripts/hee-check.sh"
 
 # Derive cursor prompts directly (no repo script required)
 rsync -a --delete \
