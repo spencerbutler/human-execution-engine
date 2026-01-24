@@ -2,13 +2,14 @@
 set -euo pipefail
 
 usage() {
-  cat <<USAGE
+  cat <<'USAGE'
 hee-vendor
 
 Vendors HEE doctrine into a target repo using validator-safe layout.
 
 Usage:
   tooling/bin/hee-vendor --target <repo_path> [--hee <hee_repo_path>] [--branch <name>]
+  tooling/bin/hee-vendor --check  --target <repo_path> [--hee <hee_repo_path>]
 
 Behavior (vendored mode):
   - prompts/hee/       <- HEE prompts (excluding .cursor)
@@ -17,21 +18,31 @@ Behavior (vendored mode):
   - docs/HEE_POLICY.md <- pointer doc (imperative-free)
   - installs scripts/hee-check.sh (consumer-side check)
   - derives .cursor/prompts directly (no consumer repo script required)
+
 Notes:
-  - This tool creates/overwrites vendored directories.
+  - This tool creates/overwrites vendored directories in vendored mode.
   - It creates a branch (default: chore/vendor-hee-policy) and pushes it.
+
+--check mode (non-mutating audit):
+  - Computes diffs that vendoring WOULD produce, without changing the target repo.
+  - Exit codes:
+      0  = no drift
+      2  = drift detected
+     >2  = tooling error
 USAGE
 }
 
 TARGET=""
 HEE=""
 BRANCH="chore/vendor-hee-policy"
+CHECK_ONLY=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --target) TARGET="$2"; shift 2;;
     --hee) HEE="$2"; shift 2;;
     --branch) BRANCH="$2"; shift 2;;
+    --check) CHECK_ONLY=1; shift 1;;
     -h|--help) usage; exit 0;;
     *) echo "Unknown arg: $1"; usage; exit 1;;
   esac
@@ -44,8 +55,142 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_HEE="$(cd "$SCRIPT_DIR/../.." && pwd)"
 HEE="${HEE:-$DEFAULT_HEE}"
 
-[[ -d "$TARGET/.git" ]] || { echo "ERROR: target not a git repo: $TARGET"; exit 1; }
-[[ -d "$HEE/.git" ]] || { echo "ERROR: HEE not a git repo: $HEE"; exit 1; }
+[[ -d "$TARGET/.git" ]] || { echo "ERROR: target not a git repo: $TARGET"; exit 3; }
+[[ -d "$HEE/.git" ]] || { echo "ERROR: HEE not a git repo: $HEE"; exit 4; }
+
+# --- Non-mutating audit mode -------------------------------------------------
+hee_vendor__check_mode() {
+  local target="$1" hee="$2"
+  local target_root branch_before status_before branch_after status_after
+  local tmp work src diff_out drift
+
+  target_root="$(git -C "$target" rev-parse --show-toplevel 2>/dev/null)" || {
+    echo "ERROR: cannot resolve target repo root: $target"
+    return 90
+  }
+
+  branch_before="$(git -C "$target_root" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  status_before="$(git -C "$target_root" status --porcelain 2>/dev/null || true)"
+
+  # Render what vendoring would produce into a temp workspace (no writes to target).
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "$tmp"' EXIT
+  work="$tmp/work"
+  mkdir -p "$work"
+
+  # 1) prompts/hee (HEE/prompts excluding .cursor)
+  mkdir -p "$work/prompts/hee"
+  rsync -a --delete --exclude ".cursor/" "$hee/prompts/" "$work/prompts/hee/"
+
+  # 2) prompts/hee/docs (HEE/docs)
+  mkdir -p "$work/prompts/hee/docs"
+  rsync -a --delete "$hee/docs/" "$work/prompts/hee/docs/"
+
+  # 3) docs/hee pointers + docs/HEE_POLICY.md + VERSION.md
+  mkdir -p "$work/docs/hee"
+  cat > "$work/docs/hee/README.md" <<'TXT'
+# HEE policy (vendored)
+
+Canonical Human Execution Engine policy is vendored under:
+
+- prompts/hee/
+- prompts/hee/docs/
+
+This directory contains pointers and version metadata only.
+TXT
+
+  cat > "$work/docs/HEE_POLICY.md" <<'TXT'
+# HEE Policy
+
+This repository consumes Human Execution Engine (HEE) policy.
+
+Vendored policy lives at:
+- prompts/hee/
+- prompts/hee/docs/
+
+Changes to policy should be made upstream and re-vendored.
+TXT
+
+  pushd "$hee" >/dev/null
+  local hee_commit
+  hee_commit="$(git rev-parse HEAD)"
+  popd >/dev/null
+
+  cat > "$work/docs/hee/VERSION.md" <<TXT
+HEE upstream commit: ${hee_commit}
+TXT
+
+  # 4) scripts/hee-check.sh (vendored asset)
+  mkdir -p "$work/scripts"
+  if [ ! -f "$hee/tooling/templates/scripts/hee-check.sh" ]; then
+    echo "ERROR: missing canonical template: $hee/tooling/templates/scripts/hee-check.sh"
+    return 92
+  fi
+  install -m 0755 "$hee/tooling/templates/scripts/hee-check.sh" "$work/scripts/hee-check.sh"
+
+  # 5) .cursor/prompts derived from prompts/hee excluding docs/ and .cursor/
+  mkdir -p "$work/.cursor/prompts"
+  rsync -a --delete \
+    --exclude "docs/" \
+    --exclude ".cursor/" \
+    "$work/prompts/hee/" "$work/.cursor/prompts/"
+
+  drift=0
+  diff_out=""
+
+  # Compare: render vs target destinations
+  # Use git diff --no-index so missing target paths show as drift.
+  for pair in \
+    "prompts/hee:prompts/hee" \
+    "prompts/hee/docs:prompts/hee/docs" \
+    "docs/hee:docs/hee" \
+    "docs/HEE_POLICY.md:docs/HEE_POLICY.md" \
+    "scripts/hee-check.sh:scripts/hee-check.sh" \
+    ".cursor/prompts:.cursor/prompts"
+  do
+    src="${pair%%:*}"
+    dst="${pair##*:}"
+    src="$work/$src"
+    dst="$target_root/$dst"
+
+    # Always compare; if target missing, diff will show it.
+    local d
+    d="$(git -C "$target_root" diff --no-index -- "$src" "$dst" 2>/dev/null || true)"
+    if [ -n "$d" ]; then
+      drift=1
+      diff_out="${diff_out}\n\n=== DIFF: $dst ===\n${d}"
+    fi
+  done
+
+  # Non-mutation tripwire: branch + status must not change.
+  branch_after="$(git -C "$target_root" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  status_after="$(git -C "$target_root" status --porcelain 2>/dev/null || true)"
+
+  if [ "$branch_before" != "$branch_after" ] || [ "$status_before" != "$status_after" ]; then
+    echo "ERROR: --check mode mutated target repo state (forbidden)."
+    echo "  branch: before='$branch_before' after='$branch_after'"
+    echo "  status(before)='$(printf %q "$status_before")'"
+    echo "  status(after) ='$(printf %q "$status_after")'"
+    return 93
+  fi
+
+  if [ "$drift" -eq 0 ]; then
+    echo "OK: hee-vendor --check: no drift detected."
+    return 0
+  fi
+
+  echo "DRIFT: hee-vendor --check detected differences."
+  # Keep CI-friendly: cap output.
+  printf "%b\n" "$diff_out" | sed -n '1,800p'
+  echo "NOTE: output truncated after 800 lines (if longer)."
+  return 2
+}
+# ----------------------------------------------------------------------------
+
+if [ "${CHECK_ONLY}" -eq 1 ]; then
+  hee_vendor__check_mode "$TARGET" "$HEE"
+  exit $?
+fi
 
 pushd "$HEE" >/dev/null
 HEE_COMMIT="$(git rev-parse HEAD)"
