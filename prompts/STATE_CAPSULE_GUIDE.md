@@ -110,6 +110,42 @@ next_chat_bootstrap:
 1. **Check for Existing Capsule**: See if an appropriate state capsule exists. If it does, read it and update as appropriate. If it does not, create it.
 2. **Update State Capsule**: The rule should be to update the state capsule. This is after merging the PR (and monitoring CI/CD if enabled), checkout the main branch, pull the changes, and check the status.
 
+## 2. HEE Feature Branch Standards
+
+### **Branch Naming Convention**
+- **Format**: `feature/[descriptive-name]` or `fix/[descriptive-name]`
+- **Examples**: 
+  - `feature/hee-troubleshooting-enhancement`
+  - `fix/state-capsule-workflow`
+  - `feature/groq-optimization-rules`
+- **Requirement**: All new work MUST use feature branches
+
+### **Branch Completion Requirements**
+- **Goal**: All tasks MUST complete in their own branch
+- **Requirements**:
+  - Full CI/CD pass (where enabled)
+  - PR creation and merge
+  - State capsule update with final status
+  - Documentation updates where needed
+  - README and changelog review
+
+### **Branch Completion Tracking**
+- **Complete**: All tasks finished, CI/CD passed, PR merged ✅
+- **Incomplete**: Tasks unfinished, CI/CD failed, or PR not merged ❌
+- **Blocked**: External dependencies preventing completion ⚠️
+
+### **Next Agent Branch Assignment**
+- **If Current Branch Complete**: Create NEW feature branch
+- **If Current Branch Incomplete**: Continue on SAME branch
+- **Branch Status Tracking**: Document in state capsule
+
+### **Critical Requirements**
+- **NEVER** work directly on main branch
+- **ALWAYS** create feature branches for new work
+- **REVIEW** README and changelog on every capsule update
+- **DOCUMENT** branch completion status clearly
+- **ENSURE** all tasks complete before merging
+
 ```mermaid
 graph TD
     A[Start HEE Session] --> B[Check Latest HEE Capsule]
