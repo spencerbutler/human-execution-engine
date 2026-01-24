@@ -5,6 +5,7 @@
 **NO CODE UNTIL PROMPTS/SPECS ARE MERGED TO MAIN**
 - Implementation code forbidden until prompts/spec complete and merged
 - Optimize for security validation, not free tier usage
+- Apply Groq free tier optimization rules when using Groq models
 - No dynamic content generation without spec approval
 
 ## Security Discipline - HIGHEST PRIORITY

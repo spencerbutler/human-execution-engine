@@ -183,6 +183,7 @@ context:
   - HEE Constraints: Must comply with spec-first discipline
   - HEE Dependencies: Core v1.1.5+, prompts v17+
   - HEE State Requirements: state-v2 compatibility
+  - Groq Optimization: Applied for free tier efficiency
 ```
 
 **Practice 2**: HEE Decision Rationale
@@ -192,6 +193,10 @@ decisions:
     Rationale: Ensures HEE editor-agnostic consistency
     Impact: Maintains HEE governance compliance
     HEE Alignment: Prompt canonicalization rules
+  - Apply Groq free tier optimization for cost efficiency
+    Rationale: Reduces operational costs while maintaining quality
+    Impact: Sustainable HEE operations
+    HEE Alignment: Cost optimization principles
 ```
 
 **Practice 3**: HEE Execution Continuity
@@ -201,6 +206,7 @@ next_chat_bootstrap:
   - Implement HEE safety protocol validation in auto-fix
   - Test HEE state preservation during monitoring operations
   - Update HEE documentation with monitoring integration guide
+  - Optimize state capsule format for Groq free tier usage
 ```
 
 ### ❌ HEE Anti-Patterns to Avoid
