@@ -115,6 +115,12 @@ if ! git commit -m "$MSG"; then
   git commit -m "$MSG"
 fi
 
-git push -u origin "$BRANCH"
+remote_name="${remote_name:-origin}"
+
+if git ls-remote --exit-code --heads "$remote_name" "$BRANCH" >/dev/null 2>&1; then
+  git push --force-with-lease "$remote_name" "$BRANCH"
+else
+  git push -u "$remote_name" "$BRANCH"
+fi
 echo "OK: pushed $BRANCH for $TARGET"
 popd >/dev/null
