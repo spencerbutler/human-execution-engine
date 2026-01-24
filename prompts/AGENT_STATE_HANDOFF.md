@@ -13,6 +13,7 @@ This document defines the comprehensive protocol for agent state handoffs within
 - **Decision Continuity**: All HEE decisions must be maintained and accessible
 - **Context Stability**: HEE execution context must remain stable
 - **Governance Compliance**: All handoffs must comply with HEE governance rules
+- **Groq Optimization**: Apply Groq free tier optimization when using Groq models
 
 ### 2. HEE Agent Roles
 
