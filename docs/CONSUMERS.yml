@@ -1,0 +1,15 @@
+# Canonical registry of repositories using the Human Execution Engine (HEE)
+#
+# This file is machine-readable and authoritative.
+# The README list is derived and human-facing.
+#
+# Rules:
+# - Append new consumers only (do not reorder)
+# - Do not include timestamps
+# - Do not embed doctrine here
+
+consumers:
+  - repo: spencerbutler/market-thesis-news
+    mode: vendored
+    policy_version_path: docs/hee/VERSION.md
+    vendor_tool: tooling/bin/hee-vendor

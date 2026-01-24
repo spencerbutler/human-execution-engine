@@ -118,3 +118,12 @@ Deterministic execution runtime with state machines, event journaling, and admis
 
 ### Development Standards
 Security-first development with numbered prompts ensuring consistent, high-quality implementation. See [Prompting Rules](prompts/PROMPTING_RULES.md) for enforcement guidelines.
+
+---
+
+## Repos using HEE
+
+The following repositories vendor or otherwise consume the Human Execution Engine.
+New repos are appended to this list as they adopt HEE.
+
+- **market-thesis-news** — vendored policy (`prompts/hee/`, `docs/hee/`)
