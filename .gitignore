@@ -48,3 +48,4 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+_staging/
