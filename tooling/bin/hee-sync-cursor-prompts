@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Sync canonical HEE prompts into Cursor convenience location.
+#
+# Source priority:
+# 1) Vendored policy: prompts/hee
+# 2) Detached policy: .hee/policy/prompts
+#
+# Destination:
+# - .cursor/prompts
+
+SRC_VENDORED="prompts/hee"
+SRC_DETACHED=".hee/policy/prompts"
+DST=".cursor/prompts"
+
+if [ -d "$SRC_VENDORED" ]; then
+  SRC="$SRC_VENDORED"
+elif [ -d "$SRC_DETACHED" ]; then
+  SRC="$SRC_DETACHED"
+else
+  echo "ERROR: No HEE prompts source found."
+  echo "Expected either:"
+  echo "  - $SRC_VENDORED (vendored mode), or"
+  echo "  - $SRC_DETACHED (detached mode)"
+  exit 1
+fi
+
+mkdir -p "$DST"
+
+rsync -a --delete \
+  --exclude "docs/" \
+  --exclude ".cursor/" \
+  "$SRC/" "$DST/"
+
+echo "OK: synced $SRC -> $DST"
