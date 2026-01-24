@@ -105,19 +105,30 @@ next_chat_bootstrap:
 
 ### 1. HEE State Capsule Creation Workflow
 
+**Updated State Capsule Rules**:
+
+1. **Check for Existing Capsule**: See if an appropriate state capsule exists. If it does, read it and update as appropriate. If it does not, create it.
+2. **Update State Capsule**: The rule should be to update the state capsule. This is after merging the PR (and monitoring CI/CD if enabled), checkout the main branch, pull the changes, and check the status.
+
 ```mermaid
 graph TD
     A[Start HEE Session] --> B[Check Latest HEE Capsule]
     B --> C{Existing HEE Capsule?}
-    C -->|Yes| D[Update Existing HEE Capsule]
+    C -->|Yes| D[Read and Update Existing HEE Capsule]
     C -->|No| E[Create New HEE Capsule]
-    E --> F[Use HEE Template]
-    F --> G[Document HEE Current State]
-    G --> H[Record HEE Decisions]
-    H --> I[List HEE Open Threads]
-    I --> J[Define HEE Next Steps]
-    J --> K[Validate HEE Compliance]
-    K --> L[Save as Final Response]
+    D --> F[Document HEE Current State]
+    E --> F
+    F --> G[Record HEE Decisions]
+    G --> H[List HEE Open Threads]
+    H --> I[Define HEE Next Steps]
+    I --> J[Validate HEE Compliance]
+    J --> K[Save as Final Response]
+    
+    L[After PR Merge] --> M[Monitor CI/CD if enabled]
+    M --> N[Checkout main branch]
+    N --> O[Pull latest changes]
+    O --> P[Check git status]
+    P --> Q[Update State Capsule with final state]
 ```
 
 ### 2. HEE Template Usage
