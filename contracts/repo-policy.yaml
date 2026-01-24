@@ -1,0 +1,28 @@
+version: 1
+
+doctrine:
+  canonical_paths:
+    - docs/
+    - prompts/
+
+cursor:
+  derived_only: true
+  canonical_source_priority:
+    - prompts/hee
+    - .hee/policy/prompts
+  derived_target:
+    - .cursor/prompts
+
+vendoring:
+  allowed_vendored_roots:
+    - prompts/hee/
+    - prompts/hee/docs/
+  docs_stub_allowed_paths:
+    - docs/hee/
+    - docs/HEE_POLICY.md
+
+prohibitions:
+  hee_repo_must_not_contain:
+    - .cursor/
+    - prompts/.cursor/
+    - prompts/**/.cursor/

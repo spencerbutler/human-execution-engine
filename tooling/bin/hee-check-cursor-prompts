@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ensures .cursor/prompts matches the active HEE policy source.
+# See hee-sync-cursor-prompts for source selection rules.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"$SCRIPT_DIR/hee-sync-cursor-prompts"
+
+if ! git diff --quiet -- .cursor/prompts; then
+  echo "ERROR: .cursor/prompts is out of sync with HEE policy source."
+  echo "Run: tooling/bin/hee-sync-cursor-prompts and commit the result (if you commit .cursor)."
+  exit 1
+fi
+
+echo "OK: .cursor/prompts is in sync"
