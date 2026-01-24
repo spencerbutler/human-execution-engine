@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${1:-.}"
+
+fail() { echo "ERROR: $*" >&2; exit 1; }
+
+# Basic boundary checks
+[ ! -d "$ROOT/.cursor" ] || fail "Repo contains .cursor/ (should be derived, not committed) at $ROOT/.cursor"
+[ ! -d "$ROOT/prompts/.cursor" ] || fail "Repo contains prompts/.cursor/ (should not exist) at $ROOT/prompts/.cursor"
+
+# Also catch any nested .cursor under prompts
+if find "$ROOT/prompts" -type d -name ".cursor" | grep -q .; then
+  echo "Found forbidden .cursor directories under prompts/:"
+  find "$ROOT/prompts" -type d -name ".cursor"
+  exit 1
+fi
+
+echo "OK: basic HEE boundary checks passed for $ROOT"

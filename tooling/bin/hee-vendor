@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<USAGE
+hee-vendor
+
+Vendors HEE doctrine into a target repo using validator-safe layout.
+
+Usage:
+  tooling/bin/hee-vendor --target <repo_path> [--hee <hee_repo_path>] [--branch <name>]
+
+Behavior (vendored mode):
+  - prompts/hee/       <- HEE prompts (excluding .cursor)
+  - prompts/hee/docs/  <- HEE docs/specs
+  - docs/hee/          <- pointers + VERSION only (imperative-free)
+  - docs/HEE_POLICY.md <- pointer doc (imperative-free)
+  - scripts are not required; uses tooling/bin/hee-sync-cursor-prompts logic by generating .cursor/prompts directly.
+
+Notes:
+  - This tool creates/overwrites vendored directories.
+  - It creates a branch (default: chore/vendor-hee-policy) and pushes it.
+USAGE
+}
+
+TARGET=""
+HEE=""
+BRANCH="chore/vendor-hee-policy"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --target) TARGET="$2"; shift 2;;
+    --hee) HEE="$2"; shift 2;;
+    --branch) BRANCH="$2"; shift 2;;
+    -h|--help) usage; exit 0;;
+    *) echo "Unknown arg: $1"; usage; exit 1;;
+  esac
+done
+
+[[ -n "$TARGET" ]] || { usage; exit 1; }
+
+# Default HEE path: derive from location of this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_HEE="$(cd "$SCRIPT_DIR/../.." && pwd)"
+HEE="${HEE:-$DEFAULT_HEE}"
+
+[[ -d "$TARGET/.git" ]] || { echo "ERROR: target not a git repo: $TARGET"; exit 1; }
+[[ -d "$HEE/.git" ]] || { echo "ERROR: HEE not a git repo: $HEE"; exit 1; }
+
+pushd "$HEE" >/dev/null
+HEE_COMMIT="$(git rev-parse HEAD)"
+popd >/dev/null
+
+pushd "$TARGET" >/dev/null
+
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "ERROR: target repo has uncommitted changes: $TARGET"
+  exit 1
+fi
+
+git checkout main >/dev/null 2>&1 || true
+git pull --ff-only
+
+if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  git branch -D "$BRANCH"
+fi
+git checkout -b "$BRANCH"
+
+rm -rf prompts/hee docs/hee
+mkdir -p prompts/hee/docs docs/hee docs/local prompts/local .cursor/prompts
+
+rsync -a --delete --exclude ".cursor/" "$HEE/prompts/" "prompts/hee/"
+rsync -a --delete "$HEE/docs/" "prompts/hee/docs/"
+
+cat > docs/hee/README.md <<'TXT'
+# HEE policy (vendored)
+
+Canonical Human Execution Engine policy is vendored under:
+
+- prompts/hee/
+- prompts/hee/docs/
+
+This directory contains pointers and version metadata only.
+TXT
+
+cat > docs/HEE_POLICY.md <<'TXT'
+# HEE Policy
+
+This repository consumes Human Execution Engine (HEE) policy.
+
+Vendored policy lives at:
+- prompts/hee/
+- prompts/hee/docs/
+
+Changes to policy should be made upstream and re-vendored.
+TXT
+
+cat > docs/hee/VERSION.md <<TXT
+HEE upstream commit: ${HEE_COMMIT}
+Imported: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+TXT
+
+# Derive cursor prompts directly (no repo script required)
+rsync -a --delete \
+  --exclude "docs/" \
+  --exclude ".cursor/" \
+  "prompts/hee/" ".cursor/prompts/"
+
+git add -A
+MSG="Vendor HEE policy under prompts/hee @ ${HEE_COMMIT}"
+
+# Two-pass commit to accommodate formatters that modify files
+if ! git commit -m "$MSG"; then
+  git add -A
+  git commit -m "$MSG"
+fi
+
+git push -u origin "$BRANCH"
+echo "OK: pushed $BRANCH for $TARGET"
+popd >/dev/null
