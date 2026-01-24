@@ -1,0 +1,38 @@
+# Groq model mapping (Free tier)
+# Keep this file small and deterministic. No timestamps.
+# Populate model IDs from: GET https://api.groq.com/openai/v1/models
+
+provider: groq
+tier: free
+model_policy:
+  primary_execution:
+    class: small_instruct
+    model_id: ""   # TODO: set exact Groq model id (smallest instruct)
+    usage:
+      - doc_edits
+      - formatting
+      - vendoring_checks
+      - small_diffs
+  escalation_planning:
+    class: large_instruct
+    model_id: ""   # TODO: set exact Groq model id (largest instruct)
+    constraints:
+      - single_pass_only
+      - plan_or_review_only
+    usage:
+      - one_shot_plan
+      - careful_review
+  secondary_reasoning:
+    class: medium_moe
+    model_id: ""   # OPTIONAL: set exact Groq MoE model id if you use one
+    usage:
+      - multi_file_light_planning
+      - cross_file_synthesis_small_scope
+
+rate_limit_policy:
+  on_429:
+    - retry_once
+    - abort_on_second_429
+output_limits:
+  default_max_lines: 150
+  prefer_split_steps_over_long_outputs: true
