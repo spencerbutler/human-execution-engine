@@ -160,10 +160,78 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 4. Test and validate all cross-references
 5. Create PR and monitor CI/CD
 
+## HEE Feature Branch Standards
+
+### **Branch Naming Convention**
+- **Format**: `feature/[descriptive-name]` or `fix/[descriptive-name]`
+- **Examples**: 
+  - `feature/hee-troubleshooting-enhancement`
+  - `fix/state-capsule-workflow`
+  - `feature/groq-optimization-rules`
+- **Requirement**: All new work MUST use feature branches
+
+### **Branch Completion Requirements**
+- **Goal**: All tasks MUST complete in their own branch
+- **Requirements**:
+  - Full CI/CD pass (where enabled)
+  - PR creation and merge
+  - State capsule update with final status
+  - Documentation updates where needed
+  - README and changelog review
+
+### **Branch Completion Tracking**
+- **Complete**: All tasks finished, CI/CD passed, PR merged ✅
+- **Incomplete**: Tasks unfinished, CI/CD failed, or PR not merged ❌
+- **Blocked**: External dependencies preventing completion ⚠️
+
+### **Next Agent Branch Assignment**
+- **If Current Branch Complete**: Create NEW feature branch
+- **If Current Branch Incomplete**: Continue on SAME branch
+- **Branch Status Tracking**: Document in state capsule
+
 ## Status Tracking
 - **Last Updated**: 2026-01-24
 - **Next Review**: 2026-01-25
-- **Progress**: 1/3 tasks in progress, 1/3 tasks pending, 1/3 tasks completed
+- **Progress**: 3/3 tasks completed ✅
+- **Branch Status**: `feature/hee-troubleshooting-enhancement` - **COMPLETE** ✅
+- **Next Branch**: `feature/[next-task-name]` (NEW branch required)
+
+## Post-Merge State Capsule Update
+**Status**: Completed
+**Priority**: High
+**Completed**: 2026-01-24
+**Related Files**:
+- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - This document
+- `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work
+- `docs/TROUBLESHOOTING.md` - New troubleshooting guide
+
+**Description**
+Updated state capsule after successful PR merge and cleanup.
+
+**Steps Completed**
+- [x] Merged PR #17 successfully
+- [x] Cleaned up git status and removed deleted file reference
+- [x] Updated current tasks with completion status
+- [x] Verified all new files are properly integrated
+- [x] Confirmed state capsule workflow compliance
+
+**Files Involved**
+- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
+- `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work documentation
+- `docs/TROUBLESHOOTING.md` - New comprehensive troubleshooting guide
+
+**Results**
+- All task sections implemented successfully
+- File references and cross-links verified
+- Groq optimization maintained throughout
+- HEE state preservation principles followed
+- Smooth handoff capabilities established
+
+**Notes**
+- Feature branch `feature/hee-troubleshooting-enhancement` deleted after merge
+- All changes committed to main branch
+- State capsule workflow properly followed
+- Ready for next phase of HEE development
 
 ## Notes
 - All tasks follow HEE state preservation principles
