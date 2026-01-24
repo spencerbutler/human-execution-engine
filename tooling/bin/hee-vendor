@@ -45,6 +45,8 @@ while [[ $# -gt 0 ]]; do
     --hee) HEE="$2"; shift 2;;
     --branch) BRANCH="$2"; shift 2;;
     --check) CHECK_ONLY=1; shift 1;;
+    --no-push) NO_PUSH=1; shift 1;;
+    --auto-amend) AUTO_AMEND=1; shift 1;;
     -h|--help) usage; exit 0;;
     *) echo "Unknown arg: $1"; usage; exit 1;;
   esac
