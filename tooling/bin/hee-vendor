@@ -8,7 +8,7 @@ hee-vendor
 Vendors HEE doctrine into a target repo using validator-safe layout.
 
 Usage:
-  tooling/bin/hee-vendor --target <repo_path> [--hee <hee_repo_path>] [--branch <name>]
+  tooling/bin/hee-vendor --target <repo_path> [--hee <hee_repo_path>] [--branch <name>] [--no-push] [--auto-amend]
   tooling/bin/hee-vendor --check  --target <repo_path> [--hee <hee_repo_path>]
 
 Behavior (vendored mode):
@@ -36,6 +36,8 @@ TARGET=""
 HEE=""
 BRANCH="chore/vendor-hee-policy"
 CHECK_ONLY=0
+NO_PUSH=0
+AUTO_AMEND=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -260,6 +262,41 @@ if ! git commit -m "$MSG"; then
   git add -A
   git commit -m "$MSG"
 fi
+
+
+# --- BEGIN AUTO_AMEND_LOOP_V1 ---
+# Optional: converge post-commit formatter/hook rewrites into a single commit.
+# This eliminates manual amend + force-with-lease workflows in consumer repos.
+if [ "${AUTO_AMEND:-0}" -eq 1 ]; then
+  passes=0
+  while [ "$passes" -lt 2 ]; do
+    if git diff --quiet && git diff --cached --quiet; then
+      break
+    fi
+    git add -A
+    if ! git commit --amend --no-edit; then
+      echo "ERROR: --auto-amend failed while amending formatter changes"
+      exit 95
+    fi
+    passes=$((passes+1))
+  done
+
+  if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo "ERROR: --auto-amend did not converge; working tree still dirty"
+    git status --porcelain || true
+    exit 96
+  fi
+fi
+# --- END AUTO_AMEND_LOOP_V1 ---
+
+
+# --- BEGIN NO_PUSH_BEHAVIOR_V1 ---
+if [ "${NO_PUSH:-0}" -eq 1 ]; then
+  echo "OK: --no-push set; prepared branch '$BRANCH' locally for $TARGET"
+  popd >/dev/null
+  exit 0
+fi
+# --- END NO_PUSH_BEHAVIOR_V1 ---
 
 remote_name="${remote_name:-origin}"
 
