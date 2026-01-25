@@ -1,3 +1,45 @@
+# 🚨 IMMEDIATE AGENT HYDRATION - CONTEXT DETECTION
+
+**CRITICAL**: Before proceeding with any INIT tasks, agents MUST determine their current state of knowledge about this repository and hydrate accordingly.
+
+## Step 1: Check Current-Tasks Capsule Status
+
+**File to Check**: `docs/STATE_CAPSULES/CURRENT_TASKS.md` (Canonical Entry Point)
+
+### If Current-Tasks Capsule EXISTS and has SUBSTANTIVE CONTENT:
+**→ AGENT HAS CONTEXT**
+1. **Read Current-Tasks Capsule** for immediate state awareness
+2. **Understand Active Tasks**: What's in progress, what's completed
+3. **Identify Violations**: Any active HEE rule violations
+4. **Check Branch Status**: Current branch state and open PRs
+5. **Proceed with INIT tasks** based on current state
+
+### If Current-Tasks Capsule is MISSING or EMPTY/DEFAULT:
+**→ AGENT HAS NO CONTEXT**
+1. **Read Prompting Rules** (`prompts/PROMPTING_RULES.md`) - Foundation
+2. **Read Bootstrap Guide** (`prompts/BOOTSTRAP.md` or equivalent) - Setup
+3. **Read Troubleshooting** (`prompts/TROUBLESHOOTING.md`) - Problem-solving
+4. **Create Initial Current-Tasks Capsule** - Establish state tracking
+5. **Proceed with INIT tasks** from beginning
+
+## Current-Tasks Capsule Validation
+
+**Substantive Content Indicators**:
+- Contains active task sections with status updates
+- Has violation documentation and resolutions
+- Includes branch management tracking
+- Shows cross-references to other files
+- Contains meaningful status updates and progress tracking
+
+**Empty/Default State Indicators**:
+- Only contains template placeholders
+- Has no substantive task tracking
+- Missing violation documentation
+- No meaningful status updates
+- Only basic structure without content
+
+---
+
 # HEE Project Initialization Guide
 
 This guide provides systematic procedures for initializing and setting up the Human Execution Engine (HEE) ecosystem, with comprehensive file references and task sections for smooth project bootstrap and team onboarding.
