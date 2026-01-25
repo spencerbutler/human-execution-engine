@@ -1,267 +1,234 @@
 # HEE State Capsule Guide
 
 ## Overview
-Comprehensive guide for HEE state capsule management including the .done extension rule for completed tasks.
 
-## State Capsule Lifecycle
+State Capsules are structured documentation artifacts that preserve critical project state, decisions, and context between agent sessions. They enable seamless handoffs and maintain project continuity in the Human Execution Engine (HEE) ecosystem.
 
-### 1. Creation
-- **When**: Start of any HEE session or task
-- **Format**: `YYYY-MM-DD/HEE-[Project]-Session.md`
-- **Location**: `docs/STATE_CAPSULES/`
-- **Content**: Task tracking, progress, decisions, and context
+## Purpose
 
-### 2. Active Management
-- **Update Frequency**: After significant operations
-- **Content**: Current status, violations, progress tracking
-- **Validation**: Use `scripts/validate_hee_capsule.py`
+State Capsules serve multiple critical functions:
 
-### 3. Completion (.done Extension Rule)
-**Rule**: When all tasks in a state capsule are completed, rename with `.done` extension
+- **Knowledge Preservation**: Capture decisions, context, and progress
+- **Seamless Handoffs**: Enable agents to resume work with full context
+- **Progress Tracking**: Document what was accomplished and what remains
+- **Compliance Assurance**: Maintain HEE governance standards
+- **Audit Trail**: Provide historical record of project evolution
 
-#### Completion Criteria
-- All tasks marked as completed ✅
-- No active violations
-- All documentation updated
-- Session cleanup completed
+## Directory Structure
 
-#### Completion Process
-```bash
-# 1. Verify all tasks are complete
-grep -q "✅" docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md
-
-# 2. Rename with .done extension
-mv docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md \
-   docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md.done
-
-# 3. Create new capsule for next session
-cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md \
-   docs/STATE_CAPSULES/2026-01-24/HEE-Next-Session.md
+```
+docs/STATE_CAPSULES/
+├── README.md                    # Directory overview and conventions
+├── CURRENT_TASKS.md             # Canonical entry point for current state
+├── 2026-01-24/                  # Date-organized session capsules
+│   ├── HEE-Session-Report.md
+│   ├── HEE-Implementation-Plan-100-Compliance.md
+│   └── [other session capsules]
+└── archive/                     # Completed capsules (if needed)
 ```
 
-#### .done Extension Benefits
-- **Clear Status**: Immediately identifies completed work
-- **Processing Skip**: Violation script skips .done files
-- **Archive Ready**: Easy identification for cleanup
-- **Historical Tracking**: Maintains completion timeline
+## File Naming Convention
 
-### 4. Archiving
-- **When**: 30 days after .done extension
-- **Process**: Move to `docs/STATE_CAPSULES/archive/`
-- **Format**: Preserve original .done extension
+### Session Capsules
+- **Format**: `Project-Phase-Description.md`
+- **Examples**:
+  - `HEE-Compliance-Closure.md`
+  - `MT-logo-render-Phase3-CI-Troubleshooting.md`
+  - `Security-Scanner-Implementation.md`
 
-## Violation Script Integration
+### Completion Convention
+When tasks are complete, prepend `done.` to the filename:
+- `Project-Phase-Description.md` → `done.Project-Phase-Description.md`
 
-### .done Extension Handling
-The violation checker script (`scripts/violation_checker.sh`) includes special handling for .done files:
+## Capsule Structure
 
-```bash
-# Check for .done files (completed capsules)
-done_capsules=($(find "$state_capsule_dir" -name "*.md.done" -type f 2>/dev/null))
-if [[ ${#done_capsules[@]} -gt 0 ]]; then
-    add_success "Found ${#done_capsules[@]} completed state capsule(s) with .done extension"
-    # Skip processing .done capsules
-    for done_capsule in "${done_capsules[@]}"; do
-        echo "  - Skipping completed capsule: $(basename "$done_capsule")"
-    done
-fi
+### Required Sections
+
+```yaml
+chat: <project-name> <phase/session>
+purpose: <one-sentence objective>
+context:
+  - Project: <project description>
+  - Current Phase: <current phase or milestone>
+  - Status: <current status and recent progress>
+  - Constraints: <important constraints or requirements>
+  - Dependencies: <key dependencies or blockers>
+
+decisions:
+  - <specific decision made with rationale>
+  - <technical choice and why it was chosen>
+  - <architectural decision and its impact>
+
+open_threads:
+  - <unresolved issue or pending task>
+  - <dependency or blocker>
+  - <next major milestone>
+
+next_chat_bootstrap:
+  - <immediate next step to take>
+  - <how to continue current work>
+  - <what to investigate or implement>
 ```
 
-### Validation Rules
-- **Active Capsules**: Must not have .done extension
-- **Processing**: Only active capsules are validated
-- **Completion**: .done capsules are skipped during violation checks
-- **Cleanup**: .done capsules flagged for archival after 30 days
+## Usage Guidelines
+
+### For Session Capsules
+
+1. **Create at Session Start**: Document initial context and objectives
+2. **Update During Session**: Capture decisions and progress
+3. **Complete at Session End**: Mark completed tasks and plan next steps
+4. **Rename on Completion**: Prepend `done.` when all tasks finished
+
+### For Current Tasks Capsule
+
+1. **Single Source of Truth**: Always check `CURRENT_TASKS.md` first
+2. **Update After Major Changes**: Reflect new phases or priorities
+3. **Cross-Reference Sessions**: Link to detailed session capsules
+4. **Maintain Accuracy**: Keep status current and actionable
+
+## Workflow Integration
+
+### Git Workflow
+
+- State Capsules are version controlled with project code
+- Include capsule references in commit messages for major transitions
+- Capsules provide context for PR reviews and merges
+
+### CI/CD Integration
+
+- Capsules can trigger automated validation
+- Status updates can inform build processes
+- Compliance checks can reference capsule state
+
+### Agent Handoffs
+
+- **Incoming Agent**: Read latest capsule to understand current state
+- **Outgoing Agent**: Update capsule with progress and next steps
+- **Context Preservation**: Ensure no knowledge loss between sessions
 
 ## Best Practices
 
-### Task Management
-- Use clear, descriptive task names
-- Mark tasks complete IMMEDIATELY after finishing
-- Update progress in real-time
-- Document decisions and rationale
+### Content Guidelines
 
-### File Organization
-- Use consistent naming conventions
-- Group related tasks logically
-- Maintain chronological order
-- Use relative paths for portability
+- **Be Specific**: Include concrete details, not vague descriptions
+- **Document Rationale**: Explain why decisions were made
+- **Prioritize Threads**: Rank open issues by importance
+- **Actionable Next Steps**: Provide clear, immediate actions
 
-### Completion Workflow
-1. **Review**: Verify all tasks are truly complete
-2. **Document**: Ensure all changes are recorded
-3. **Validate**: Run state capsule validation
-4. **Rename**: Apply .done extension
-5. **Archive**: Plan archival after 30 days
+### Maintenance
 
-### Error Prevention
-- **NEVER** commit directly to main branch
-- **ALWAYS** create feature branches for changes
-- **UPDATE** state capsule after significant operations
-- **VALIDATE** before marking tasks complete
+- **Regular Updates**: Keep capsules current with project state
+- **Archive Completed**: Move old capsules if directory becomes cluttered
+- **Cross-Reference**: Link related capsules and documentation
+- **Quality Assurance**: Review capsules for completeness and accuracy
 
-## Integration with HEE Workflow
+### Compliance
 
-### Pre-commit Integration
+- **HEE Standards**: Follow established governance rules
+- **Pager Prevention**: Ensure all commands prevent pager invocation
+- **Model Disclosure**: Include model information in commits
+- **Branch Management**: Use feature branches for all changes
+
+## Examples
+
+### Session Capsule Example
+
 ```yaml
-# .pre-commit-config.yaml
-repos:
-  - repo: local
-    hooks:
-      - id: hee-state-capsule-check
-        name: HEE State Capsule Validation
-        entry: bash -c 'echo "🔍 Validating state capsule..." && ./scripts/validate_hee_capsule.py --input docs/STATE_CAPSULES/current.md'
-        language: system
-        files: '.*'
-        pass_filenames: false
+chat: HEE Compliance Closure
+purpose: Resolve remaining violations to achieve 100% HEE compliance
+context:
+  - Project: human-execution-engine governance optimization
+  - Current Phase: Phase 1 (Compliance closure)
+  - Status: 3 active violations (5 points total)
+  - Constraints: Must maintain existing HEE framework
+  - Dependencies: Access to violation tracking system
+
+decisions:
+  - Create feature branch for all changes (resolves BM-001)
+  - Implement model disclosure in commit messages (resolves CH-001)
+  - Create STATE_CAPSULE_GUIDE.md documentation (resolves PA-001)
+
+open_threads:
+  - Update violation metrics to reflect zero-point status
+  - Test compliance improvements
+
+next_chat_bootstrap:
+  - Create docs/STATE_CAPSULE_GUIDE.md with comprehensive guide
+  - Update CURRENT_TASKS.md to reflect completion
+  - Prepare for Phase 2 implementation plan execution
 ```
 
-### CI/CD Integration
-- Validate state capsule completeness
-- Check for .done extension compliance
-- Ensure no active violations
-- Verify documentation updates
+### Current Tasks Capsule Example
 
-### Monitoring and Reporting
-- Track completion rates
-- Monitor .done extension usage
-- Report on state capsule health
-- Identify workflow bottlenecks
+```yaml
+## Quick Status Summary
+
+- **Active Tasks**: 3 (Compliance closure items)
+- **Completed Tasks**: 23 (Core + advanced features)
+- **Open PRs**: 0 (Clean state)
+- **Branch Status**: Clean main branch
+- **Critical Alerts**: 0 (Target achieved)
+
+## Active Tasks
+
+### 🔴 Phase 1: Compliance Closure (HIGH PRIORITY)
+
+- [x] Create feature branch for all changes
+- [x] Implement model disclosure in commit messages
+- [x] Create docs/STATE_CAPSULE_GUIDE.md documentation
+- [ ] Update violation metrics to zero-point status
+- [ ] Commit with proper HEE format
+
+**Goal**: Achieve 100% HEE compliance (0 violation points)
+```
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Issue: "Task not marked complete but work is done"
-**Solution**: Update state capsule IMMEDIATELY after task completion
-```bash
-# Update task status
-sed -i 's/- \[ \] Task description/- [x] Task description/' docs/STATE_CAPSULES/current.md
-```
-
-#### Issue: "Violation script processes .done files"
-**Solution**: Ensure .done extension is properly applied
-```bash
-# Check for .done files
-ls -la docs/STATE_CAPSULES/*.done
-```
-
-#### Issue: "State capsule not found"
-**Solution**: Verify file exists and path is correct
-```bash
-# Check state capsule directory
-ls -la docs/STATE_CAPSULES/
-```
+- **Missing Context**: Always include essential background information
+- **Vague Next Steps**: Make actions specific and immediately actionable
+- **Outdated Information**: Keep capsules current with project state
+- **Incomplete Documentation**: Ensure all required sections are filled
 
 ### Recovery Procedures
 
-#### Recover from Missing State Capsule
-1. Create new capsule from template
-2. Document current state
-3. Update task tracking
-4. Validate and commit
+1. **Stale Capsule**: Update with current project state
+2. **Missing Information**: Cross-reference with other capsules or documentation
+3. **Conflicting Information**: Resolve discrepancies and update accordingly
+4. **Incomplete Tasks**: Document current status and next steps
 
-#### Recover from Incomplete Tasks
-1. Review task list
-2. Identify incomplete items
-3. Update status accordingly
-4. Plan completion strategy
+## Integration Points
 
-#### Recover from Violation Issues
-1. Run violation checker
-2. Address all violations
-3. Update state capsule
-4. Validate compliance
+### Related Documentation
 
-## Templates and Examples
+- `docs/HEE_POLICY.md` - Governance rules and standards
+- `prompts/AGENT_STATE_HANDOFF.md` - Agent transition procedures
+- `docs/TROUBLESHOOTING.md` - Problem resolution guides
 
-### Basic State Capsule Template
-```markdown
-# HEE Session Report
+### Tools and Scripts
 
-## Overview
-[Session purpose and scope]
+- `scripts/violation_checker.sh` - Compliance validation
+- `scripts/check_pager_prevention.sh` - Pager prevention validation
+- `scripts/check_model_disclosure.sh` - Model disclosure validation
 
-## Session Details
-- **Date**: [YYYY-MM-DD]
-- **Time Started**: [HH:MM:SS TZ]
-- **Branch**: [feature/branch-name]
-- **Status**: [In Progress/Completed]
-- **Model**: [model-name]
+## Evolution and Updates
 
-## Current Work
-### Task: [Task Name]
-**Status**: [In Progress/Completed/Pending]
-**Priority**: [High/Medium/Low]
-**Related Files**: [file1, file2, ...]
+### Version History
 
-**Description**: [Task details]
+- **v1.0**: Initial state capsule framework
+- **v1.1**: Added completion convention (`done.` prefix)
+- **v1.2**: Enhanced compliance tracking and validation
 
-**Steps to Complete**:
-- [ ] Step 1
-- [ ] Step 2
-- [ ] Step 3
+### Future Enhancements
 
-**Files Involved**:
-- [file1] - [description]
-- [file2] - [description]
+- Automated capsule generation from session logs
+- Integration with project management tools
+- Enhanced validation and cross-referencing
+- AI-assisted capsule completion and suggestions
 
-**Dependencies**: [list dependencies]
+## Conclusion
 
-**Notes**: [additional notes]
+State Capsules are the backbone of HEE project continuity and governance. By maintaining comprehensive, current, and well-structured capsules, the system ensures that critical project knowledge is preserved, decisions are documented, and seamless handoffs between agents are possible.
 
-## HEE State Management
-### Current State Capsule
-- **File**: [path]
-- **Status**: [Active/Completed]
-- **Branch**: [branch-name]
-
-### Previous State Capsules
-- [list previous capsules]
-
-### .done Extension Rule
-**Rule**: When all tasks in a state capsule are completed, rename with `.done` extension
-- Example: `HEE-Current-Tasks.md` → `HEE-Current-Tasks.md.done`
-- Violation script should skip processing any files with `.done` extension
-- Archive .done capsules after 30 days to prevent accumulation
-
-## Problem Analysis
-[Document issues, root causes, and solutions]
-
-## Next Steps
-[list upcoming tasks and actions]
-
-## HEE Compliance
-- [ ] Feature branch created for all changes
-- [ ] Working from proper project directory
-- [ ] State capsule created and updated
-- [ ] Model disclosure in commit messages
-- [ ] Pre-commit checks configured
-
-## Files Modified
-[list modified files]
-
-## Pending Actions
-[list pending items]
-
-## Status Tracking
-- **Session Started**: [timestamp]
-- **Current Status**: [status]
-- **Progress**: [X/Y tasks completed]
-- **Next Update**: [timestamp]
-```
-
-### .done Extension Example
-```bash
-# Before completion
-docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md
-
-# After completion
-docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md.done
-```
-
-## References
-- [HEE Policy](HEE_POLICY.md)
-- [Violation Metrics](VIOLATION_METRICS.md)
-- [Prompting Rules](PROMPTING_RULES.md)
-- [Troubleshooting Guide](TROUBLESHOOTING.md)
+**Remember**: A well-maintained state capsule system is the difference between chaotic project handoffs and smooth, efficient development continuity.
