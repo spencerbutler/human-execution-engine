@@ -93,18 +93,21 @@ monitoring_state:
 ## Performance Metrics
 
 **Detection Performance**:
+
 - Average Detection Time: [Seconds]
 - Detection Accuracy: [Percentage]%
 - False Positives: [Count]
 - False Negatives: [Count]
 
 **Fix Performance**:
+
 - Average Fix Time: [Seconds]
 - Success Rate: [Percentage]%
 - Rollback Rate: [Percentage]%
 - Validation Time: [Seconds]
 
 **System Impact**:
+
 - CPU Usage: [Percentage]%
 - Memory Usage: [MB]
 - Disk I/O: [MB/s]
@@ -113,16 +116,19 @@ monitoring_state:
 ## HEE-Specific Metrics
 
 **State Preservation**:
+
 - State Integrity: [Percentage]%
 - Decision Preservation: [Percentage]%
 - Context Stability: [Percentage]%
 
 **Spec Coverage Impact**:
+
 - Pre-Fix Spec Coverage: [Percentage]%
 - Post-Fix Spec Coverage: [Percentage]%
 - Spec Coverage Improvement: [Percentage]%
 
 **Prompt Compatibility**:
+
 - Prompt Validation Rate: [Percentage]%
 - Prompt Coverage Impact: [Percentage]%
 
@@ -137,14 +143,8 @@ monitoring_state:
 ### Error Pattern Analysis
 
 **Most Common Issues**:
-1. [Pattern ID]: [Description] ([Count] occurrences)
-2. [Pattern ID]: [Description] ([Count] occurrences)
-3. [Pattern ID]: [Description] ([Count] occurrences)
 
 **Most Effective Fixes**:
-1. [Pattern ID]: [Description] ([Success Rate]%)
-2. [Pattern ID]: [Description] ([Success Rate]%)
-3. [Pattern ID]: [Description] ([Success Rate]%)
 
 ## Recommendations
 
@@ -171,11 +171,13 @@ monitoring_state:
 ### State Capsule Impact
 
 **Positive Impacts**:
+
 - [Impact 1]
 - [Impact 2]
 - [Impact 3]
 
 **Challenges**:
+
 - [Challenge 1]
 - [Challenge 2]
 - [Challenge 3]
@@ -183,11 +185,13 @@ monitoring_state:
 ### Decision Preservation
 
 **Decisions Maintained**:
+
 - [Decision 1]
 - [Decision 2]
 - [Decision 3]
 
 **Decision Conflicts**:
+
 - [Conflict 1]
 - [Conflict 2]
 - [Conflict 3]
@@ -195,12 +199,14 @@ monitoring_state:
 ## Logs and Artifacts
 
 **Attached Files**:
+
 - `fix_log_[ID].log`: Detailed fix execution log
 - `state_backup_[ID].json`: Pre-fix state backup
 - `validation_report_[ID].json`: Post-fix validation results
 - `performance_metrics_[ID].json`: Performance data
 
 **Reference Links**:
+
 - Monitoring Dashboard: [URL]
 - CI/CD Pipeline: [URL]
 - State Capsule: [URL]
@@ -214,10 +220,12 @@ monitoring_state:
 **Next Steps**: [Action Items]
 
 **HEE Compliance**:
+
 - [ ] Spec-first discipline maintained
 - [ ] State preservation requirements met
 - [ ] Quality gates passed
 - [ ] Governance compliance verified
+
 ```
 
 ## Usage Instructions
@@ -238,6 +246,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### 2. Report Integration
 
 **HEE Workflow Integration**:
+
 - Attach to state capsules for context preservation
 - Include in CI/CD monitoring artifacts
 - Reference in release documentation
@@ -246,6 +255,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### 3. Template Customization
 
 **HEE-Specific Fields**:
+
 - Add project-specific patterns
 - Include additional metrics
 - Customize recommendation sections
@@ -256,6 +266,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### ✅ Recommended Practices
 
 **Practice 1**: Comprehensive Pattern Analysis
+
 ```markdown
 **Most Common Issues**:
 1. PAT-001: Clippy Warnings (12 occurrences, 100% fix rate)
@@ -263,6 +274,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ```
 
 **Practice 2**: HEE-Specific Metrics
+
 ```markdown
 **State Preservation**:
 - State Integrity: 100%
@@ -273,12 +285,14 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### ❌ Anti-Patterns to Avoid
 
 **Anti-Pattern 1**: Incomplete Issue Tracking
+
 ```markdown
 **Issues Detected**:
 - Some issues found  # Too vague
 ```
 
 **Anti-Pattern 2**: Missing HEE Integration
+
 ```markdown
 **HEE Integration Analysis**:
 - Worked fine  # Too generic
@@ -289,6 +303,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### 1. State Capsule Integration
 
 **HEE State Updates**:
+
 - Include report references in state capsules
 - Update state metrics based on report data
 - Preserve report context in state history
@@ -296,6 +311,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### 2. CI/CD Integration
 
 **HEE Pipeline Integration**:
+
 - Generate reports in monitoring workflows
 - Attach reports to build artifacts
 - Use reports for quality gate decisions
@@ -303,6 +319,7 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 ### 3. Pattern Database Integration
 
 **HEE Pattern Improvements**:
+
 - Update pattern effectiveness metrics
 - Add new patterns from report analysis
 - Deprecate ineffective patterns

@@ -31,6 +31,7 @@ The execution target is a **single human operator**, explicitly modeled as a
 constrained processing unit with finite capacity.
 
 The human is:
+
 - Not a passive assignee
 - Not an approval gate
 - The execution runtime itself
@@ -42,6 +43,7 @@ The human is:
 Work is represented as **executable units**, not reminders or intentions.
 
 Each unit MUST define:
+
 - A start condition
 - A completion condition
 - Explicit inputs and outputs (even if informal)
@@ -67,6 +69,7 @@ Executable units are arranged in an explicit dependency structure
 The system enforces **deterministic scheduling** over the human runtime.
 
 This includes:
+
 - Explicit limits on concurrency (typically 1)
 - Controlled task admission
 - Prevention of implicit multitasking
@@ -81,6 +84,7 @@ Context switching is treated as a cost, not a free operation.
 The engine maintains explicit task state and enforces legal transitions.
 
 Typical states include:
+
 - Pending
 - Runnable
 - Active
@@ -107,6 +111,7 @@ Failure is a first-class outcome.
 System health is measured by **execution characteristics**, not sentiment.
 
 Valid metrics include:
+
 - Time-to-runnable
 - Time-to-completion
 - Idle time
@@ -132,6 +137,7 @@ The system optimizes execution correctness and flow, not memory augmentation.
 ## Non-Properties (Explicit Exclusions)
 
 A Human Execution Engine is **not**:
+
 - A to-do list
 - A reminder system
 - A habit tracker

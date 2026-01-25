@@ -23,7 +23,7 @@ add_violation() {
     local description="$2"
     local points="$3"
     local severity="$4"
-    
+
     VIOLATION_SCORE=$((VIOLATION_SCORE + points))
     VIOLATIONS_FOUND+=("$code: $description ($points points - $severity)")
     echo -e "${RED}❌ $code: $description${NC}"
@@ -33,14 +33,14 @@ add_violation() {
 add_warning() {
     local code="$1"
     local description="$2"
-    
+
     echo -e "${YELLOW}⚠️  $code: $description${NC}"
 }
 
 # Function to add success
 add_success() {
     local message="$1"
-    
+
     echo -e "${GREEN}✅ $message${NC}"
 }
 
@@ -58,7 +58,7 @@ fi
 # Check 2: Model Disclosure
 echo ""
 echo "📋 Checking Model Disclosure..."
-commit_msg=$(git log --format=%B -n 1 HEAD 2>/dev/null || echo "")
+commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo "")
 if [[ ! "$commit_msg" =~ \[model: ]]; then
     add_violation "CH-001" "Missing model disclosure in commit message" 1 "Level 1"
     add_warning "CH-001" "Include [model: <model-name>] in commit message"

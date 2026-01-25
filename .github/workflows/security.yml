@@ -16,15 +16,15 @@ jobs:
   security-scan:
     name: Comprehensive Security Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Run HEE Security Scanner
       run: |
         echo "🔍 Running HEE security scanner..."
-        
+
         # Check for security scanner script
         if [ -f "scripts/security_scanner.py" ]; then
           echo "✅ Security scanner found at scripts/security_scanner.py"
@@ -37,7 +37,7 @@ jobs:
     - name: Check for sensitive information
       run: |
         echo "🔍 Scanning for sensitive information..."
-        
+
         # Check for hardcoded secrets
         echo "Checking for potential secrets..."
         if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" --include="*.env*" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo\|sample" | head -10; then
@@ -50,14 +50,14 @@ jobs:
     - name: Check for security policy compliance
       run: |
         echo "🔍 Validating security policy compliance..."
-        
+
         # Check for security policy
         if [ -f "docs/SECURITY.md" ]; then
           echo "✅ Security policy found"
         else
           echo "⚠️  Security policy missing"
         fi
-        
+
         # Check for HEE policy security sections
         if [ -f "docs/HEE_POLICY.md" ] && grep -q "security" docs/HEE_POLICY.md; then
           echo "✅ HEE policy includes security sections"
@@ -68,19 +68,19 @@ jobs:
     - name: Check for dependency vulnerabilities
       run: |
         echo "🔍 Checking for dependency vulnerabilities..."
-        
+
         # Check for package.json
         if [ -f "package.json" ]; then
           echo "✅ Found package.json, would run npm audit here"
           # npm audit --audit-level=moderate
         fi
-        
+
         # Check for requirements.txt
         if [ -f "requirements.txt" ]; then
           echo "✅ Found requirements.txt, would run pip-audit here"
           # pip-audit --requirement requirements.txt
         fi
-        
+
         # Check for Cargo.toml
         if [ -f "Cargo.toml" ]; then
           echo "✅ Found Cargo.toml, would run cargo audit here"
@@ -90,14 +90,14 @@ jobs:
     - name: Check for insecure patterns
       run: |
         echo "🔍 Checking for insecure patterns..."
-        
+
         # Check for eval usage
         if grep -r "eval(" --include="*.py" --include="*.js" .; then
           echo "⚠️  Found eval() usage - review for security implications"
         else
           echo "✅ No eval() usage detected"
         fi
-        
+
         # Check for shell injection patterns
         if grep -r "os\.system\|subprocess\.call\|exec\(" --include="*.py" .; then
           echo "⚠️  Found potential shell injection patterns - review for security"
@@ -108,14 +108,14 @@ jobs:
     - name: Check for HEE-specific security compliance
       run: |
         echo "🔍 Checking HEE-specific security compliance..."
-        
+
         # Check for model disclosure in commits
-        if git log --oneline -20 | grep -q "\[model:"; then
+        if git --no-pager log --oneline -20 | grep -q "\[model:"; then
           echo "✅ Model disclosure found in recent commits"
         else
           echo "⚠️  No model disclosure found in recent commits"
         fi
-        
+
         # Check for pager prevention compliance
         if [ -f "docs/HEE_POLICY.md" ] && grep -q "pager prevention" docs/HEE_POLICY.md; then
           echo "✅ Pager prevention policy documented"
@@ -127,11 +127,11 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-      
+
     - name: Dependency Review
       uses: actions/dependency-review-action@v4
       with:
@@ -141,7 +141,7 @@ jobs:
   codeql-analysis:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
-    
+
     permissions:
       actions: read
       contents: read
@@ -151,7 +151,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'javascript', 'python' ]
-        
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -167,11 +167,11 @@ jobs:
   secret-scanning:
     name: Secret Scanning
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Run TruffleHog OSS
       uses: trufflesecurity/trufflehog@main
       with:
@@ -184,15 +184,15 @@ jobs:
     name: Final Security Summary
     runs-on: ubuntu-latest
     needs: [security-scan, dependency-review, codeql-analysis, secret-scanning]
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Security validation summary
       run: |
         echo "🔍 Running final security validation summary..."
-        
+
         echo "✅ HEE Security Scanning completed"
         echo "📋 Summary:"
         echo "   - Sensitive information: Scanned"
@@ -203,5 +203,5 @@ jobs:
         echo "   - Dependency review: Completed"
         echo "   - CodeQL analysis: Completed"
         echo "   - Secret scanning: Completed"
-        
+
         echo "🎯 All HEE security checks completed!"

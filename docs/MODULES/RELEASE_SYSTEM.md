@@ -9,16 +9,19 @@ This document specifies the comprehensive release system for the Human Execution
 ### 1. Core Principles
 
 **Spec-First Release Discipline**:
+
 - Release specifications precede implementation
 - Documentation completeness is a release criterion
 - Spec coverage metrics gate release readiness
 
 **Quality-First Approach**:
+
 - 100% test coverage requirement for production releases
 - Comprehensive validation before any release
 - Rollback capability for all production deployments
 
 **State-Preserving Releases**:
+
 - State capsule integration throughout release process
 - Decision preservation across release cycles
 - Context stability during version transitions
@@ -42,6 +45,7 @@ graph LR
 **Format**: `MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]`
 
 **HEE-Specific Rules**:
+
 - **MAJOR**: Breaking changes to HEE core architecture or state capsule format
 - **MINOR**: New features with backward compatibility and state preservation
 - **PATCH**: Bug fixes with full state compatibility
@@ -66,12 +70,14 @@ graph LR
 #### Phase 1: Feature Complete
 
 **Criteria**:
+
 - All planned features implemented
 - 100% spec coverage achieved
 - State capsule integration complete
 - Documentation drafts available
 
 **Deliverables**:
+
 - Feature-complete codebase
 - Initial state capsules for release
 - Draft release notes
@@ -80,12 +86,14 @@ graph LR
 #### Phase 2: Stabilization
 
 **Activities**:
+
 - Bug fixing and edge case handling
 - Performance optimization
 - Security hardening
 - State capsule validation
 
 **Quality Gates**:
+
 - 100% test coverage (line, branch, function, integration, spec, prompt)
 - All CI/CD pipelines passing
 - State capsule integrity verified
@@ -94,12 +102,14 @@ graph LR
 #### Phase 3: Release Candidate
 
 **Process**:
+
 1. Version tagging with state references
 2. Release candidate build generation
 3. Comprehensive testing (functional, performance, security)
 4. State capsule validation and signing
 
 **Success Criteria**:
+
 - No critical bugs found
 - All quality metrics met
 - State capsules validated and signed
@@ -108,6 +118,7 @@ graph LR
 #### Phase 4: Production Release
 
 **Steps**:
+
 1. Final state capsule generation
 2. Cryptographic signing of all artifacts
 3. Git tag creation with state references
@@ -115,6 +126,7 @@ graph LR
 5. Distribution channel updates
 
 **Validation**:
+
 - State capsule integrity checks
 - Artifact signature verification
 - Dependency validation
@@ -148,6 +160,7 @@ graph LR
 ### 2. Package Contents
 
 **Standard Package Structure**:
+
 ```
 hee-release-<version>/
 ├── bin/                    # Executables
@@ -175,18 +188,21 @@ hee-release-<version>/
 ### 1. Deployment Modes
 
 #### Local Mode (Default)
+
 - Single-user, localhost-only
 - No authentication required
 - SQLite database with state capsules
 - Automatic updates disabled
 
 #### LAN Mode (Opt-in)
+
 - Network-accessible with authentication
 - Token-based security
 - State capsule synchronization
 - Audit logging enabled
 
 #### Cloud Mode (Future)
+
 - Multi-tenant architecture
 - Centralized state management
 - Scalable monitoring
@@ -195,6 +211,7 @@ hee-release-<version>/
 ### 2. Configuration Management
 
 **HEE Configuration Structure**:
+
 ```json
 {
   "version": "1.0",
@@ -225,11 +242,13 @@ hee-release-<version>/
 ### 1. Release State Capsules
 
 **Required Capsules**:
+
 - `PRE-RELEASE`: Pre-release state and decisions
 - `RELEASE`: Final release state and configuration
 - `POST-RELEASE`: Post-release monitoring and issues
 
 **Capsule Structure**:
+
 ```yaml
 chat: HEE v1.2.3 Release
 purpose: Document release state, decisions, and configuration
@@ -278,12 +297,14 @@ next_chat_bootstrap:
 ### 1. HEE Documentation Standards
 
 **Requirements**:
+
 - Versioned documentation with state references
 - State capsule integration examples
 - Decision rationale preservation
 - Migration guides for breaking changes
 
 **Structure**:
+
 ```
 docs/
 ├── v1.2/                     # Versioned docs
@@ -298,6 +319,7 @@ docs/
 ### 2. Changelog Format
 
 **HEE Changelog Structure**:
+
 ```markdown
 # Changelog
 
@@ -335,6 +357,7 @@ docs/
 ### 1. Release Validation Process
 
 **Validation Stages**:
+
 1. **Spec Validation**: 100% spec coverage verification
 2. **State Validation**: State capsule integrity checks
 3. **Security Validation**: Vulnerability scanning
@@ -357,6 +380,7 @@ docs/
 ### 1. Release Security Requirements
 
 **HEE Security Checklist**:
+
 - [ ] Cryptographic signing of all artifacts
 - [ ] State capsule encryption for sensitive data
 - [ ] Dependency vulnerability scanning
@@ -381,12 +405,14 @@ docs/
 ### 1. Post-Release Monitoring
 
 **HEE Monitoring Framework**:
+
 - Real-time error tracking with state context
 - Performance metric collection
 - User feedback analysis
 - State capsule health monitoring
 
 **Alert Thresholds**:
+
 - Critical errors: Immediate alert with state capsule
 - Performance degradation: 5-minute threshold
 - User feedback trends: Daily analysis
@@ -395,12 +421,14 @@ docs/
 ### 2. Maintenance Process
 
 **HEE Maintenance Cycle**:
+
 - **Daily**: Health checks and state validation
 - **Weekly**: Performance reviews and state updates
 - **Monthly**: Security patches and state evolution
 - **Quarterly**: Feature updates with state migration
 
 **Patch Release Criteria**:
+
 - Critical bug fixes only
 - No new features
 - Full backward compatibility
@@ -411,12 +439,14 @@ docs/
 ### 1. HEE Rollback Procedures
 
 **Rollback Triggers**:
+
 - Critical failures in production
 - Security vulnerabilities discovered
 - State corruption detected
 - Performance degradation >20%
 
 **Rollback Process**:
+
 1. Identify affected version and state
 2. Load previous state capsule
 3. Validate rollback compatibility
@@ -427,6 +457,7 @@ docs/
 ### 2. Recovery Procedures
 
 **HEE Recovery Framework**:
+
 - **Immediate Rollback**: Automatic for critical state failures
 - **Gradual Rollback**: Phased for complex state issues
 - **State Restoration**: Full system state recovery

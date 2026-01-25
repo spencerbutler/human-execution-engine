@@ -9,6 +9,7 @@ State Capsules are structured handoff documents that preserve decision state and
 ### 1. Purpose and Value Proposition
 
 **Primary Objectives**:
+
 - **Continuation Vector**: Enable seamless handoffs between execution contexts
 - **Decision Preservation**: Maintain critical decision state across transitions
 - **Context Stability**: Prevent loss of important context and requirements
@@ -17,6 +18,7 @@ State Capsules are structured handoff documents that preserve decision state and
 ### 2. When to Use State Capsules
 
 **Mandatory Usage Scenarios**:
+
 - Transitioning between agents or chat sessions
 - Preserving complex decision state across interruptions
 - Multi-step projects with dependencies and constraints
@@ -61,16 +63,19 @@ next_chat_bootstrap:
 ### 2. Component Details
 
 #### Chat Identifier
+
 - **Format**: Short, descriptive name
 - **Pattern**: `<Project> <Phase/Session>`
 - **Example**: `MT-logo-render Phase 3 CI Troubleshooting`
 
 #### Purpose Statement
+
 - **Format**: Single sentence, clear and concise
 - **Content**: Objective of the current session
 - **Example**: `Document current state and remaining work for Phase 3 completion`
 
 #### Context Section
+
 - **Content Areas**:
   - Project overview and scope
   - Current phase and milestone status
@@ -80,6 +85,7 @@ next_chat_bootstrap:
   - Tools and technologies in use
 
 #### Decisions Section
+
 - **Content Requirements**:
   - Specific decisions made during session
   - Technical choices with rationale
@@ -87,6 +93,7 @@ next_chat_bootstrap:
   - Trade-offs considered and resolution
 
 #### Open Threads Section
+
 - **Content Requirements**:
   - Unresolved issues and pending tasks
   - Dependencies and external blockers
@@ -95,6 +102,7 @@ next_chat_bootstrap:
   - Questions needing answers or investigation
 
 #### Next Chat Bootstrap
+
 - **Content Requirements**:
   - Immediate next steps (actionable items)
   - Continuation instructions for current work
@@ -125,6 +133,7 @@ docs/STATE_CAPSULES/
 **Date Format**: `YYYY-MM-DD` (ISO 8601)
 **File Pattern**: `Project-Session-Description.md`
 **Examples**:
+
 - `2026-01-23/MT-logo-render-Phase3-CI-Troubleshooting.md`
 - `2026-01-24/HEE-Release-Preparation.md`
 
@@ -164,6 +173,7 @@ graph TD
 ### 1. Git Integration
 
 **Best Practices**:
+
 - Version control all State Capsules
 - Include capsule references in commit messages
 - Link capsules in pull request descriptions
@@ -172,6 +182,7 @@ graph TD
 ### 2. CI/CD Integration
 
 **Integration Points**:
+
 - Generate capsule summaries in build artifacts
 - Include capsule links in deployment notifications
 - Use capsule metadata for project status updates
@@ -180,6 +191,7 @@ graph TD
 ### 3. Project Management
 
 **Usage Patterns**:
+
 - Reference in sprint planning and retrospectives
 - Use for knowledge transfer during team changes
 - Include in project documentation and wikis
@@ -201,6 +213,7 @@ graph TD
 ### 2. Structural Validation
 
 **Requirements**:
+
 - All required sections present and non-empty
 - YAML format compliance
 - Consistent naming conventions
@@ -212,11 +225,13 @@ graph TD
 ### 1. Multi-Agent Collaboration
 
 **Pattern**: Chain of State Capsules
+
 ```
 Agent A → State Capsule 1 → Agent B → State Capsule 2 → Agent C
 ```
 
 **Benefits**:
+
 - Preserves context across agent transitions
 - Enables specialization and handoffs
 - Maintains decision continuity
@@ -225,11 +240,13 @@ Agent A → State Capsule 1 → Agent B → State Capsule 2 → Agent C
 ### 2. Long-Running Projects
 
 **Pattern**: Milestone-Based Capsules
+
 ```
 Phase 1 Capsule → Phase 2 Capsule → Phase 3 Capsule → Release Capsule
 ```
 
 **Benefits**:
+
 - Clear phase boundaries and transitions
 - Progress tracking and visibility
 - Decision history preservation
@@ -238,11 +255,13 @@ Phase 1 Capsule → Phase 2 Capsule → Phase 3 Capsule → Release Capsule
 ### 3. Cross-Project Integration
 
 **Pattern**: Project Ecosystem Capsules
+
 ```
 Project A Capsule → Integration Capsule → Project B Capsule
 ```
 
 **Benefits**:
+
 - Cross-project context preservation
 - Dependency management
 - Integration point documentation
@@ -253,6 +272,7 @@ Project A Capsule → Integration Capsule → Project B Capsule
 ### ✅ Best Practices
 
 **Practice 1**: Specific and Actionable
+
 ```yaml
 next_chat_bootstrap:
   - Fix HEE Security Scan job failures
@@ -261,6 +281,7 @@ next_chat_bootstrap:
 ```
 
 **Practice 2**: Decision Rationale
+
 ```yaml
 decisions:
   - Use cargo fmt --all before pushes to prevent formatting failures
@@ -270,18 +291,21 @@ decisions:
 ### ❌ Anti-Patterns
 
 **Anti-Pattern 1**: Vague Next Steps
+
 ```yaml
 next_chat_bootstrap:
   - Continue working on the project  # Too vague
 ```
 
 **Anti-Pattern 2**: Missing Context
+
 ```yaml
 context:
   - Project: Some project  # Too generic
 ```
 
 **Anti-Pattern 3**: Empty Sections
+
 ```yaml
 open_threads:
   -  # Missing content
@@ -294,6 +318,7 @@ open_threads:
 **Template Location**: `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md`
 
 **Usage**:
+
 ```bash
 # Create new capsule from template
 cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d)/New-Session.md
@@ -302,6 +327,7 @@ cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d
 ### 2. Directory Management
 
 **Automation Scripts**:
+
 ```bash
 # Create date directory if needed
 mkdir -p docs/STATE_CAPSULES/$(date +%Y-%m-%d)
