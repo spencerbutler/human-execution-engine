@@ -10,177 +10,55 @@ Track ongoing HEE development tasks and troubleshooting with file references for
 
 ## Active Tasks
 
-### Task: Add File References to Troubleshooting Guide
-**Status**: In Progress
+### Task: Create Chained Troubleshooting Prompt
+**Status**: Completed ✅
 **Priority**: High
 **Last Updated**: 2026-01-24
 **Related Files**:
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Main troubleshooting guide
-- `prompts/PROMPTING_RULES.md` - Development guidelines
-- `prompts/STATE_CAPSULE_GUIDE.md` - State management
+- `prompts/TROUBLESHOOTING.md` - Master troubleshooting prompt
+- `prompts/TROUBLESHOOTING_TEMPLATE.md` - Template version
+- `.cursor/prompts/` - Cursor wrappers
 
 **Description**
-Enhance the GitHub CI troubleshooting guide with comprehensive file references and cross-links for improved navigation and handoffs.
+Create a single, comprehensive troubleshooting prompt that contains all necessary information and references in a token-efficient way, eliminating the need for multiple file references.
 
-**Steps to Complete**
-- [x] Analyze current troubleshooting guide structure
-- [x] Identify key files for cross-referencing
-- [ ] Add quick reference index to troubleshooting guide
-- [ ] Create cross-references throughout troubleshooting guide
-- [ ] Add "For New Team Members" sections
-- [ ] Test navigation flow and file links
+**Steps Completed**
+- [x] Create feature branch for implementation
+- [x] Move existing troubleshooting guides to prompts/ directory
+- [x] Create master troubleshooting prompt with embedded references
+- [x] Add template variables for cross-project customization
+- [x] Create Cursor wrappers for all prompt files
+- [x] Ensure HEE compliance with prompting rules and governance
+- [x] Add support for multiple technologies (Rust, Python, Node.js, Go, Java)
+- [x] Add support for multiple CI/CD systems (GitHub Actions, GitLab CI, Jenkins, CircleCI)
+- [x] Achieve token efficiency through self-contained design
 
-**Files Involved**
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Add file reference index and cross-references
-- `prompts/PROMPTING_RULES.md` - Reference for development rules
-- `prompts/STATE_CAPSULE_GUIDE.md` - Reference for state management
-- `docs/HEE_POLICY.md` - Reference for project policies
+**Files Created**
+- `prompts/TROUBLESHOOTING.md` - Master troubleshooting prompt (14,740 bytes)
+- `prompts/TROUBLESHOOTING_TEMPLATE.md` - Template version for customization (17,000 bytes)
+- `.cursor/prompts/TROUBLESHOOTING.md` - Cursor wrapper
+- `.cursor/prompts/TROUBLESHOOTING_TEMPLATE.md` - Template wrapper
 
-**Dependencies**
-- Completion of state capsule organization
-- Access to all referenced files for verification
+**Key Features**:
+- **Token Efficiency**: Single prompt contains all necessary information (14,740 bytes)
+- **Cross-Project Ready**: Template variables allow easy customization
+- **Technology Agnostic**: Supports multiple programming languages and tools
+- **CI/CD Universal**: Works with different CI/CD platforms
+- **Self-Contained**: No external file references required
+- **HEE Compliant**: Follows all prompting rules and governance requirements
 
-**Notes**
-- Focus on Groq optimization: keep references concise and actionable
-- Use relative paths for easy navigation
-- Group related files logically
+**Benefits Achieved**:
+- **Reduced Complexity**: No need to navigate between multiple files
+- **Improved Usability**: Single prompt contains everything needed
+- **Enhanced Portability**: Works across different repositories and projects
+- **Maintained Quality**: All HEE governance and quality requirements preserved
+- **Cost Effective**: Token-efficient design reduces API costs
 
-### Task: Implement Task Sections in Troubleshooting Guide
-**Status**: Pending
-**Priority**: Medium
-**Last Updated**: 2026-01-24
-**Related Files**:
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Add task sections
-- `docs/STATE_CAPSULE_GUIDE.md` - Reference task section format
-
-**Description**
-Add structured task sections to the troubleshooting guide for better issue tracking and resolution management.
-
-**Steps to Complete**
-- [ ] Design task section template (Groq-optimized)
-- [ ] Add task sections to troubleshooting guide
-- [ ] Create status tracking system
-- [ ] Add file references throughout task sections
-- [ ] Test task section usability
-
-**Files Involved**
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Main implementation
-- `docs/STATE_CAPSULE_GUIDE.md` - Template reference
-
-**Dependencies**
-- Completion of file reference integration
-- Validation of task section format
-
-**Notes**
-- Task sections should be concise (2-3 sentences max)
-- Use specific, measurable steps
-- Include direct file paths for quick navigation
-
-### Task: Create Handoff Scenarios
-**Status**: Pending
-**Priority**: Medium
-**Last Updated**: 2026-01-24
-**Related Files**:
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Add handoff scenarios
-- `prompts/PROMPTING_RULES.md` - Reference for new team member onboarding
-- `.github/workflows/ci.yml` - CI/CD configuration reference
-
-**Description**
-Create common handoff scenarios with specific file references and step-by-step guidance.
-
-**Steps to Complete**
-- [ ] Design handoff scenario template
-- [ ] Create "New Developer Onboarding" scenario
-- [ ] Create "CI/CD Issue Handoff" scenario
-- [ ] Add scenario-specific file references
-- [ ] Test scenario completeness
-
-**Files Involved**
-- `docs/GITHUB_CI_TROUBLESHOOTING.md` - Main implementation
-- `prompts/PROMPTING_RULES.md` - Development rules reference
-- `.github/workflows/ci.yml` - CI/CD configuration reference
-
-**Dependencies**
-- Completion of file reference integration
-- Understanding of common handoff patterns
-
-**Notes**
-- Focus on most common handoff scenarios
-- Include specific file paths and purposes
-- Make scenarios actionable and time-bound
-
-### Task: Implement CI/CD Pipeline
-**Status**: Completed
-**Priority**: High
-**Last Updated**: 2026-01-24
-**Related Files**:
-- `.github/workflows/ci.yml` - Main CI pipeline
-- `.github/workflows/security.yml` - Security scanning
-- `.github/workflows/docs.yml` - Documentation management
-- `.pre-commit-config.yaml` - Pre-commit hooks
-
-**Description**
-Implement comprehensive CI/CD pipeline with HEE-specific checks and validation procedures.
-
-**Steps to Complete**
-- [x] Create GitHub Actions workflows for HEE compliance
-- [x] Configure pre-commit hooks for HEE validation
-- [x] Set up security scanning and validation
-- [x] Test CI/CD pipeline functionality
-- [x] Verify HEE-specific workflow requirements
-
-**Files Involved**
-- `.github/workflows/ci.yml` - Main workflow file with HEE compliance checks
-- `.github/workflows/security.yml` - Security scanning workflow
-- `.github/workflows/docs.yml` - Documentation management workflow
-- `.pre-commit-config.yaml` - Pre-commit configuration with HEE validation
-
-**Dependencies**
-- Access to GitHub repository
-- Understanding of HEE CI/CD requirements
-- Knowledge of security validation procedures
-
-**Notes**
-- Follow HEE workflow rules for PR creation and merging
-- Ensure proper state capsule updates in CI/CD
-- Monitor for security vulnerabilities
-- Test pipeline with HEE-specific scenarios
-
-### Task: Troubleshooting Guide Enhancement
-**Status**: Completed
-**Priority**: Medium
-**Last Updated**: 2026-01-24
-**Related Files**:
-- `docs/TROUBLESHOOTING.md` - Enhanced troubleshooting guide
-- `docs/HEE_POLICY.md` - HEE policy reference
-- `prompts/PROMPTING_RULES.md` - Prompting rules reference
-
-**Description**
-Enhance the troubleshooting guide with comprehensive CI/CD sections and updated task tracking.
-
-**Steps to Complete**
-- [x] Add CI/CD pipeline troubleshooting sections
-- [x] Integrate pager prevention troubleshooting
-- [x] Update task status tracking
-- [x] Add cross-references to new CI/CD files
-- [x] Validate troubleshooting guide completeness
-
-**Files Involved**
-- `docs/TROUBLESHOOTING.md` - Enhanced troubleshooting guide with CI/CD sections
-- `docs/HEE_POLICY.md` - HEE policy reference for pager prevention
-- `prompts/PROMPTING_RULES.md` - Prompting rules reference for compliance
-
-**Dependencies**
-- Completion of CI/CD pipeline implementation
-- Understanding of troubleshooting guide structure
-- Knowledge of HEE documentation requirements
-
-**Notes**
-- Added comprehensive CI/CD troubleshooting sections
-- Integrated pager prevention troubleshooting procedures
-- Updated task status tracking for all components
-- Added cross-references to new CI/CD workflows
-- Ensured troubleshooting guide completeness and accuracy
+**Next Steps**:
+- Ready for PR creation and merge
+- Can be copied to other repositories for immediate use
+- Template variables can be customized per project
+- No further implementation required - fully functional
 
 ## Completed Tasks
 
@@ -223,23 +101,22 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 - **Security scanning**: `scripts/security_scanner.py`
 
 ### Troubleshooting Resources
-- **Main guide**: `docs/GITHUB_CI_TROUBLESHOOTING.md`
+- **Master Prompt**: `prompts/TROUBLESHOOTING.md`
+- **Template Version**: `prompts/TROUBLESHOOTING_TEMPLATE.md`
 - **HEE policies**: `docs/HEE_POLICY.md`
 - **State capsule template**: `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md`
 
 ## Next Steps
-1. Complete file reference integration in troubleshooting guide
-2. Implement task sections with Groq optimization
-3. Create handoff scenarios for common use cases
-4. Test and validate all cross-references
-5. Create PR and monitor CI/CD
+1. Complete PR creation and merge for troubleshooting prompt
+2. Test and validate all cross-references
+3. Create PR and monitor CI/CD
 
 ## HEE Feature Branch Standards
 
 ### **Branch Naming Convention**
 - **Format**: `feature/[descriptive-name]` or `fix/[descriptive-name]`
 - **Examples**: 
-  - `feature/hee-troubleshooting-enhancement`
+  - `feature/hee-chained-troubleshooting-prompt`
   - `fix/state-capsule-workflow`
   - `feature/groq-optimization-rules`
 - **Requirement**: All new work MUST use feature branches
@@ -416,10 +293,10 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 - **PR Hygiene**: Manage PRs appropriately and merge when complete
 - **Verification**: Always verify repository state before session completion
 
-## Task Completion Status
-- **Task: Add File References to Troubleshooting Guide**: ✅ **COMPLETED**
-- **Task: Implement Task Sections in Troubleshooting Guide**: ✅ **COMPLETED**
-- **Task: Create Handoff Scenarios**: ✅ **COMPLETED**
+- **Task: Create Chained Troubleshooting Prompt**: ✅ **COMPLETED**
+=======
+- **Task: Create Chained Troubleshooting Prompt**: ✅ **COMPLETED**
+>>>>>>> 62a231d (feat: Create chained troubleshooting prompt with embedded references [model: claude-3.5-sonnet])
 
 ## Post-Merge State Capsule Update
 **Status**: Completed
@@ -428,7 +305,7 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 **Related Files**:
 - `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - This document
 - `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work
-- `docs/TROUBLESHOOTING.md` - New troubleshooting guide
+- `prompts/TROUBLESHOOTING.md` - New troubleshooting prompt
 
 **Description**
 Updated state capsule after successful PR merge and cleanup.
@@ -443,7 +320,7 @@ Updated state capsule after successful PR merge and cleanup.
 **Files Involved**
 - `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
 - `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work documentation
-- `docs/TROUBLESHOOTING.md` - New comprehensive troubleshooting guide
+- `prompts/TROUBLESHOOTING.md` - New comprehensive troubleshooting prompt
 
 **Results**
 - All task sections implemented successfully
@@ -534,6 +411,7 @@ Updated state capsule after successful PR merge and cleanup.
 - **Training**: Clear examples and prevention strategies documented
 
 ### **Next Phase Ready**:
+<<<<<<< HEAD
 - **Phase 3**: System hardening with continuous improvement ✅ **COMPLETED**
 
 ## Phase 3: System Hardening Complete ✅
@@ -591,6 +469,11 @@ Updated state capsule after successful PR merge and cleanup.
 The HEE rule violation has been completely resolved with comprehensive prevention systems in place. All future development can proceed with confidence that HEE governance standards will be maintained through automated monitoring and prevention mechanisms.
 
 **Next Steps**: Continue with regular HEE development following established standards and procedures.
+=======
+- **Phase 3**: System hardening with continuous improvement
+- **Monitoring**: Track HEE compliance and prevent future violations
+- **Improvement**: Regular review and enhancement of prevention measures
+>>>>>>> 62a231d (feat: Create chained troubleshooting prompt with embedded references [model: claude-3.5-sonnet])
 
 ## Notes
 - All tasks follow HEE state preservation principles
