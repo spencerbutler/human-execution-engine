@@ -1,0 +1,60 @@
+chat: OPS-HEE-Docs-Consolidation-Plan
+purpose: >
+  Checkpoint PLAN state for HEE documentation consolidation prior to any ACT.
+  Preserve authority decisions, execution scope, and blockers.
+
+context:
+  project: human-execution-engine
+  phase: PLAN (pre-ACT)
+  authority_model: A
+  scope: NARROW
+  timestamp: 2026-01-25
+  governance:
+    admission_control: Strong
+    wrapper_required: scripts/hee_git_ops.sh
+    plan_act_boundary_enforced: true
+
+decisions:
+  - Decision: Docs vs Prompts Authority Model A
+    Rationale: docs/ is canonical for normative and user-facing documentation; prompts/ is agent execution guidance
+    Impact: Conflicting files in both locations are BLOCKED pending human resolution
+    HEE_Compliance: Admission Control + Authority Doctrine
+
+  - Decision: Initial ACT scope limited to HIGH-confidence moves only
+    Rationale: Minimize risk; defer ambiguous classifications
+    Impact: Only five files approved for initial execution
+    HEE_Compliance: Safe Incremental Execution
+
+approved_narrow_act_scope:
+  - docs/HEE.md -> docs/doctrine/HEE.md
+  - docs/HEER.md -> docs/specs/HEER.md
+  - docs/HEE_POLICY.md -> docs/doctrine/HEE_POLICY.md
+  - docs/SECURITY.md -> docs/doctrine/SECURITY.md
+  - docs/SPEC.md -> docs/specs/SPEC.md
+
+explicitly_excluded:
+  blocked:
+    - docs/STATE_CAPSULE_GUIDE.md
+    - docs/TROUBLESHOOTING.md
+  deferred:
+    - docs/ROADMAP.md
+    - docs/VIOLATION_METRICS.md
+    - docs/HEE_IMPROVEMENTS_SUMMARY.md
+    - docs/HEE_VENDOR_HARDENING_SPEC.md
+    - templates/ vs TEMPLATES/ naming resolution
+
+open_threads:
+  - Resolve docs vs prompts authority conflicts for BLOCKED files
+  - Decide classification for MEDIUM/LOW confidence files
+  - Decide whether to extend hee_git_ops.sh with mv/mkdir ops
+
+act_preconditions:
+  - Explicit APPROVED_TO_ACT token from human
+  - Use scripts/hee_git_ops.sh exclusively
+  - Stop after first commit boundary
+  - No BLOCKED or DEFERRED items included
+
+next_chat_bootstrap:
+  - If proceeding to execution: authorize ACT for narrow scope only
+  - If pausing: resume from this capsule without re-analysis
+
