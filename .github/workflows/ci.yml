@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 env:
-  MODEL: claude-3-5-sonnet-20250929
+  MODEL: GPT-5.2
 
 jobs:
   hee-compliance-check:
@@ -17,6 +17,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Enforce HEE GitOps admission control
+      run: bash scripts/hee_ci_gitops_enforce.sh
+
 
     - name: Check for pager invocation prevention
       run: |
@@ -54,15 +58,7 @@ jobs:
         fi
 
     - name: Check for model disclosure in commits
-      run: |
-        echo "🔍 Checking for model disclosure in recent commits..."
-
-        # Check last 10 commits for model disclosure
-        if git --no-pager log --oneline -10 | grep -q "\[model:"; then
-          echo "✅ Model disclosure found in recent commits"
-        else
-          echo "⚠️  No model disclosure found in recent commits"
-        fi
+      run: bash scripts/check_model_disclosure.sh
 
     - name: Validate HEE policy compliance
       run: |
