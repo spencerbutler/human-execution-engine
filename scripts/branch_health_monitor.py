@@ -39,13 +39,19 @@ class HealthThresholds:
 
 
 class BranchHealthMonitor:
-    """Monitor and score branch health in real-time."""
+    """Monitor and score branch health in real-time with performance optimization."""
 
     def __init__(self, repo_path: str = ".", config_file: str = "docs/BRANCH_HEALTH_CONFIG.json"):
         self.repo_path = repo_path
         self.config_file = config_file
         self.thresholds = HealthThresholds()
         self.metrics_history: List[BranchMetrics] = []
+
+        # Performance optimization caches
+        self._branch_cache: Dict[str, Dict[str, Any]] = {}
+        self._cache_timestamp: Optional[datetime] = None
+        self._cache_ttl_seconds = 30  # Cache for 30 seconds
+
         self.load_config()
 
     def load_config(self) -> None:
@@ -67,8 +73,34 @@ class BranchHealthMonitor:
                 'last_updated': datetime.now().isoformat()
             }, f, indent=2)
 
+    def _is_cache_valid(self) -> bool:
+        """Check if the current cache is still valid."""
+        if self._cache_timestamp is None:
+            return False
+        return (datetime.now() - self._cache_timestamp).seconds < self._cache_ttl_seconds
+
+    def _invalidate_cache(self) -> None:
+        """Invalidate the current cache."""
+        self._branch_cache = {}
+        self._cache_timestamp = None
+
+    def _get_cached_or_compute(self, cache_key: str, compute_func, *args, **kwargs):
+        """Get value from cache or compute and cache it."""
+        if not self._is_cache_valid():
+            self._invalidate_cache()
+
+        if cache_key not in self._branch_cache:
+            self._branch_cache[cache_key] = compute_func(*args, **kwargs)
+            self._cache_timestamp = datetime.now()
+
+        return self._branch_cache[cache_key]
+
     def get_all_branches(self) -> List[str]:
-        """Get all local branches except main/master."""
+        """Get all local branches except main/master with caching."""
+        return self._get_cached_or_compute('all_branches', self._get_all_branches_uncached)
+
+    def _get_all_branches_uncached(self) -> List[str]:
+        """Get all local branches except main/master (uncached implementation)."""
         try:
             result = subprocess.run(
                 ['git', 'branch', '--format=%(refname:short)'],
