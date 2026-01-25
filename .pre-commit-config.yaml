@@ -6,9 +6,9 @@ repos:
     hooks:
       - id: hee-pager-prevention-check
         name: HEE Pager Prevention Check
-        entry: bash -c 'echo "🔍 Checking for pager prevention in shell commands..." && (grep -r "git log" --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention" | head -1 && echo "❌ Found git log without pager prevention" && exit 1 || echo "✅ Pager prevention check passed")'
+        entry: ./scripts/check_pager_prevention.sh
         language: system
-        files: '.*\.(md|sh|yml|yaml)$'
+        files: '.*'
         pass_filenames: false
 
       - id: hee-state-capsule-validation
@@ -27,7 +27,7 @@ repos:
 
       - id: model-disclosure-check
         name: Model Disclosure Check
-        entry: bash -c 'echo "🔍 Checking for model disclosure..." && if git log --oneline -5 | grep -q "\[model:"; then echo "✅ Model disclosure found"; else echo "⚠️  No model disclosure in recent commits"; fi'
+        entry: ./scripts/check_model_disclosure.sh
         language: system
         files: '.*'
         pass_filenames: false

@@ -6,16 +6,20 @@
 
 **File to Check**: `docs/STATE_CAPSULES/CURRENT_TASKS.md` (Canonical Entry Point)
 
-### If Current-Tasks Capsule EXISTS and has SUBSTANTIVE CONTENT:
+### If Current-Tasks Capsule EXISTS and has SUBSTANTIVE CONTENT
+
 **→ AGENT HAS CONTEXT**
+
 1. **Read Current-Tasks Capsule** for immediate state awareness
 2. **Understand Active Tasks**: What's in progress, what's completed
 3. **Identify Violations**: Any active HEE rule violations
 4. **Check Branch Status**: Current branch state and open PRs
 5. **Proceed with INIT tasks** based on current state
 
-### If Current-Tasks Capsule is MISSING or EMPTY/DEFAULT:
+### If Current-Tasks Capsule is MISSING or EMPTY/DEFAULT
+
 **→ AGENT HAS NO CONTEXT**
+
 1. **Read Prompting Rules** (`prompts/PROMPTING_RULES.md`) - Foundation
 2. **Read Bootstrap Guide** (`prompts/BOOTSTRAP.md` or equivalent) - Setup
 3. **Read Troubleshooting** (`prompts/TROUBLESHOOTING.md`) - Problem-solving
@@ -25,6 +29,7 @@
 ## Current-Tasks Capsule Validation
 
 **Substantive Content Indicators**:
+
 - Contains active task sections with status updates
 - Has violation documentation and resolutions
 - Includes branch management tracking
@@ -32,6 +37,7 @@
 - Contains meaningful status updates and progress tracking
 
 **Empty/Default State Indicators**:
+
 - Only contains template placeholders
 - Has no substantive task tracking
 - Missing violation documentation
@@ -47,6 +53,7 @@ This guide provides systematic procedures for initializing and setting up the Hu
 ## Quick Reference - File Locations
 
 ### HEE Documentation
+
 - State Capsule Guide: `docs/STATE_CAPSULE_GUIDE.md`
 - Prompting Rules: `prompts/PROMPTING_RULES.md`
 - Agent State Handoff: `prompts/AGENT_STATE_HANDOFF.md`
@@ -54,12 +61,14 @@ This guide provides systematic procedures for initializing and setting up the Hu
 - HEE Policy: `docs/HEE_POLICY.md`
 
 ### Project Structure
+
 - Main README: `README.md`
 - CI/CD Configuration: `.github/workflows/`
 - Pre-commit Config: `.pre-commit-config.yaml`
 - Security Scanning: `scripts/security_scanner.py`
 
 ### Initialization Resources
+
 - This guide: `prompts/INIT.md`
 - HEE optimization: `prompts/GROQ_OPTIMIZATION_RULES.md`
 - Agent analysis: `prompts/AGENT_COMPARISON_ANALYSIS.md`
@@ -68,9 +77,11 @@ This guide provides systematic procedures for initializing and setting up the Hu
 ## Project Bootstrap Checklist
 
 ### Task: Environment Setup Verification
+
 **Status**: Pending
 **Priority**: High
 **Related Files**:
+
 - `prompts/PROMPTING_RULES.md` - HEE prompting rules
 - `docs/HEE_POLICY.md` - HEE policies
 - `prompts/GROQ_OPTIMIZATION_RULES.md` - Optimization guidelines
@@ -79,6 +90,7 @@ This guide provides systematic procedures for initializing and setting up the Hu
 Verify development environment is properly configured for HEE development and follows all governance requirements.
 
 **Steps to Complete**
+
 - [ ] Install required tools and dependencies
 - [ ] Configure HEE-specific environment variables
 - [ ] Set up security validation tools
@@ -86,26 +98,31 @@ Verify development environment is properly configured for HEE development and fo
 - [ ] Test HEE command execution capabilities
 
 **Files Involved**
+
 - `prompts/PROMPTING_RULES.md` - Environment requirements reference
 - `docs/HEE_POLICY.md` - Policy compliance verification
 - `prompts/GROQ_OPTIMIZATION_RULES.md` - Optimization setup
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Access to development environment
 - Understanding of HEE tool requirements
 - Knowledge of security validation procedures
 
 **Notes**
+
 - Ensure all HEE policies are understood and followed
 - Verify Groq optimization setup for cost efficiency
 - Test pager prevention in command execution
 - Confirm Git workflow compliance
 
 ### Task: HEE State Management Setup
+
 **Status**: Pending
 **Priority**: High
 **Related Files**:
+
 - `docs/STATE_CAPSULE_GUIDE.md` - State management rules
 - `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md` - Template structure
 - `docs/STATE_CAPSULES/` - State capsule files
@@ -114,6 +131,7 @@ Verify development environment is properly configured for HEE development and fo
 Initialize HEE state management system for proper state preservation and handoffs.
 
 **Steps to Complete**
+
 - [ ] Create initial state capsule structure
 - [ ] Set up state capsule validation tools
 - [ ] Configure state preservation workflows
@@ -121,26 +139,31 @@ Initialize HEE state management system for proper state preservation and handoff
 - [ ] Verify state handoff procedures
 
 **Files Involved**
+
 - `docs/STATE_CAPSULE_GUIDE.md` - State management reference
 - `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md` - Template to follow
 - Individual state capsule files in `docs/STATE_CAPSULES/`
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of HEE state preservation requirements
 - Access to state capsule validation tools
 - Knowledge of state handoff procedures
 
 **Notes**
+
 - Ensure all state capsules follow HEE governance rules
 - Test state preservation across different scenarios
 - Validate state capsule format and content
 - Set up automated state validation
 
 ### Task: CI/CD Pipeline Initialization
+
 **Status**: Pending
 **Priority**: Medium
 **Related Files**:
+
 - `.github/workflows/` - CI/CD workflows
 - `.pre-commit-config.yaml` - Pre-commit hooks
 - `scripts/security_scanner.py` - Security checks
@@ -149,6 +172,7 @@ Initialize HEE state management system for proper state preservation and handoff
 Set up CI/CD pipeline with HEE-specific checks and validation procedures.
 
 **Steps to Complete**
+
 - [ ] Create GitHub Actions workflows
 - [ ] Configure pre-commit hooks for HEE compliance
 - [ ] Set up security scanning and validation
@@ -156,26 +180,31 @@ Set up CI/CD pipeline with HEE-specific checks and validation procedures.
 - [ ] Verify HEE-specific workflow requirements
 
 **Files Involved**
+
 - `.github/workflows/` - Main workflow files
 - `.pre-commit-config.yaml` - Pre-commit configuration
 - `scripts/security_scanner.py` - Security scanning script
 - `scripts/` directory - Other CI/CD scripts
 
 **Dependencies**
+
 - Access to GitHub repository
 - Understanding of HEE CI/CD requirements
 - Knowledge of security validation procedures
 
 **Notes**
+
 - Follow HEE workflow rules for PR creation and merging
 - Ensure proper state capsule updates in CI/CD
 - Monitor for security vulnerabilities
 - Test pipeline with HEE-specific scenarios
 
 ### Task: Documentation System Setup
+
 **Status**: Pending
 **Priority**: Medium
 **Related Files**:
+
 - `docs/HEE.md` - HEE definition
 - `docs/HEER.md` - HEER runtime
 - `docs/TROUBLESHOOTING.md` - Troubleshooting guide
@@ -185,6 +214,7 @@ Set up CI/CD pipeline with HEE-specific checks and validation procedures.
 Initialize comprehensive documentation system for HEE project with proper cross-references and navigation.
 
 **Steps to Complete**
+
 - [ ] Set up documentation structure and organization
 - [ ] Create cross-reference system for easy navigation
 - [ ] Initialize troubleshooting and support documentation
@@ -192,6 +222,7 @@ Initialize comprehensive documentation system for HEE project with proper cross-
 - [ ] Test documentation accessibility and completeness
 
 **Files Involved**
+
 - `docs/HEE.md` - HEE definition reference
 - `docs/HEER.md` - HEER runtime reference
 - `docs/TROUBLESHOOTING.md` - Troubleshooting reference
@@ -199,11 +230,13 @@ Initialize comprehensive documentation system for HEE project with proper cross-
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of HEE documentation requirements
 - Access to all documentation files
 - Knowledge of cross-reference systems
 
 **Notes**
+
 - Use relative paths for portability
 - Group related files logically
 - Test all cross-references
@@ -212,9 +245,11 @@ Initialize comprehensive documentation system for HEE project with proper cross-
 ## HEE-Specific Initialization
 
 ### Task: Agent Coordination Setup
+
 **Status**: Pending
 **Priority**: Medium
 **Related Files**:
+
 - `prompts/AGENT_STATE_HANDOFF.md` - State handoff procedures
 - `prompts/PROMPTING_RULES.md` - Agent interaction rules
 - `prompts/AGENT_COMPARISON_ANALYSIS.md` - Agent role analysis
@@ -223,6 +258,7 @@ Initialize comprehensive documentation system for HEE project with proper cross-
 Configure agent coordination system for proper handoffs and role management within HEE ecosystem.
 
 **Steps to Complete**
+
 - [ ] Review agent role assignments and responsibilities
 - [ ] Set up state handoff procedures
 - [ ] Configure agent communication protocols
@@ -230,26 +266,31 @@ Configure agent coordination system for proper handoffs and role management with
 - [ ] Update agent guidelines and procedures
 
 **Files Involved**
+
 - `prompts/AGENT_STATE_HANDOFF.md` - Handoff procedures reference
 - `prompts/PROMPTING_RULES.md` - Communication rules reference
 - `prompts/AGENT_COMPARISON_ANALYSIS.md` - Agent role reference
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of HEE agent architecture
 - Access to agent testing environments
 - Knowledge of state preservation requirements
 
 **Notes**
+
 - Ensure proper Planning (10-20%), Acting (70-80%), Review (30-40%) agent usage
 - Validate state capsule updates between agents
 - Check for communication breakdowns
 - Test agent coordination in different scenarios
 
 ### Task: Security and Compliance Setup
+
 **Status**: Pending
 **Priority**: High
 **Related Files**:
+
 - `docs/HEE_POLICY.md` - HEE policies and procedures
 - `prompts/PROMPTING_RULES.md` - Security validation rules
 - `scripts/security_scanner.py` - Security scanning
@@ -258,6 +299,7 @@ Configure agent coordination system for proper handoffs and role management with
 Initialize comprehensive security and compliance system for HEE development and operations.
 
 **Steps to Complete**
+
 - [ ] Configure security validation tools and procedures
 - [ ] Set up compliance checking and monitoring
 - [ ] Test security scanning functionality
@@ -265,17 +307,20 @@ Initialize comprehensive security and compliance system for HEE development and 
 - [ ] Document security procedures and escalation
 
 **Files Involved**
+
 - `docs/HEE_POLICY.md` - Security policies reference
 - `prompts/PROMPTING_RULES.md` - Security rules reference
 - `scripts/security_scanner.py` - Security scanning script
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of HEE security requirements
 - Access to security validation tools
 - Knowledge of compliance procedures
 
 **Notes**
+
 - Security validation before any implementation
 - All inputs validated against HEE/HEER security requirements
 - Content sanitization required for all user inputs
@@ -284,6 +329,7 @@ Initialize comprehensive security and compliance system for HEE development and 
 ## HEE Violation Prevention
 
 ### Pre-Session Checklist
+
 - [ ] Create feature branch for ALL changes
 - [ ] Work from proper project directory
 - [ ] Include model disclosure in all commits
@@ -292,6 +338,7 @@ Initialize comprehensive security and compliance system for HEE development and 
 - [ ] Verify CI/CD passes before merging
 
 ### Violation Awareness
+
 Understanding why HEE rules exist helps prevent violations:
 
 - **Branch Management**: Ensures proper change tracking and review
@@ -300,6 +347,7 @@ Understanding why HEE rules exist helps prevent violations:
 - **Working Directory**: Maintains project isolation and consistency
 
 ### Escalation Procedures
+
 - **10+ points**: Warning issued, mandatory review required
 - **20+ points**: Block new feature branches until score improves
 - **30+ points**: Suspend HEE operations until compliance restored
@@ -307,9 +355,11 @@ Understanding why HEE rules exist helps prevent violations:
 ## Quick Setup Procedures
 
 ### Task: Pager Prevention Configuration
+
 **Status**: Pending
 **Priority**: High
 **Related Files**:
+
 - `prompts/PROMPTING_RULES.md` - Pager prevention rules
 - `docs/HEE_POLICY.md` - HEE pager policy
 - `docs/TROUBLESHOOTING.md` - Pager troubleshooting
@@ -319,6 +369,7 @@ Understanding why HEE rules exist helps prevent violations:
 Configure pager prevention system to ensure output never hits shell PAGER, maintaining HEE autonomy.
 
 **Steps to Complete**
+
 - [ ] Set up pager bypass environment variables
 - [ ] Configure command-specific pager prevention
 - [ ] Test pager prevention in all shell commands
@@ -326,6 +377,7 @@ Configure pager prevention system to ensure output never hits shell PAGER, maint
 - [ ] Integrate pager prevention in security validation
 
 **Files Involved**
+
 - `prompts/PROMPTING_RULES.md` - Pager prevention rules reference
 - `docs/HEE_POLICY.md` - HEE pager policy reference
 - `docs/TROUBLESHOOTING.md` - Pager troubleshooting reference
@@ -333,20 +385,24 @@ Configure pager prevention system to ensure output never hits shell PAGER, maint
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of command-specific pager behavior
 - Access to pager bypass techniques
 - Knowledge of HEE pager prevention requirements
 
 **Notes**
+
 - Pager invocation constitutes HEE process failure
 - Different commands require different bypass methods
 - Must be documented as enforceable HEE rule
 - Include pager prevention in security validation
 
 ### Task: Model Disclosure Setup
+
 **Status**: Pending
 **Priority**: Medium
 **Related Files**:
+
 - `prompts/PROMPTING_RULES.md` - Model disclosure rules
 - `docs/HEE_POLICY.md` - HEE disclosure policy
 - `docs/STATE_CAPSULES/` - State capsule files
@@ -355,6 +411,7 @@ Configure pager prevention system to ensure output never hits shell PAGER, maint
 Set up model disclosure system to ensure all commits include proper model identification.
 
 **Steps to Complete**
+
 - [ ] Configure commit message templates with model disclosure
 - [ ] Set up validation for model disclosure in commits
 - [ ] Test model disclosure in different scenarios
@@ -362,17 +419,20 @@ Set up model disclosure system to ensure all commits include proper model identi
 - [ ] Integrate model disclosure in CI/CD validation
 
 **Files Involved**
+
 - `prompts/PROMPTING_RULES.md` - Model disclosure rules reference
 - `docs/HEE_POLICY.md` - HEE disclosure policy reference
 - `docs/STATE_CAPSULES/` - State capsule files for documentation
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of model disclosure requirements
 - Access to commit validation tools
 - Knowledge of CI/CD integration
 
 **Notes**
+
 - No commits without model identification
 - Model name must match actual model used
 - Disclosure required in commit subject line
@@ -381,9 +441,11 @@ Set up model disclosure system to ensure all commits include proper model identi
 ## Emergency Initialization
 
 ### Task: Critical System Recovery
+
 **Status**: Pending
 **Priority**: Critical
 **Related Files**:
+
 - `docs/HEE_POLICY.md` - HEE emergency procedures
 - `docs/STATE_CAPSULE_GUIDE.md` - State management
 - `prompts/PROMPTING_RULES.md` - Core rules
@@ -392,6 +454,7 @@ Set up model disclosure system to ensure all commits include proper model identi
 Emergency procedures for recovering HEE system from critical failures or inconsistencies.
 
 **Steps to Complete**
+
 - [ ] Assess system state and identify issues
 - [ ] Follow HEE emergency procedures
 - [ ] Create emergency state capsule
@@ -399,17 +462,20 @@ Emergency procedures for recovering HEE system from critical failures or inconsi
 - [ ] Document resolution and lessons learned
 
 **Files Involved**
+
 - `docs/HEE_POLICY.md` - Emergency procedures reference
 - `docs/STATE_CAPSULE_GUIDE.md` - State management reference
 - `prompts/PROMPTING_RULES.md` - Core rules reference
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
+
 - Understanding of HEE emergency protocols
 - Access to emergency response tools
 - Ability to act quickly and effectively
 
 **Notes**
+
 - Prioritize critical issues over routine initialization
 - Document all emergency actions
 - Update procedures based on lessons learned
@@ -418,9 +484,11 @@ Emergency procedures for recovering HEE system from critical failures or inconsi
 ## Prevention and Maintenance
 
 ### Task: Regular System Health Check
+
 **Status**: Pending
 **Priority**: Medium
 **Related Files**:
+
 - `prompts/INIT.md` - This guide
 - `docs/STATE_CAPSULE_GUIDE.md` - State management
 - `prompts/PROMPTING_RULES.md` - Core rules
@@ -429,6 +497,7 @@ Emergency procedures for recovering HEE system from critical failures or inconsi
 Regular maintenance procedures to prevent issues and ensure system health during initialization.
 
 **Steps to Complete**
+
 - [ ] Review state capsule completeness
 - [ ] Check prompt optimization compliance
 - [ ] Validate CI/CD workflow functionality
@@ -436,16 +505,19 @@ Regular maintenance procedures to prevent issues and ensure system health during
 - [ ] Update documentation as needed
 
 **Files Involved**
+
 - `prompts/INIT.md` - Maintenance procedures
 - `docs/STATE_CAPSULE_GUIDE.md` - State management
 - `prompts/PROMPTING_RULES.md` - Core rules
 
 **Dependencies**
+
 - Regular maintenance schedule
 - Access to all system components
 - Understanding of HEE requirements
 
 **Notes**
+
 - Schedule regular health checks during initialization
 - Document any issues found
 - Implement preventive measures
@@ -454,9 +526,11 @@ Regular maintenance procedures to prevent issues and ensure system health during
 ## Support and Escalation
 
 ### Task: Escalation Procedures Setup
+
 **Status**: Pending
 **Priority**: Low
 **Related Files**:
+
 - `docs/HEE_POLICY.md` - HEE policies
 - `docs/STATE_CAPSULE_GUIDE.md` - State management
 - `prompts/PROMPTING_RULES.md` - Core rules
@@ -465,6 +539,7 @@ Regular maintenance procedures to prevent issues and ensure system health during
 Set up escalation procedures for issues that cannot be resolved during initialization.
 
 **Steps to Complete**
+
 - [ ] Identify escalation criteria and thresholds
 - [ ] Set up escalation contact information
 - [ ] Configure escalation notification systems
@@ -472,16 +547,19 @@ Set up escalation procedures for issues that cannot be resolved during initializ
 - [ ] Train team on escalation processes
 
 **Files Involved**
+
 - `docs/HEE_POLICY.md` - Escalation policies
 - `docs/STATE_CAPSULE_GUIDE.md` - State management
 - `prompts/PROMPTING_RULES.md` - Core rules
 
 **Dependencies**
+
 - Understanding of HEE escalation procedures
 - Access to escalation contacts
 - Ability to document and learn from escalations
 
 **Notes**
+
 - Use escalation as last resort during initialization
 - Document all escalation actions
 - Learn from each escalation to improve procedures
@@ -490,6 +568,7 @@ Set up escalation procedures for issues that cannot be resolved during initializ
 ## Status Tracking
 
 ### Current Initialization Status
+
 - **Task: Environment Setup Verification**: Pending
 - **Task: HEE State Management Setup**: Pending
 - **Task: CI/CD Pipeline Initialization**: Pending
@@ -503,12 +582,15 @@ Set up escalation procedures for issues that cannot be resolved during initializ
 - **Task: Escalation Procedures Setup**: Pending
 
 ### Last Updated
+
 2026-01-24
 
 ### Next Review
+
 2026-01-25
 
 ## Notes
+
 - All tasks follow HEE state preservation principles
 - Groq optimization maintained throughout initialization
 - File references use relative paths for portability

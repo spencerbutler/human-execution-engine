@@ -13,12 +13,14 @@ This document defines the policies and governance rules for the Human Execution 
 **Rationale**: Pager invocation requires oper intervention, violating HEE autonomy and deterministic execution principles.
 
 **Enforcement**:
+
 - All shell commands must include pager prevention when applicable
 - Pager bypass required for ALL interactive commands
 - Violation constitutes HEE process failure
 - Document pager prevention in all command examples
 
 **Command-Specific Requirements**:
+
 - **Git**: Use `--no-pager` flag or `GIT_PAGER=cat` environment variable
 - **Man pages**: Use `-P cat` flag or `MANPAGER=cat` environment variable
 - **Less/More**: Use `cat` or redirect to file instead
@@ -27,6 +29,7 @@ This document defines the policies and governance rules for the Human Execution 
 - **System commands**: Use `PAGER=cat` environment variable or output redirection
 
 **Examples**:
+
 ```bash
 # CORRECT: Pager prevention included
 git --no-pager log
@@ -37,7 +40,7 @@ command | cat
 command > file.txt
 
 # INCORRECT: Pager invocation allowed
-git log                    # May invoke pager
+git --no-pager log         # Prevents pager invocation
 man page                   # May invoke pager
 command                    # May invoke pager
 ```
@@ -47,12 +50,14 @@ command                    # May invoke pager
 **Requirement**: ALL changes MUST use feature branches
 
 **Enforcement**:
+
 - Never commit directly to main branch
 - Feature branches named: `feature/description-of-work`
 - Delete merged branches immediately to prevent confusion
 - All changes made on feature branches only
 
 **Workflow**:
+
 ```bash
 git checkout -b feature/work-description
 # Make changes, commit frequently
@@ -69,12 +74,14 @@ git push origin --delete feature/merged-branch  # Remote
 **Requirement**: HEE state MUST be preserved across all operations
 
 **Enforcement**:
+
 - Update state capsule after every phase
 - Document all state changes
 - Maintain state consistency throughout session
 - Never leave repository in inconsistent state
 
 **State Capsule Requirements**:
+
 - All required sections present
 - HEE YAML format compliance
 - HEE naming conventions followed
@@ -85,12 +92,14 @@ git push origin --delete feature/merged-branch  # Remote
 **Requirement**: Security validation BEFORE any implementation
 
 **Enforcement**:
+
 - All inputs validated against HEE/HEER security requirements
 - No shell commands without security pre-check
 - Content sanitization required for all user inputs
 - Threat model verification mandatory
 
 **Security Checks**:
+
 - Unicode validation for all text inputs
 - Control character blocking
 - Zero-width character detection
@@ -101,12 +110,14 @@ git push origin --delete feature/merged-branch  # Remote
 **Requirement**: Documentation is paramount - no undefined references
 
 **Enforcement**:
+
 - No references to non-existent files/tools
 - All README examples must work immediately
 - API documentation must reflect actual implementation
 - Specs must be canonical and complete
 
 **Documentation Standards**:
+
 - Use relative paths for portability
 - Include file references and cross-links for navigation
 - Design for smooth handoffs and team onboarding
@@ -117,12 +128,14 @@ git push origin --delete feature/merged-branch  # Remote
 **Requirement**: ALL commits require model disclosure
 
 **Enforcement**:
+
 - No commits without model identification
 - Model name must match actual model used
 - Disclosure required in commit subject line
 - No exceptions for any commit
 
 **Format**:
+
 ```
 Pattern: [model: model-name]
 Example: [model: claude-3.5-sonnet]
@@ -133,12 +146,14 @@ Example: [model: claude-3.5-sonnet]
 **Requirement**: PRE-VALIDATION required for all commands
 
 **Enforcement**:
+
 - Syntax validation with `bash -n` for all shell commands
 - Path verification before file operations
 - Git state verification before repository operations
 - No execution without explicit validation
 
 **Validation Pattern**:
+
 ```bash
 # Pattern: Validate then execute
 [ -f file.txt ] && echo "File exists" || echo "File missing - plan violation"
@@ -149,6 +164,7 @@ Example: [model: claude-3.5-sonnet]
 **Requirement**: HEE/HEER compliance enforced
 
 **Enforcement**:
+
 - All changes validated against HEE conceptual model
 - HEER runtime contract compliance required
 - Breaking changes require ecosystem coordination
@@ -159,18 +175,21 @@ Example: [model: claude-3.5-sonnet]
 ### HEE Rule Violation Documentation
 
 **Process**:
+
 1. **Immediate**: Document violation in state capsule
 2. **Analysis**: Identify root cause and impact
 3. **Resolution**: Record corrective actions taken
 4. **Prevention**: Add measures to prevent recurrence
 
 **Violation Categories**:
+
 - **Critical**: Pager invocation, direct main commits, state corruption
 - **High**: Security violations, documentation failures
 - **Medium**: Command safety issues, integration problems
 - **Low**: Minor policy violations, formatting issues
 
 **Example Violation Report**:
+
 ```markdown
 ## 🚨 HEE Rule Violation Documentation
 
@@ -198,16 +217,19 @@ Example: [model: claude-3.5-sonnet]
 ## Compliance Monitoring
 
 ### Regular Audits
+
 - **Daily**: Review state capsule for violations
 - **Weekly**: Audit branch management compliance
 - **Monthly**: Review security and documentation standards
 
 ### Automated Checks
+
 - Pre-commit hooks for HEE compliance
 - State capsule validation in CI/CD
 - Pager prevention validation in command examples
 
 ### Enforcement Actions
+
 - **First violation**: Warning and documentation
 - **Repeated violations**: Process review and training
 - **Critical violations**: Immediate corrective action required
@@ -215,11 +237,13 @@ Example: [model: claude-3.5-sonnet]
 ## Policy Updates
 
 ### Version Control
+
 - All policy changes tracked in git
 - Model disclosure required for policy commits
 - State capsule updates for policy changes
 
 ### Review Process
+
 - Policy reviews every 3 months
 - Community feedback incorporated
 - HEE principles maintained as core

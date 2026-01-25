@@ -22,7 +22,7 @@ class HEEComplianceMonitor:
         """Ensure the violations log file exists with proper structure."""
         if not self.violations_log.parent.exists():
             self.violations_log.parent.mkdir(parents=True, exist_ok=True)
-        
+
         if not self.violations_log.exists():
             with open(self.violations_log, 'w') as f:
                 json.dump({
@@ -102,7 +102,7 @@ class HEEComplianceMonitor:
     def run_compliance_checks(self):
         """Run all compliance checks and return violations."""
         violations = []
-        
+
         # Check main branch violation
         violation = self.check_main_branch_violation()
         if violation:
@@ -132,7 +132,7 @@ class HEEComplianceMonitor:
         # Add new violations
         data["violations"].extend(violations)
         data["last_check"] = datetime.now().isoformat()
-        
+
         # Calculate compliance score
         total_violations = len(data["violations"])
         compliance_score = max(0, 100 - (total_violations * 10))
@@ -158,7 +158,7 @@ class HEEComplianceMonitor:
 ## Recent Violations
 
 """
-        
+
         if data["violations"]:
             for i, violation in enumerate(data["violations"][-5:], 1):  # Show last 5 violations
                 report += f"""
@@ -188,18 +188,18 @@ class HEEComplianceMonitor:
     def monitor_compliance(self):
         """Main monitoring function."""
         print("🔍 Running HEE compliance checks...")
-        
+
         violations = self.run_compliance_checks()
         self.log_violations(violations)
         self.print_violations(violations)
-        
+
         if violations:
             print("💡 To fix violations:")
             print("  - Create feature branches for all changes")
             print("  - Include [model: claude-3.5-sonnet] in commit messages")
             print("  - Follow HEE branch naming conventions")
             return False
-        
+
         print("✅ All HEE compliance checks passed!")
         return True
 

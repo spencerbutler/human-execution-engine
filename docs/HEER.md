@@ -57,6 +57,7 @@ policy configuration.
 A **Task** is an executable unit of work with defined semantics.
 
 Each Task MUST have:
+
 - A stable identifier
 - A specification (title + optional description)
 - A start condition
@@ -74,6 +75,7 @@ Tasks are runnable work units, not reminders or intentions.
 The **Operator** represents the human execution runtime.
 
 Properties:
+
 - Stable identity (often single-operator)
 - Finite execution capacity
 - Explicit concurrency limits (`max_concurrency`, default = 1)
@@ -88,6 +90,7 @@ The operator is the runtime itself.
 A **Runtime Policy** defines admissibility and scheduling rules.
 
 Examples:
+
 - Concurrency limits
 - Time-of-day constraints
 - Required execution conditions (location, tooling, focus block)
@@ -152,12 +155,14 @@ Illegal transitions MUST be rejected.
 ### 1. Task Graph Manager
 
 Responsibilities:
+
 - Maintain dependency edges
 - Detect and reject dependency cycles
 - Compute dependency readiness
 - Propagate completion and failure downstream
 
 Requirements:
+
 - Dependency evaluation MUST be deterministic
 - Cycles MUST NOT silently pass
 
@@ -166,6 +171,7 @@ Requirements:
 ### 2. Admission Controller
 
 Responsibilities:
+
 - Determine whether a dependency-ready task may enter the runnable set
 - Enforce runtime policy constraints beyond dependency satisfaction
 
@@ -177,11 +183,13 @@ A task may be dependency-ready but still **not admitted**.
 ### 3. Scheduler
 
 Responsibilities:
+
 - Select the next executable unit(s) from admitted runnable tasks
 - Enforce operator capacity constraints
 - Minimize context switching according to policy
 
 Normative constraints:
+
 - If `max_concurrency = 1`, the scheduler MUST present at most one ACTIVE task
 - Scheduler decisions MUST be deterministic under replay
 
@@ -190,11 +198,13 @@ Normative constraints:
 ### 4. Execution Journal (Event Store)
 
 Responsibilities:
+
 - Record all meaningful runtime changes as immutable events
 - Support full state reconstruction via replay
 - Enable metric derivation without mutable counters
 
 Minimum event types:
+
 - `TASK_CREATED`
 - `DEPENDENCY_ADDED`
 - `DEPENDENCY_REMOVED`
@@ -215,6 +225,7 @@ Metrics MUST be derived from events, not stored as state.
 ### 5. Integration Boundary (Adapters)
 
 Responsibilities:
+
 - Translate external systems into validated runtime commands
 - Examples:
   - CLI
@@ -277,6 +288,7 @@ Default behavior:
   downstream tasks become `BLOCKED` with an explicit reason.
 
 Overrides:
+
 - Allowed only via explicit override commands
 - Overrides MUST be recorded as events with rationale
 
