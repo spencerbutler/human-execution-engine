@@ -52,6 +52,22 @@
 
 ## Git Operations - VERIFY STATE FIRST
 
+## HEE Git/GH Admission Control (Strong)
+
+- Agents MUST NOT run raw mutating `git` / `gh` commands.
+- Any mutation MUST be executed via: `scripts/hee_git_ops.sh`
+- Liveness gating: if mutation requested while not in ACT tool-mode, emit:
+  `BLOCKER: Mutation requested but HEE_TOOL_MODE!=ACT or --act missing. Refusing.`
+  then STOP.
+- Branch gating: mutations on `main` are forbidden.
+
+Mutation protocol:
+- Set `HEE_TOOL_MODE=ACT`
+- Use `--act` and `--reason "..."` on every invocation
+- Examples:
+  - `HEE_TOOL_MODE=ACT scripts/hee_git_ops.sh add --act --reason "stage files" <paths...>`
+  - `HEE_TOOL_MODE=ACT scripts/hee_git_ops.sh commit --act --reason "commit changes" -m "..."`
+
 **NEVER ASSUME GIT STATE**
 
 ```bash
