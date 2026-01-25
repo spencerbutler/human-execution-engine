@@ -43,7 +43,7 @@ Two open PRs (#18 and #19) in the human-execution-engine repository contained un
 **Branch**: `feature/hee-chained-troubleshooting-prompt`
 **Conflict Details**:
 
-- **Files Affected**: docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md, docs/TROUBLESHOOTING.md
+- **Files Affected**: docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md, docs/TROUBLESHOOTING.md
 - **Conflict Type**: Content conflicts and file deletion conflicts
 - **Root Cause**: State capsule file modifications and troubleshooting.md deletion
 - **Resolution Required**: Complex rebase with multiple conflict resolutions

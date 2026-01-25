@@ -145,7 +145,7 @@ When all tasks in a state capsule are completed, rename with `.done` extension:
 ### **New Files Created**
 1. `docs/STATE_CAPSULE_GUIDE.md` - Comprehensive state capsule management guide
 2. `docs/HEE_IMPROVEMENTS_SUMMARY.md` - This summary document
-3. `docs/STATE_CAPSULES/2026-01-24/HEE-Violation-Script-Fixes.md.done` - Completed session report
+3. `docs/history/state_capsules/2026-01-24/HEE-Violation-Script-Fixes.md.done` - Completed session report
 
 ### **Files Modified**
 1. `scripts/violation_checker.sh` - Complete rewrite with robust error handling
@@ -277,7 +277,7 @@ Total Violation Score: 4 points
 ## 📞 **Support and Escalation**
 
 ### **For Violation Issues**
-1. **Check State Capsule**: Review `docs/STATE_CAPSULES/` for current status
+1. **Check State Capsule**: Review `docs/history/state_capsules/` for current status
 2. **Run Violation Checker**: Execute `./scripts/violation_checker.sh`
 3. **Review Pre-commit**: Check `.pre-commit-config.yaml` for validation rules
 4. **Document Violations**: Update state capsule with violation reports

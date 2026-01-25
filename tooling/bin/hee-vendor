@@ -88,7 +88,7 @@ hee_vendor__check_mode() {
 
   # 2) prompts/hee/docs (HEE/docs)
   mkdir -p "$work/prompts/hee/docs"
-  rsync -a --delete "$hee/docs/" "$work/prompts/hee/docs/"
+  rsync -a --delete --exclude "history/" "$hee/docs/" "$work/prompts/hee/docs/"
 
   # 3) docs/hee pointers + docs/HEE_POLICY.md + VERSION.md
   mkdir -p "$work/docs/hee"
@@ -218,7 +218,7 @@ git checkout -b "$BRANCH"
 rm -rf prompts/hee docs/hee
 mkdir -p prompts/hee/docs docs/hee docs/local prompts/local .cursor/prompts scripts
 rsync -a --delete --exclude ".cursor/" "$HEE/prompts/" "prompts/hee/"
-rsync -a --delete "$HEE/docs/" "prompts/hee/docs/"
+rsync -a --delete --exclude "history/" "$HEE/docs/" "prompts/hee/docs/"
 
 cat > docs/hee/README.md <<'TXT'
 # HEE policy (vendored)

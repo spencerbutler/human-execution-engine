@@ -165,7 +165,7 @@ python scripts/create_hee_handoff.py \
   --originator [Agent ID] \
   --recipient [Agent ID] \
   --project [Project] \
-  --output docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-Handoff-[ID].md
+  --output docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-Handoff-[ID].md
 
 # Validate HEE handoff capsule
 python scripts/validate_hee_handoff.py \
@@ -190,7 +190,7 @@ python scripts/validate_hee_handoff.py \
 ```bash
 # Load HEE handoff capsule
 python scripts/load_hee_handoff.py \
-  --input docs/STATE_CAPSULES/2026-01-24/HEE-Handoff-[ID].md \
+  --input docs/history/state_capsules/2026-01-24/HEE-Handoff-[ID].md \
   --acknowledge
 
 # Continue HEE execution
@@ -506,7 +506,7 @@ python scripts/create_hee_handoff.py \
   --recipient HEE-Agent-B \
   --project "CI Monitoring" \
   --phase "Integration" \
-  --output docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-Handoff-A-B.md
+  --output docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-Handoff-A-B.md
 
 # Validate HEE handoff
 python scripts/validate_hee_handoff.py \

@@ -4,7 +4,7 @@
 
 ## Step 1: Check Current-Tasks Capsule Status
 
-**File to Check**: `docs/STATE_CAPSULES/CURRENT_TASKS.md` (Optional Operator Dashboard)
+**Optional File (Operator Dashboard)**: `docs/history/state_capsules/CURRENT_TASKS.md` (Optional Operator Dashboard)
 
 NOTE:
 - `CURRENT_TASKS.md` is a convenience artifact, not a governance gate.
@@ -34,7 +34,7 @@ NOTE:
 
 ### Step 2: Review All State Capsules (If Available)
 
-**Directory to Check**: `docs/STATE_CAPSULES/` (All dated subdirectories)
+**Optional Historical Directory**: `docs/history/state_capsules/` (All dated subdirectories)
 
 **Hydration Process**:
 
@@ -132,7 +132,7 @@ This guide provides systematic procedures for initializing and setting up the Hu
 - State Capsule Guide: `docs/STATE_CAPSULE_GUIDE.md`
 - Prompting Rules: `prompts/PROMPTING_RULES.md`
 - Agent State Handoff: `prompts/AGENT_STATE_HANDOFF.md`
-- Current Tasks: `@docs/STATE_CAPSULES/CURRENT_TASKS.md`
+- Current Tasks: `@docs/history/state_capsules/CURRENT_TASKS.md`
 - HEE Policy: `docs/HEE_POLICY.md`
 
 ### Project Structure
@@ -200,7 +200,7 @@ Verify development environment is properly configured for HEE development and fo
 
 - `docs/STATE_CAPSULE_GUIDE.md` - State management rules
 - `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md` - Template structure
-- `docs/STATE_CAPSULES/` - State capsule files
+- `docs/history/state_capsules/` - State capsule files
 
 **Description**
 Initialize HEE state management system for proper state preservation and handoffs.
@@ -217,7 +217,7 @@ Initialize HEE state management system for proper state preservation and handoff
 
 - `docs/STATE_CAPSULE_GUIDE.md` - State management reference
 - `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md` - Template to follow
-- Individual state capsule files in `docs/STATE_CAPSULES/`
+- Individual state capsule files in `docs/history/state_capsules/`
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**
@@ -480,7 +480,7 @@ Configure pager prevention system to ensure output never hits shell PAGER, maint
 
 - `prompts/PROMPTING_RULES.md` - Model disclosure rules
 - `docs/HEE_POLICY.md` - HEE disclosure policy
-- `docs/STATE_CAPSULES/` - State capsule files
+- `docs/history/state_capsules/` - State capsule files
 
 **Description**
 Set up model disclosure system to ensure all commits include proper model identification.
@@ -497,7 +497,7 @@ Set up model disclosure system to ensure all commits include proper model identi
 
 - `prompts/PROMPTING_RULES.md` - Model disclosure rules reference
 - `docs/HEE_POLICY.md` - HEE disclosure policy reference
-- `docs/STATE_CAPSULES/` - State capsule files for documentation
+- `docs/history/state_capsules/` - State capsule files for documentation
 - `prompts/INIT.md` - This initialization guide
 
 **Dependencies**

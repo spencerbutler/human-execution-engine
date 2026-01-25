@@ -203,7 +203,7 @@ python scripts/generate_hee_validation_report.py \
 ```bash
 # Validate HEE release state capsule
 python scripts/validate_hee_state_capsule.py \
-  --input docs/STATE_CAPSULES/2026-01-24/HEE-v1.2.3-Release.md \
+  --input docs/history/state_capsules/2026-01-24/HEE-v1.2.3-Release.md \
   --hee-rules strict \
   --release-mode
 ```
@@ -282,7 +282,7 @@ hee-release-v[Version]/
 python scripts/create_hee_release_package.py \
   --version v1.2.3 \
   --output dist/hee-release-v1.2.3/ \
-  --state-capsule docs/STATE_CAPSULES/2026-01-24/HEE-v1.2.3-Release.md
+  --state-capsule docs/history/state_capsules/2026-01-24/HEE-v1.2.3-Release.md
 
 # Validate HEE package structure
 python scripts/validate_hee_package.py \
@@ -321,7 +321,7 @@ gh release edit v1.2.3 \
 # Upload HEE release assets
 gh release upload v1.2.3 \
   dist/hee-release-v1.2.3.zip \
-  docs/STATE_CAPSULES/2026-01-24/HEE-v1.2.3-Release.md
+  docs/history/state_capsules/2026-01-24/HEE-v1.2.3-Release.md
 ```
 
 ## HEE Post-Release Process
@@ -341,7 +341,7 @@ gh release upload v1.2.3 \
 # Monitor HEE release health
 python scripts/monitor_hee_release.py \
   --version v1.2.3 \
-  --state-capsule docs/STATE_CAPSULES/2026-01-24/HEE-v1.2.3-PostRelease.md \
+  --state-capsule docs/history/state_capsules/2026-01-24/HEE-v1.2.3-PostRelease.md \
   --alert-threshold high
 
 # Generate HEE post-release report
@@ -377,7 +377,7 @@ python scripts/generate_hee_post_release_report.py \
 python scripts/initiate_hee_rollback.py \
   --current-version v1.2.3 \
   --target-version v1.2.2 \
-  --state-capsule docs/STATE_CAPSULES/2026-01-24/HEE-Rollback.md \
+  --state-capsule docs/history/state_capsules/2026-01-24/HEE-Rollback.md \
   --priority critical
 
 # Execute HEE rollback
@@ -460,7 +460,7 @@ python scripts/generate_hee_compliance_report.py \
 python scripts/generate_hee_release_capsule.py \
   --version v1.2.3 \
   --type minor \
-  --output docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-v1.2.3-Release.md
+  --output docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-v1.2.3-Release.md
 
 # Validate HEE release readiness
 python scripts/validate_hee_release_readiness.py \
@@ -497,7 +497,7 @@ python scripts/monitor_hee_release_health.py \
 # Archive HEE release state capsules
 python scripts/archive_hee_release_capsules.py \
   --version v1.2.3 \
-  --destination docs/STATE_CAPSULES/archive/
+  --destination docs/history/state_capsules/archive/
 ```
 
 This HEE Release Preparation Protocol provides a comprehensive framework for preparing, validating, and executing HEE releases while maintaining full compliance with HEE's governance rules, quality discipline, and state preservation requirements.

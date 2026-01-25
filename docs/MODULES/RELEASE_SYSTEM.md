@@ -220,7 +220,7 @@ hee-release-<version>/
   "data_path": "~/.hee/",
   "state_capsules": {
     "enabled": true,
-    "path": "docs/STATE_CAPSULES/",
+    "path": "docs/history/state_capsules/",
     "auto_save": true,
     "encryption": false
   },
