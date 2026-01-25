@@ -120,7 +120,7 @@ case "$op" in
     ;;
 
   log)
-    git log "$@"
+    git --no-pager log "$@"
     ;;
 
   show)

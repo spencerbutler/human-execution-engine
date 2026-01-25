@@ -27,12 +27,12 @@ jobs:
         echo "🔍 Validating pager prevention in shell commands..."
 
         # Check for common pager-invoking commands without prevention
-        if grep -r "git log" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention"; then
+        if grep -r "git log" --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention"; then
           echo "❌ Found git log commands without pager prevention"
           exit 1
         fi
 
-        if grep -r "man " --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "man -P cat\|MANPAGER=cat" | grep -v "pager prevention"; then
+        if grep -r "man " --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "man -P cat\|MANPAGER=cat" | grep -v "pager prevention"; then
           echo "❌ Found man commands without pager prevention"
           exit 1
         fi
@@ -44,11 +44,11 @@ jobs:
         echo "🔍 Validating HEE state capsule format..."
 
         # Check for state capsule files
-        if [ -d "docs/history/state_capsules" ]; then
+        if [ -d "docs/STATE_CAPSULES" ]; then
           echo "✅ State capsule directory found"
 
           # Validate YAML format in state capsules
-          for file in docs/history/state_capsules/**/*.md; do
+          for file in docs/STATE_CAPSULES/**/*.md; do
             if [ -f "$file" ] && grep -q "chat:" "$file"; then
               echo "✅ State capsule format validation passed for $file"
             fi
@@ -65,7 +65,7 @@ jobs:
         echo "🔍 Validating HEE policy compliance..."
 
         # Check for HEE policy file
-        if [ -f "docs/doctrine/HEE_POLICY.md" ]; then
+        if [ -f "docs/HEE_POLICY.md" ]; then
           echo "✅ HEE policy file found"
         else
           echo "❌ HEE policy file missing"
@@ -174,7 +174,7 @@ jobs:
         echo "🔍 Running comprehensive pager prevention validation..."
 
         # Check for pager prevention documentation
-        if [ -f "docs/doctrine/HEE_POLICY.md" ] && grep -q "pager prevention" docs/doctrine/HEE_POLICY.md; then
+        if [ -f "docs/HEE_POLICY.md" ] && grep -q "pager prevention" docs/HEE_POLICY.md; then
           echo "✅ Pager prevention policy documented"
         else
           echo "❌ Pager prevention policy missing"
