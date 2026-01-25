@@ -47,11 +47,13 @@ classDiagram
 ### 2. Integration with HEE Principles
 
 **Spec-First Alignment**:
+
 - Monitoring specifications precede implementation
 - Auto-fix patterns are documented before coding
 - Coverage targets are specified upfront
 
 **Quality Discipline**:
+
 - Comprehensive validation before any automated fixes
 - Safety protocols enforce quality gates
 - Rollback mechanisms ensure system stability
@@ -61,12 +63,14 @@ classDiagram
 ### 1. Monitoring Engine
 
 **Capabilities**:
+
 - Real-time surveillance of GitHub Actions workflows
 - Adaptive polling based on system health
 - Pattern-based failure detection
 - Multi-channel alerting system
 
 **Performance Targets**:
+
 - Normal polling: 60 seconds
 - Degraded state polling: 30 seconds
 - Detection latency: < 2 minutes
@@ -163,6 +167,7 @@ def execute_fix(pattern_id, context):
 ### 3. Safety Protocols
 
 **HEE-Specific Requirements**:
+
 1. **State Capsule Validation**: All fixes validated against current state
 2. **Constraint Checking**: Respect project constraints from capsule
 3. **Decision Preservation**: Maintain decision history during fixes

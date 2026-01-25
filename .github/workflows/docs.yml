@@ -19,18 +19,18 @@ jobs:
   documentation-validation:
     name: Documentation Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Validate documentation structure
       run: |
         echo "🔍 Validating HEE documentation structure..."
-        
+
         # Check for required documentation files
         required_docs=("docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md" "docs/HEE_POLICY.md" "prompts/PROMPTING_RULES.md")
-        
+
         for doc in "${required_docs[@]}"; do
           if [ -f "$doc" ]; then
             echo "✅ $doc found"
@@ -43,21 +43,21 @@ jobs:
     - name: Check documentation cross-references
       run: |
         echo "🔍 Checking documentation cross-references..."
-        
+
         # Check for cross-references to state capsule guide
         if grep -r "docs/STATE_CAPSULE_GUIDE.md" --include="*.md" .; then
           echo "✅ Cross-references to state capsule guide found"
         else
           echo "⚠️  No cross-references to state capsule guide found"
         fi
-        
+
         # Check for cross-references to HEE policy
         if grep -r "docs/HEE_POLICY.md" --include="*.md" .; then
           echo "✅ Cross-references to HEE policy found"
         else
           echo "⚠️  No cross-references to HEE policy found"
         fi
-        
+
         # Check for cross-references to prompting rules
         if grep -r "prompts/PROMPTING_RULES.md" --include="*.md" .; then
           echo "✅ Cross-references to prompting rules found"
@@ -68,7 +68,7 @@ jobs:
     - name: Validate file path references
       run: |
         echo "🔍 Validating file path references..."
-        
+
         # Check for broken relative path references
         echo "Checking for broken relative path references..."
         for file in $(find . -name "*.md" -type f); do
@@ -92,14 +92,14 @@ jobs:
     - name: Check documentation formatting
       run: |
         echo "🔍 Checking documentation formatting standards..."
-        
+
         # Check for proper HEE documentation structure
         if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then
           echo "✅ State capsule structure found"
         else
           echo "⚠️  State capsule structure may be missing"
         fi
-        
+
         # Check for task sections in documentation
         if grep -r "## Active Tasks\|### Task:" --include="*.md" .; then
           echo "✅ Task sections found in documentation"
@@ -110,15 +110,15 @@ jobs:
   documentation-links-check:
     name: Documentation Links Check
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Comprehensive link validation
       run: |
         echo "🔍 Running comprehensive link validation..."
-        
+
         # Check for internal markdown links
         echo "Checking internal markdown links..."
         for file in $(find . -name "*.md" -type f); do
@@ -143,12 +143,12 @@ jobs:
     - name: Check for documentation consistency
       run: |
         echo "🔍 Checking documentation consistency..."
-        
+
         # Check for consistent HEE terminology
         if grep -r "Human Execution Engine\|HEE" --include="*.md" . | head -5; then
           echo "✅ HEE terminology found"
         fi
-        
+
         # Check for consistent task formatting
         if grep -r "### Task:" --include="*.md" . | head -3; then
           echo "✅ Task formatting found"
@@ -157,29 +157,29 @@ jobs:
   documentation-health-check:
     name: Documentation Health Check
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Documentation health validation
       run: |
         echo "🔍 Running documentation health check..."
-        
+
         # Check for documentation completeness
         echo "Checking documentation completeness..."
-        
+
         # Count markdown files
         md_count=$(find . -name "*.md" -type f | wc -l)
         echo "Found $md_count markdown files"
-        
+
         # Check for recent documentation updates
         if find . -name "*.md" -type f -mtime -7 | head -1; then
           echo "✅ Recent documentation updates found"
         else
           echo "⚠️  No recent documentation updates"
         fi
-        
+
         # Check for documentation in proper directories
         if [ -d "docs" ] && [ -d "prompts" ]; then
           echo "✅ Documentation directories found"
@@ -191,15 +191,15 @@ jobs:
     name: Final Documentation Summary
     runs-on: ubuntu-latest
     needs: [documentation-validation, documentation-links-check, documentation-health-check]
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Documentation validation summary
       run: |
         echo "🔍 Running final documentation validation summary..."
-        
+
         echo "✅ HEE Documentation Management completed"
         echo "📋 Summary:"
         echo "   - Documentation structure: Validated"
@@ -209,5 +209,5 @@ jobs:
         echo "   - Internal links: Validated"
         echo "   - Documentation consistency: Checked"
         echo "   - Documentation health: Validated"
-        
+
         echo "🎯 All HEE documentation checks completed!"

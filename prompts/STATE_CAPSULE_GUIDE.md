@@ -9,6 +9,7 @@ This guide provides comprehensive instructions for creating, using, and managing
 ### 1. Purpose and Scope
 
 **Primary Objectives**:
+
 - **Continuation Vector**: Enable seamless handoffs between HEE execution contexts
 - **Decision Preservation**: Maintain critical decision state across HEE transitions
 - **Context Stability**: Prevent loss of important HEE context and requirements
@@ -17,6 +18,7 @@ This guide provides comprehensive instructions for creating, using, and managing
 ### 2. HEE-Specific Requirements
 
 **HEE Integration Mandates**:
+
 - All State Capsules must comply with HEE governance rules
 - State Capsules must preserve HEE decision history
 - Context must include HEE-specific integration points
@@ -64,16 +66,19 @@ next_chat_bootstrap:
 ### 2. HEE-Specific Component Requirements
 
 #### Chat Identifier
+
 - **Format**: `<Project> <Phase/Session> [HEE]`
 - **Example**: `HEE CI Monitoring Integration Phase 1`
 - **HEE Requirement**: Must include HEE identifier for HEE projects
 
 #### Purpose Statement
+
 - **Format**: Single sentence with HEE alignment
 - **Example**: `Integrate MT-logo-render CI monitoring into HEE with full state preservation`
 - **HEE Requirement**: Must reference HEE integration or objectives
 
 #### Context Section
+
 - **HEE-Specific Requirements**:
   - HEE Integration: Specify HEE version and integration points
   - HEE Constraints: Document HEE governance and quality requirements
@@ -81,6 +86,7 @@ next_chat_bootstrap:
   - HEE State Requirements: Specify state capsule compatibility
 
 #### Decisions Section
+
 - **HEE-Specific Requirements**:
   - HEE Decision Impact: Analyze impact on HEE architecture
   - HEE Rationale: Explain alignment with HEE principles
@@ -88,6 +94,7 @@ next_chat_bootstrap:
   - HEE Compliance: Note governance and quality implications
 
 #### Open Threads Section
+
 - **HEE-Specific Requirements**:
   - HEE Priority: Assign HEE-specific priority levels
   - HEE Blockers: Identify HEE ecosystem dependencies
@@ -95,6 +102,7 @@ next_chat_bootstrap:
   - HEE Milestones: Align with HEE roadmap
 
 #### Next Chat Bootstrap
+
 - **HEE-Specific Requirements**:
   - HEE Execution Context: Provide HEE-specific instructions
   - HEE Continuation: Specify HEE workflow continuation points
@@ -113,14 +121,16 @@ next_chat_bootstrap:
 ## 2. HEE Feature Branch Standards
 
 ### **Branch Naming Convention**
+
 - **Format**: `feature/[descriptive-name]` or `fix/[descriptive-name]`
-- **Examples**: 
+- **Examples**:
   - `feature/hee-troubleshooting-enhancement`
   - `fix/state-capsule-workflow`
   - `feature/groq-optimization-rules`
 - **Requirement**: All new work MUST use feature branches
 
 ### **Branch Completion Requirements**
+
 - **Goal**: All tasks MUST complete in their own branch
 - **Requirements**:
   - Full CI/CD pass (where enabled)
@@ -130,16 +140,19 @@ next_chat_bootstrap:
   - README and changelog review
 
 ### **Branch Completion Tracking**
+
 - **Complete**: All tasks finished, CI/CD passed, PR merged ✅
 - **Incomplete**: Tasks unfinished, CI/CD failed, or PR not merged ❌
 - **Blocked**: External dependencies preventing completion ⚠️
 
 ### **Next Agent Branch Assignment**
+
 - **If Current Branch Complete**: Create NEW feature branch
 - **If Current Branch Incomplete**: Continue on SAME branch
 - **Branch Status Tracking**: Document in state capsule
 
 ### **Critical Requirements**
+
 - **NEVER** work directly on main branch
 - **ALWAYS** create feature branches for new work
 - **REVIEW** README and changelog on every capsule update
@@ -159,7 +172,7 @@ graph TD
     H --> I[Define HEE Next Steps]
     I --> J[Validate HEE Compliance]
     J --> K[Save as Final Response]
-    
+
     L[After PR Merge] --> M[Monitor CI/CD if enabled]
     M --> N[Checkout main branch]
     N --> O[Pull latest changes]
@@ -172,6 +185,7 @@ graph TD
 **HEE Template Location**: `docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md`
 
 **HEE Creation Command**:
+
 ```bash
 # Create new HEE capsule from template
 cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-[Project]-Session.md
@@ -182,11 +196,13 @@ cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d
 ### 1. HEE Agent Handoffs
 
 **HEE Agent Transition Pattern**:
+
 ```
 HEE Agent A → State Capsule → HEE Agent B → Updated State Capsule → HEE Agent C
 ```
 
 **HEE-Specific Benefits**:
+
 - Preserves HEE context across agent transitions
 - Maintains HEE decision continuity
 - Enables HEE specialization and workflow optimization
@@ -195,11 +211,13 @@ HEE Agent A → State Capsule → HEE Agent B → Updated State Capsule → HEE 
 ### 2. HEE Release Management
 
 **HEE Release Pattern**:
+
 ```
 Pre-Release Capsule → Release Capsule → Post-Release Capsule → Maintenance Capsule
 ```
 
 **HEE-Specific Benefits**:
+
 - Clear HEE release phase boundaries
 - Comprehensive HEE release documentation
 - Decision history for HEE release analysis
@@ -208,11 +226,13 @@ Pre-Release Capsule → Release Capsule → Post-Release Capsule → Maintenance
 ### 3. HEE Cross-Project Integration
 
 **HEE Ecosystem Pattern**:
+
 ```
 HEE Core Capsule → MT-logo-render Integration Capsule → tick-task Integration Capsule
 ```
 
 **HEE-Specific Benefits**:
+
 - HEE ecosystem context preservation
 - Dependency management across HEE projects
 - Integration point documentation
@@ -223,6 +243,7 @@ HEE Core Capsule → MT-logo-render Integration Capsule → tick-task Integratio
 ### ✅ HEE Recommended Practices
 
 **Practice 1**: HEE-Specific Context
+
 ```yaml
 context:
   - Project: Human Execution Engine v1.2.3 Integration
@@ -234,6 +255,7 @@ context:
 ```
 
 **Practice 2**: HEE Decision Rationale
+
 ```yaml
 decisions:
   - Use HEE canonical prompts for all agent interactions
@@ -247,6 +269,7 @@ decisions:
 ```
 
 **Practice 3**: HEE Execution Continuity
+
 ```yaml
 next_chat_bootstrap:
   - Finalize HEE state capsule structure for monitoring
@@ -259,6 +282,7 @@ next_chat_bootstrap:
 ### ❌ HEE Anti-Patterns to Avoid
 
 **Anti-Pattern 1**: Generic HEE Context
+
 ```yaml
 context:
   - Project: Some project  # Too generic for HEE
@@ -266,6 +290,7 @@ context:
 ```
 
 **Anti-Pattern 2**: Vague HEE Next Steps
+
 ```yaml
 next_chat_bootstrap:
   - Continue HEE work  # Too vague for HEE execution
@@ -273,6 +298,7 @@ next_chat_bootstrap:
 ```
 
 **Anti-Pattern 3**: Ignoring HEE State Requirements
+
 ```yaml
 decisions:
   - Change state format without HEE compatibility  # Violates HEE principles
@@ -284,12 +310,14 @@ decisions:
 ### 1. HEE Git Integration
 
 **HEE-Specific Practices**:
+
 - Version control all HEE state capsules
 - Include capsule references in HEE commit messages
 - Link capsules in HEE pull request descriptions
 - Use in HEE release notes with state transitions
 
 **HEE Git Commands**:
+
 ```bash
 # Add HEE state capsule to git
 git add docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-*.md
@@ -302,12 +330,14 @@ State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
 ### 2. HEE CI/CD Integration
 
 **HEE Integration Points**:
+
 - Generate HEE capsule summaries in build artifacts
 - Include HEE capsule links in deployment notifications
 - Use HEE capsule metadata for project status updates
 - Validate HEE capsule structure in documentation checks
 
 **HEE CI Configuration**:
+
 ```yaml
 # .github/workflows/hee-ci.yml
 - name: Validate HEE State Capsules
@@ -317,6 +347,7 @@ State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
 ### 3. HEE Project Management
 
 **HEE Usage Patterns**:
+
 - Reference in HEE sprint planning and retrospectives
 - Use for HEE knowledge transfer during team changes
 - Include in HEE project documentation and wikis
@@ -340,6 +371,7 @@ State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
 ### 2. HEE Structural Validation
 
 **HEE Validation Script**:
+
 ```bash
 # Validate HEE capsule structure
 python scripts/validate_hee_capsule.py \
@@ -352,6 +384,7 @@ python scripts/validate_hee_capsule.py \
 ### 1. HEE Multi-Agent Collaboration
 
 **HEE Agent Chain Pattern**:
+
 ```yaml
 # Agent A State Capsule
 chat: HEE CI Monitoring - Agent A Session
@@ -384,6 +417,7 @@ next_chat_bootstrap:
 ### 2. HEE Decision Tree Preservation
 
 **HEE Decision Chain Pattern**:
+
 ```yaml
 decisions:
   - Decision 1: Use HEE state capsules for monitoring
@@ -406,6 +440,7 @@ decisions:
 ### 1. HEE Template Location and Usage
 
 **HEE Template Structure**:
+
 ```
 docs/
 └── TEMPLATES/
@@ -413,6 +448,7 @@ docs/
 ```
 
 **HEE Template Commands**:
+
 ```bash
 # Create new HEE capsule from template
 cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md \
@@ -426,6 +462,7 @@ python scripts/validate_hee_template.py \
 ### 2. HEE Directory Management
 
 **HEE Automation Scripts**:
+
 ```bash
 # Create HEE date directory if needed
 mkdir -p docs/STATE_CAPSULES/$(date +%Y-%m-%d)
@@ -442,6 +479,7 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 ### 1. HEE Content Requirements
 
 **HEE-Specific Checks**:
+
 - HEE state version compatibility
 - HEE decision preservation requirements
 - HEE spec coverage integration
@@ -453,6 +491,7 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 ### 2. HEE Structural Validation
 
 **HEE Validation Rules**:
+
 - All required HEE sections present and non-empty
 - HEE YAML format compliance
 - HEE naming conventions followed (`HEE-*` prefix)
@@ -465,6 +504,7 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 ### 1. HEE State Capsule Integration
 
 **HEE State Management**:
+
 - State capsules preserve HEE execution context
 - Decision history maintained across HEE sessions
 - Context stability ensured for HEE operations
@@ -473,6 +513,7 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 ### 2. HEE Prompt Governance Integration
 
 **HEE Prompt Compliance**:
+
 - State capsules reference canonical HEE prompts
 - No authoritative content in wrapper files
 - HEE governance rules enforced in capsules
@@ -481,6 +522,7 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 ### 3. HEE CI/CD Monitoring Integration
 
 **HEE Monitoring Integration**:
+
 - State capsules include monitoring metadata
 - CI/CD status preserved in capsules
 - Auto-fix history documented

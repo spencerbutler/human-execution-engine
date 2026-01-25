@@ -9,6 +9,7 @@ This document defines the comprehensive protocol for agent state handoffs within
 ### 1. HEE Handoff Requirements
 
 **Mandatory Requirements**:
+
 - **State Preservation**: All HEE state must be preserved across agent transitions
 - **Decision Continuity**: All HEE decisions must be maintained and accessible
 - **Context Stability**: HEE execution context must remain stable
@@ -56,6 +57,7 @@ sequenceDiagram
 ### 2. HEE State Capsule Requirements
 
 **Minimum Viable Handoff Capsule**:
+
 ```yaml
 chat: HEE [Project] Agent Handoff [Originator]→[Recipient]
 purpose: Preserve HEE state and context for agent transition
@@ -89,6 +91,7 @@ next_chat_bootstrap:
 ### 1. State Preservation Requirements
 
 **HEE State Components**:
+
 - Execution context and environment state
 - Decision history and rationale
 - Open threads and priorities
@@ -96,6 +99,7 @@ next_chat_bootstrap:
 - Prompt compatibility and versioning
 
 **HEE Validation Checklist**:
+
 - [ ] All HEE decisions preserved with rationale
 - [ ] HEE execution context documented
 - [ ] HEE state version compatibility verified
@@ -105,12 +109,14 @@ next_chat_bootstrap:
 ### 2. Decision Continuity Requirements
 
 **HEE Decision Tracking**:
+
 - All decisions must include HEE impact analysis
 - Decision rationale must reference HEE principles
 - Follow-up requirements must be HEE-compliant
 - Decision chains must be preserved
 
 **HEE Decision Format**:
+
 ```yaml
 decisions:
   - Decision: [Decision Text]
@@ -125,6 +131,7 @@ decisions:
 ### 1. Originator Responsibilities
 
 **HEE Originator Checklist**:
+
 - [ ] Create comprehensive HEE state capsule
 - [ ] Document all HEE decisions with rationale
 - [ ] List all HEE open threads and priorities
@@ -134,6 +141,7 @@ decisions:
 - [ ] Provide HEE-specific transition instructions
 
 **HEE Originator Commands**:
+
 ```bash
 # Create HEE handoff capsule
 python scripts/create_hee_handoff.py \
@@ -151,6 +159,7 @@ python scripts/validate_hee_handoff.py \
 ### 2. Recipient Responsibilities
 
 **HEE Recipient Checklist**:
+
 - [ ] Load and validate HEE state capsule
 - [ ] Acknowledge HEE decision continuity
 - [ ] Assess HEE open threads and priorities
@@ -160,6 +169,7 @@ python scripts/validate_hee_handoff.py \
 - [ ] Notify HEE monitor of handoff completion
 
 **HEE Recipient Commands**:
+
 ```bash
 # Load HEE handoff capsule
 python scripts/load_hee_handoff.py \
@@ -175,6 +185,7 @@ python scripts/continue_hee_execution.py \
 ### 3. Monitor Responsibilities
 
 **HEE Monitor Checklist**:
+
 - [ ] Validate HEE handoff capsule structure
 - [ ] Verify HEE governance compliance
 - [ ] Confirm HEE quality discipline adherence
@@ -184,6 +195,7 @@ python scripts/continue_hee_execution.py \
 - [ ] Escalate HEE compliance issues
 
 **HEE Monitor Commands**:
+
 ```bash
 # Validate HEE handoff compliance
 python scripts/validate_hee_compliance.py \
@@ -205,6 +217,7 @@ python scripts/approve_hee_handoff.py \
 **Scenario**: Planned transition between HEE agents
 
 **HEE Workflow**:
+
 1. Originator completes current task
 2. Originator creates HEE handoff capsule
 3. Monitor validates HEE compliance
@@ -212,6 +225,7 @@ python scripts/approve_hee_handoff.py \
 5. Monitor confirms successful transition
 
 **HEE Example**:
+
 ```yaml
 chat: HEE CI Monitoring Agent Handoff A→B
 purpose: Transition CI monitoring integration from Agent A to Agent B
@@ -250,6 +264,7 @@ next_chat_bootstrap:
 **Scenario**: Unplanned transition due to agent failure
 
 **HEE Emergency Protocol**:
+
 1. Monitor detects agent failure
 2. Monitor creates emergency HEE state backup
 3. Monitor initiates emergency handoff
@@ -257,6 +272,7 @@ next_chat_bootstrap:
 5. Monitor validates HEE integrity
 
 **HEE Emergency Commands**:
+
 ```bash
 # Create emergency HEE backup
 python scripts/create_hee_emergency_backup.py \
@@ -275,12 +291,14 @@ python scripts/initiate_hee_emergency_handoff.py \
 **Scenario**: Transition between HEE projects or ecosystems
 
 **HEE Cross-Project Requirements**:
+
 - Cross-project state compatibility
 - Ecosystem decision preservation
 - Inter-project dependency tracking
 - Unified HEE governance compliance
 
 **HEE Cross-Project Example**:
+
 ```yaml
 chat: HEE Cross-Project Handoff MT→tick
 purpose: Transition from MT-logo-render to tick-task integration
@@ -318,6 +336,7 @@ next_chat_bootstrap:
 ### 1. HEE Compliance Validation
 
 **HEE Validation Criteria**:
+
 - State capsule structure compliance
 - HEE governance rule adherence
 - Quality discipline requirements
@@ -325,6 +344,7 @@ next_chat_bootstrap:
 - Execution continuity readiness
 
 **HEE Validation Script**:
+
 ```bash
 # Comprehensive HEE handoff validation
 python scripts/validate_hee_handoff.py \
@@ -351,6 +371,7 @@ python scripts/validate_hee_handoff.py \
 ### 1. HEE Monitoring Requirements
 
 **HEE Monitoring Metrics**:
+
 - Handoff success rate
 - State preservation integrity
 - Decision continuity accuracy
@@ -358,6 +379,7 @@ python scripts/validate_hee_handoff.py \
 - Governance compliance rate
 
 **HEE Monitoring Dashboard**:
+
 ```json
 {
   "handoff_metrics": {
@@ -408,6 +430,7 @@ python scripts/generate_hee_handoff_report.py \
 | Governance violation    | Compliance correction workflow |
 
 **HEE Recovery Commands**:
+
 ```bash
 # Rollback to previous HEE state
 python scripts/rollback_hee_state.py \
@@ -425,6 +448,7 @@ python scripts/reconstruct_hee_decisions.py \
 ### 2. HEE Recovery Validation
 
 **HEE Recovery Checklist**:
+
 - [ ] State integrity restored
 - [ ] Decision continuity verified
 - [ ] Context stability confirmed

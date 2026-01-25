@@ -9,6 +9,7 @@ This document provides comprehensive guidance for implementing and operating the
 ### 1. HEE Monitoring Philosophy
 
 **HEE-Specific Principles**:
+
 - **Spec-First Monitoring**: Monitoring specifications precede implementation
 - **State-Preserving Operations**: All monitoring preserves HEE state integrity
 - **Decision-Aware Analysis**: Monitoring respects HEE decision history
@@ -50,6 +51,7 @@ classDiagram
 ### 1. HEE Monitoring Configuration
 
 **HEE-Specific Configuration**:
+
 ```yaml
 hee_monitoring:
   version: "1.0"
@@ -177,6 +179,7 @@ def apply_hee_compliant_fix(pattern_id, context):
 ### 3. HEE Safety Protocols
 
 **HEE-Specific Safety Requirements**:
+
 1. **HEE State Validation**: All fixes validated against HEE state capsule
 2. **HEE Decision Compatibility**: Respect HEE decision history and constraints
 3. **HEE Governance Compliance**: Maintain HEE governance rules during fixes
