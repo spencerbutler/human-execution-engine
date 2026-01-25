@@ -123,6 +123,40 @@ CI/CD workflows failing or not following HEE best practices.
 - Ensure proper state capsule updates after merges
 - Monitor for security vulnerabilities
 
+### Task: Resolve Output Pager Issues
+**Status**: Pending
+**Priority**: High
+**Related Files**:
+- `prompts/PROMPTING_RULES.md` - Pager prevention rules
+- `docs/HEE_POLICY.md` - HEE pager policy
+- `docs/TROUBLESHOOTING.md` - This guide
+
+**Description**
+Output pager invocation violates HEE principles by requiring oper intervention, breaking deterministic execution.
+
+**Steps to Complete**
+- [ ] Identify commands that may invoke pager
+- [ ] Apply appropriate pager bypass methods
+- [ ] Validate pager prevention in all shell commands
+- [ ] Test command execution without pager invocation
+- [ ] Document pager prevention procedures
+
+**Files Involved**
+- `prompts/PROMPTING_RULES.md` - Pager prevention rules reference
+- `docs/HEE_POLICY.md` - HEE pager policy reference
+- `docs/TROUBLESHOOTING.md` - Pager troubleshooting procedures
+
+**Dependencies**
+- Understanding of command-specific pager behavior
+- Access to pager bypass techniques
+- Knowledge of HEE pager prevention requirements
+
+**Notes**
+- Pager invocation constitutes HEE process failure
+- Different commands require different bypass methods
+- Must be documented as enforceable HEE rule
+- Include pager prevention in security validation
+
 ## HEE-Specific Troubleshooting
 
 ### Task: Resolve Agent Coordination Issues
@@ -341,12 +375,118 @@ Procedures for escalating issues that cannot be resolved at the current level.
 - **Task: Critical Issue Resolution**: Pending
 - **Task: Regular System Health Check**: Pending
 - **Task: Escalation Procedures**: Pending
+- **Task: Resolve Output Pager Issues**: Pending
+- **Task: Implement CI/CD Pipeline**: Pending
 
 ### Last Updated
 2026-01-24
 
 ### Next Review
 2026-01-25
+
+## HEE CI/CD Integration
+
+### Task: CI/CD Pipeline Troubleshooting
+**Status**: Pending
+**Priority**: High
+**Related Files**:
+- `.github/workflows/ci.yml` - Main CI pipeline
+- `.github/workflows/security.yml` - Security scanning
+- `.github/workflows/docs.yml` - Documentation management
+- `.pre-commit-config.yaml` - Pre-commit hooks
+
+**Description**
+Troubleshoot and resolve issues with the HEE CI/CD pipeline implementation and configuration.
+
+**Steps to Complete**
+- [ ] Verify GitHub Actions workflows are properly configured
+- [ ] Test pre-commit hooks functionality
+- [ ] Validate security scanning integration
+- [ ] Check documentation validation workflows
+- [ ] Monitor CI/CD pipeline execution and results
+
+**Files Involved**
+- `.github/workflows/ci.yml` - Main CI pipeline with HEE compliance checks
+- `.github/workflows/security.yml` - Security scanning workflow
+- `.github/workflows/docs.yml` - Documentation management workflow
+- `.pre-commit-config.yaml` - Pre-commit configuration with HEE validation
+
+**Dependencies**
+- Access to GitHub repository with Actions enabled
+- Understanding of HEE CI/CD requirements
+- Knowledge of GitHub Actions syntax and configuration
+
+**Notes**
+- Follow HEE workflow rules for PR creation and merging
+- Ensure proper state capsule updates in CI/CD
+- Monitor for security vulnerabilities
+- Test pipeline with HEE-specific scenarios
+
+### Task: Pre-commit Hook Configuration
+**Status**: Pending
+**Priority**: Medium
+**Related Files**:
+- `.pre-commit-config.yaml` - Pre-commit configuration
+- `scripts/security_scanner.py` - Security scanning script
+
+**Description**
+Configure and troubleshoot pre-commit hooks for HEE compliance validation and security checks.
+
+**Steps to Complete**
+- [ ] Install pre-commit hooks locally
+- [ ] Test HEE compliance checks
+- [ ] Validate pager prevention checks
+- [ ] Test security scanning integration
+- [ ] Verify model disclosure validation
+
+**Files Involved**
+- `.pre-commit-config.yaml` - Pre-commit configuration with HEE validation
+- `scripts/security_scanner.py` - Security scanning script (if available)
+
+**Dependencies**
+- Pre-commit framework installed
+- Access to pre-commit configuration
+- Understanding of HEE validation requirements
+
+**Notes**
+- Pre-commit hooks enforce HEE policies before commits
+- Pager prevention checks prevent shell PAGER invocation
+- Security scanning validates code quality and security
+- Model disclosure ensures proper commit tracking
+
+### Task: Documentation Workflow Integration
+**Status**: Pending
+**Priority**: Medium
+**Related Files**:
+- `.github/workflows/docs.yml` - Documentation management workflow
+- `docs/STATE_CAPSULE_GUIDE.md` - State management reference
+- `prompts/PROMPTING_RULES.md` - Core rules reference
+
+**Description**
+Integrate and troubleshoot documentation workflows for automated validation and cross-reference checking.
+
+**Steps to Complete**
+- [ ] Test documentation validation workflows
+- [ ] Verify cross-reference checking
+- [ ] Validate file path references
+- [ ] Test documentation formatting checks
+- [ ] Monitor documentation health metrics
+
+**Files Involved**
+- `.github/workflows/docs.yml` - Documentation management workflow
+- `docs/STATE_CAPSULE_GUIDE.md` - State management reference
+- `prompts/PROMPTING_RULES.md` - Core rules reference
+
+**Dependencies**
+- Access to GitHub Actions
+- Understanding of documentation requirements
+- Knowledge of cross-reference validation
+
+**Notes**
+- Automated documentation validation ensures consistency
+- Cross-reference checking prevents broken links
+- File path validation maintains navigation integrity
+- Documentation health monitoring tracks quality metrics
 
 ## Notes
 - All tasks follow HEE state preservation principles
