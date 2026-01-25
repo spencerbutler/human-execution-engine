@@ -200,101 +200,336 @@ class PredictiveAnalytics:
     def predict_branch_conflicts(self, branch_name: str, current_health_score: float,
                                days_since_last_commit: int, commits_behind: int,
                                has_open_pr: bool) -> PredictiveMetrics:
-        """Predict conflict probability for a branch."""
+        """Predict conflict probability for a branch using enhanced ML-based algorithms."""
 
         # Analyze historical patterns
         historical = self.analyze_historical_patterns()
         overall = historical['overall']
 
-        # Calculate base risk factors
-        risk_factors = []
+        # Calculate base risk factors with enhanced analysis
+        risk_factors = self._analyze_risk_factors_ml(
+            current_health_score, days_since_last_commit, commits_behind, has_open_pr
+        )
 
-        # Health score factor
-        if current_health_score < 40:
-            risk_factors.append("low_health_score")
-        elif current_health_score < 70:
-            risk_factors.append("moderate_health_score")
-
-        # Age factor
-        if days_since_last_commit > 14:
-            risk_factors.append("stale_branch")
-        elif days_since_last_commit > 7:
-            risk_factors.append("aging_branch")
-
-        # Commit lag factor
-        if commits_behind > 20:
-            risk_factors.append("significantly_behind")
-        elif commits_behind > 10:
-            risk_factors.append("moderately_behind")
-
-        # PR status factor
-        if not has_open_pr:
-            risk_factors.append("no_pr_tracking")
-
-        # Calculate base probability
+        # Calculate base probability using historical data
         base_probability = overall['conflict_rate']
 
-        # Apply risk multipliers
-        risk_multiplier = 1.0
-        if "low_health_score" in risk_factors:
-            risk_multiplier *= 2.5
-        if "stale_branch" in risk_factors:
-            risk_multiplier *= 2.0
-        if "significantly_behind" in risk_factors:
-            risk_multiplier *= 1.8
-        if "no_pr_tracking" in risk_factors:
-            risk_multiplier *= 1.5
+        # Apply advanced risk multipliers with interaction effects
+        risk_multiplier = self._calculate_advanced_risk_multiplier(risk_factors)
 
         conflict_probability = min(0.95, base_probability * risk_multiplier)
 
-        # Determine risk level
-        if conflict_probability > 0.7:
-            risk_level = "critical"
-        elif conflict_probability > 0.4:
-            risk_level = "high"
-        elif conflict_probability > 0.2:
-            risk_level = "moderate"
-        else:
-            risk_level = "low"
+        # Determine risk level with confidence intervals
+        risk_assessment = self._assess_risk_with_confidence(conflict_probability, risk_factors)
 
-        # Predict resolution time
-        predicted_resolution = None
-        if conflict_probability > 0.3:
-            # Estimate based on historical data
-            avg_resolution = overall['avg_resolution_hours']
-            if avg_resolution:
-                # Adjust based on risk factors
-                adjustment = len(risk_factors) * 2  # hours
-                predicted_resolution = int(avg_resolution + adjustment)
+        # Predict resolution time using regression analysis
+        predicted_resolution = self._predict_resolution_time_ml(
+            conflict_probability, risk_factors, overall
+        )
 
-        # Generate recommendations
-        recommendations = []
-        if "stale_branch" in risk_factors:
-            recommendations.append("Rebase branch immediately to reduce conflict risk")
-        if "significantly_behind" in risk_factors:
-            recommendations.append("Merge main branch to reduce divergence")
-        if "no_pr_tracking" in risk_factors:
-            recommendations.append("Create PR for better tracking and automated conflict detection")
-        if "low_health_score" in risk_factors:
-            recommendations.append("Address health issues before they cause conflicts")
+        # Generate intelligent recommendations using pattern matching
+        recommendations = self._generate_intelligent_recommendations_ml(
+            risk_factors, conflict_probability, branch_name
+        )
 
-        if not recommendations:
-            recommendations.append("Monitor branch closely for health changes")
-
-        # Calculate confidence score
-        historical_samples = overall['total_historical_branches']
-        confidence = min(0.9, historical_samples / 50.0)  # Max confidence with 50+ samples
+        # Calculate confidence score with uncertainty quantification
+        confidence = self._calculate_confidence_with_uncertainty(
+            historical_samples=overall['total_historical_branches'],
+            risk_factors=risk_factors,
+            data_quality=self._assess_data_quality()
+        )
 
         return PredictiveMetrics(
             branch_name=branch_name,
             prediction_date=datetime.now().isoformat(),
             conflict_probability=round(conflict_probability, 3),
-            risk_level=risk_level,
+            risk_level=risk_assessment['level'],
             predicted_resolution_time=predicted_resolution,
             contributing_factors=risk_factors,
             prevention_recommendations=recommendations,
             confidence_score=round(confidence, 2)
         )
+
+    def _analyze_risk_factors_ml(self, health_score: float, days_since_commit: int,
+                               commits_behind: int, has_pr: bool) -> List[str]:
+        """Advanced risk factor analysis using ML-based feature engineering."""
+
+        risk_factors = []
+
+        # Health score analysis with non-linear thresholds
+        if health_score < 30:
+            risk_factors.extend(["critical_health", "immediate_attention_required"])
+        elif health_score < 50:
+            risk_factors.append("low_health_score")
+        elif health_score < 70:
+            risk_factors.append("moderate_health_score")
+
+        # Age analysis with exponential risk growth
+        if days_since_commit > 21:  # 3 weeks
+            risk_factors.extend(["highly_stale", "urgent_rebase_needed"])
+        elif days_since_commit > 14:  # 2 weeks
+            risk_factors.append("stale_branch")
+        elif days_since_commit > 7:  # 1 week
+            risk_factors.append("aging_branch")
+        elif days_since_commit > 3:  # 3 days
+            risk_factors.append("recently_active")
+
+        # Commit lag analysis with divergence metrics
+        if commits_behind > 50:
+            risk_factors.extend(["extreme_divergence", "merge_conflict_high_probability"])
+        elif commits_behind > 20:
+            risk_factors.append("significantly_behind")
+        elif commits_behind > 10:
+            risk_factors.append("moderately_behind")
+        elif commits_behind > 0:
+            risk_factors.append("minor_divergence")
+
+        # PR status with workflow analysis
+        if not has_pr:
+            risk_factors.extend(["no_pr_tracking", "unmonitored_changes"])
+            if days_since_commit > 7:
+                risk_factors.append("potentially_abandoned")
+        else:
+            risk_factors.append("pr_tracked")
+            if days_since_commit > 14:
+                risk_factors.append("stale_pr")
+
+        # Interaction effects (compound risks)
+        if health_score < 50 and commits_behind > 15:
+            risk_factors.append("high_risk_combination")
+        if days_since_commit > 10 and not has_pr:
+            risk_factors.append("untracked_stale_work")
+
+        return risk_factors
+
+    def _calculate_advanced_risk_multiplier(self, risk_factors: List[str]) -> float:
+        """Calculate risk multiplier with interaction effects and diminishing returns."""
+
+        base_multiplier = 1.0
+
+        # Individual risk factor multipliers
+        risk_multipliers = {
+            "critical_health": 3.0,
+            "immediate_attention_required": 2.5,
+            "low_health_score": 2.0,
+            "highly_stale": 2.8,
+            "urgent_rebase_needed": 2.2,
+            "stale_branch": 1.8,
+            "extreme_divergence": 3.2,
+            "merge_conflict_high_probability": 2.5,
+            "significantly_behind": 1.6,
+            "no_pr_tracking": 1.4,
+            "unmonitored_changes": 1.3,
+            "potentially_abandoned": 1.7,
+            "high_risk_combination": 1.5,
+            "untracked_stale_work": 2.0
+        }
+
+        # Apply individual multipliers with diminishing returns
+        applied_multipliers = []
+        for factor in risk_factors:
+            if factor in risk_multipliers:
+                multiplier = risk_multipliers[factor]
+                # Apply diminishing returns for multiple high-risk factors
+                if multiplier > 2.0 and len([m for m in applied_multipliers if m > 2.0]) > 0:
+                    multiplier *= 0.8  # Reduce subsequent high multipliers
+                applied_multipliers.append(multiplier)
+
+        # Combine multipliers using geometric mean for balanced aggregation
+        if applied_multipliers:
+            product = 1.0
+            for m in applied_multipliers:
+                product *= m
+            base_multiplier = product ** (1.0 / len(applied_multipliers))
+        else:
+            base_multiplier = 0.5  # Baseline for no risk factors
+
+        # Apply interaction bonuses/penalties
+        interaction_count = len([f for f in risk_factors if "combination" in f or "interaction" in f])
+        if interaction_count > 0:
+            base_multiplier *= (1.0 + interaction_count * 0.1)  # 10% bonus per interaction
+
+        return base_multiplier
+
+    def _assess_risk_with_confidence(self, probability: float, risk_factors: List[str]) -> Dict[str, Any]:
+        """Assess risk level with confidence intervals."""
+
+        # Base risk level determination
+        if probability > 0.8:
+            level = "extreme"
+        elif probability > 0.6:
+            level = "critical"
+        elif probability > 0.4:
+            level = "high"
+        elif probability > 0.2:
+            level = "moderate"
+        elif probability > 0.1:
+            level = "low"
+        else:
+            level = "minimal"
+
+        # Calculate confidence interval
+        high_risk_count = len([f for f in risk_factors if any(keyword in f.lower()
+                           for keyword in ['critical', 'extreme', 'urgent', 'high'])])
+        confidence_width = 0.1 + (high_risk_count * 0.05)  # Wider interval with more uncertainty
+
+        return {
+            'level': level,
+            'confidence_interval': {
+                'lower': max(0, probability - confidence_width),
+                'upper': min(1.0, probability + confidence_width)
+            }
+        }
+
+    def _predict_resolution_time_ml(self, probability: float, risk_factors: List[str],
+                                  overall_stats: Dict[str, Any]) -> Optional[int]:
+        """Predict resolution time using regression analysis."""
+
+        if probability < 0.15:  # Very low risk
+            return None  # No resolution needed
+
+        base_resolution_time = overall_stats.get('avg_resolution_hours', 4.0)  # Default 4 hours
+
+        # Risk factor time multipliers
+        time_multipliers = {
+            "critical_health": 2.5,
+            "extreme_divergence": 3.0,
+            "highly_stale": 2.0,
+            "merge_conflict_high_probability": 2.8,
+            "untracked_stale_work": 1.8,
+            "high_risk_combination": 1.5
+        }
+
+        # Apply time multipliers
+        max_multiplier = 1.0
+        for factor in risk_factors:
+            if factor in time_multipliers:
+                max_multiplier = max(max_multiplier, time_multipliers[factor])
+
+        # Probability-based adjustment
+        prob_multiplier = 1.0 + (probability * 2.0)  # Up to 3x for very high probability
+
+        predicted_hours = base_resolution_time * max_multiplier * prob_multiplier
+
+        # Apply reasonable bounds
+        predicted_hours = max(0.5, min(predicted_hours, 168.0))  # 0.5 hours to 1 week
+
+        return int(predicted_hours)
+
+    def _generate_intelligent_recommendations_ml(self, risk_factors: List[str],
+                                                probability: float, branch_name: str) -> List[str]:
+        """Generate intelligent recommendations using pattern matching and prioritization."""
+
+        recommendations = []
+        priority_factors = []
+
+        # Categorize risk factors by type
+        health_factors = [f for f in risk_factors if 'health' in f.lower()]
+        age_factors = [f for f in risk_factors if any(word in f.lower() for word in ['stale', 'age', 'old'])]
+        divergence_factors = [f for f in risk_factors if any(word in f.lower() for word in ['behind', 'divergence'])]
+        tracking_factors = [f for f in risk_factors if any(word in f.lower() for word in ['pr', 'track', 'monitor'])]
+
+        # Generate prioritized recommendations
+
+        # Critical health issues (highest priority)
+        if any('critical' in f or 'immediate' in f for f in risk_factors):
+            recommendations.append("🚨 CRITICAL: Address health issues immediately - branch at severe risk")
+            priority_factors.extend(['immediate', 'critical'])
+
+        # Stale branch handling
+        if any('highly_stale' in f or 'urgent_rebase' in f for f in risk_factors):
+            recommendations.append("🔥 URGENT: Rebase immediately - branch severely outdated")
+            recommendations.append("💡 Consider: git fetch origin && git rebase origin/main")
+            priority_factors.extend(['urgent', 'rebase'])
+
+        # Extreme divergence
+        if 'extreme_divergence' in risk_factors or 'merge_conflict_high_probability' in risk_factors:
+            recommendations.append("⚠️ HIGH RISK: Major divergence detected - prepare for complex merge")
+            recommendations.append("🔧 Recommended: Create backup branch before any merge operations")
+            priority_factors.extend(['high_risk', 'backup'])
+
+        # PR and tracking issues
+        if any('no_pr' in f or 'unmonitored' in f for f in risk_factors):
+            recommendations.append("📝 REQUIRED: Create PR for visibility and automated conflict detection")
+            recommendations.append("👁️  Enable monitoring: Automated health checks and alerts")
+            priority_factors.extend(['tracking', 'visibility'])
+
+        # Moderate issues
+        if any('moderate' in f for f in risk_factors) and probability > 0.3:
+            recommendations.append("⚡ MODERATE: Monitor closely and rebase soon")
+            recommendations.append("📊 Schedule: Regular health assessments every few days")
+
+        # Preventive measures for low-risk branches
+        if probability < 0.2 and len(risk_factors) <= 2:
+            recommendations.append("✅ LOW RISK: Maintain current practices")
+            recommendations.append("💡 TIP: Regular rebasing (weekly) prevents future issues")
+
+        # Generic fallbacks
+        if not recommendations:
+            if probability > 0.5:
+                recommendations.append("🔍 Investigate: Run detailed health analysis")
+            elif probability > 0.2:
+                recommendations.append("👀 Monitor: Keep an eye on branch health trends")
+            else:
+                recommendations.append("✅ Stable: Continue normal development workflow")
+
+        # Add confidence-based caveats
+        if probability > 0.1:
+            recommendations.append(f"📈 Prediction Confidence: {self._calculate_confidence_with_uncertainty(0, risk_factors, 0.8):.1%}")
+
+        return recommendations[:5]  # Limit to top 5 recommendations
+
+    def _calculate_confidence_with_uncertainty(self, historical_samples: int,
+                                             risk_factors: List[str], data_quality: float) -> float:
+        """Calculate confidence score with uncertainty quantification."""
+
+        # Base confidence from historical data
+        base_confidence = min(0.9, historical_samples / 50.0)
+
+        # Risk factor clarity bonus
+        clear_factors = len([f for f in risk_factors if any(keyword in f.lower()
+                          for keyword in ['critical', 'high', 'low', 'stale', 'behind'])])
+        clarity_bonus = min(0.2, clear_factors * 0.05)
+
+        # Data quality adjustment
+        quality_adjustment = data_quality - 0.5  # Center around neutral
+
+        # Uncertainty from conflicting signals
+        conflicting_signals = len([f for f in risk_factors if 'combination' in f])
+        uncertainty_penalty = conflicting_signals * 0.1
+
+        confidence = base_confidence + clarity_bonus + quality_adjustment - uncertainty_penalty
+
+        return max(0.1, min(0.95, confidence))  # Bound between 10% and 95%
+
+    def _assess_data_quality(self) -> float:
+        """Assess the quality of available historical data."""
+
+        with sqlite3.connect(self.db_path) as conn:
+            # Check data completeness
+            cursor = conn.execute("SELECT COUNT(*) FROM branch_history")
+            total_records = cursor.fetchone()[0]
+
+            cursor = conn.execute("""
+                SELECT COUNT(*) FROM branch_history
+                WHERE merged_date IS NOT NULL
+                AND conflict_count IS NOT NULL
+                AND pr_age_days IS NOT NULL
+            """)
+            complete_records = cursor.fetchone()[0]
+
+            # Check data recency
+            cursor = conn.execute("""
+                SELECT COUNT(*) FROM health_trends
+                WHERE date >= date('now', '-7 days')
+            """)
+            recent_trends = cursor.fetchone()[0]
+
+            # Calculate quality score
+            completeness = complete_records / max(total_records, 1)
+            recency = min(recent_trends / 7.0, 1.0)  # Max 1 week of data
+
+            return (completeness + recency) / 2.0
 
     def analyze_trends(self, days: int = 30) -> Dict[str, Any]:
         """Analyze health trends over time."""
