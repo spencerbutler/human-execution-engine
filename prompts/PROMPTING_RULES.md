@@ -193,6 +193,40 @@ gh pr create --title "type: Clear description" \
 - Wait for PR merge before continuing work
 - Never merge directly to main without PR
 
+## Output Pager Prevention - CRITICAL HEE VIOLATION
+
+**NEVER ALLOW OUTPUT TO HIT SHELL PAGER**
+```bash
+# Pager bypass patterns for common commands:
+git --no-pager log                    # Git commands
+GIT_PAGER=cat git log                 # Environment variable
+man -P cat page                       # Manual pages
+MANPAGER=cat man page                 # Manual pager override
+PAGER=cat command                     # General pager override
+command | cat                         # Force output to stdout
+command > file.txt                    # Redirect to file
+command 2>&1                          # Capture both stdout and stderr
+```
+- Pager invocation requires oper intervention, violating HEE autonomy
+- Different commands require different bypass methods
+- Must be documented as enforceable HEE rule with clear consequences
+- All shell commands must include pager prevention when applicable
+
+**COMMAND-SPECIFIC PAGER BYPASS METHODS**:
+- **Git**: `--no-pager` flag or `GIT_PAGER=cat` environment variable
+- **Man pages**: `-P cat` flag or `MANPAGER=cat` environment variable  
+- **Less/More**: Use `cat` or redirect to file instead
+- **Grep**: `--no-pager` where available, otherwise redirect output
+- **Find**: Use `-print0` with `xargs -0` or redirect to file
+- **System commands**: `PAGER=cat` environment variable or output redirection
+
+**HEE RULE ENFORCEMENT**:
+- Output MUST never invoke shell PAGER
+- Pager bypass required for ALL interactive commands
+- Violation constitutes HEE process failure
+- Document pager prevention in all command examples
+- Include pager bypass in security validation checks
+
 ## Branch Cleanup - IMMEDIATE REMOVAL
 
 **DELETE MERGED BRANCHES IMMEDIATELY**
