@@ -4,7 +4,12 @@
 
 ## Step 1: Check Current-Tasks Capsule Status
 
-**File to Check**: `docs/STATE_CAPSULES/CURRENT_TASKS.md` (Canonical Entry Point)
+**File to Check**: `docs/STATE_CAPSULES/CURRENT_TASKS.md` (Optional Operator Dashboard)
+
+NOTE:
+- `CURRENT_TASKS.md` is a convenience artifact, not a governance gate.
+- Absence or staleness of `CURRENT_TASKS.md` MUST NOT block work.
+- Canonical authority for behavior is doctrine and prompts, not a mutable "current tasks" file.
 
 ### If Current-Tasks Capsule EXISTS and has SUBSTANTIVE CONTENT
 
@@ -68,9 +73,9 @@
 **CRITICAL PROTOCOL**: All HEE prompts require explicit human authorization before any mutation.
 
 **PLAN Phase Requirements**:
+- Agent MUST NOT require or emit a terminal token as a condition of PLAN completion
 - Agent MUST produce a PLAN response and then STOP
-- Agent MUST end PLAN output with: WAITING_FOR: APPROVED_TO_ACT
-- Agent MUST wait for exact token: APPROVED_TO_ACT
+- If changes are proposed, the agent MUST present the exact AUTHZ line the operator may respond with, then STOP
 - Agent MAY run read-only commands: ls, cat, rg, git status/diff/log
 - Agent MUST NOT run any command that could change the working tree
 - Agent MUST NOT perform file writes, moves, deletes, copies, or formatting
@@ -78,8 +83,9 @@
 - Agent MUST NOT run scripts that modify repository state
 
 **ACT Phase Requirements**:
-- Agent MUST NOT begin mutations until receiving exact token: APPROVED_TO_ACT
-- Token must match exactly: APPROVED_TO_ACT (case-sensitive, no quotes, no surrounding whitespace)
+- Agent MUST NOT begin mutations until receiving exact sentinel: AUTHZ: APPROVED_TO_ACT
+- Sentinel must match exactly: AUTHZ: APPROVED_TO_ACT (case-sensitive, no quotes, no surrounding whitespace)
+- Tool/UI "ACT mode" is NOT an authorization signal; only an explicit AUTHZ line in chat grants ACT authority
 - Any mutation before approval constitutes RULE VIOLATION
 - Agent MUST treat unauthorized mutations as HEE governance failure
 
