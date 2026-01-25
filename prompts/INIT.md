@@ -50,7 +50,7 @@ This guide provides systematic procedures for initializing and setting up the Hu
 - State Capsule Guide: `docs/STATE_CAPSULE_GUIDE.md`
 - Prompting Rules: `prompts/PROMPTING_RULES.md`
 - Agent State Handoff: `prompts/AGENT_STATE_HANDOFF.md`
-- Current Tasks: `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md`
+- Current Tasks: `@docs/STATE_CAPSULES/CURRENT_TASKS.md`
 - HEE Policy: `docs/HEE_POLICY.md`
 
 ### Project Structure
