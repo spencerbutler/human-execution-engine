@@ -52,7 +52,7 @@ Comprehensive summary of HEE violation script fixes and pre-commit hook improvem
 #### **Robust Error Handling**
 ```bash
 # Before: Unsafe command execution
-commit_msg=$(git log --format=%B -n 1 HEAD 2>/dev/null || echo "")
+commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo "")
 
 # After: Safe command execution with validation
 if git rev-parse --git-dir > /dev/null 2>&1; then
@@ -153,6 +153,13 @@ When all tasks in a state capsule are completed, rename with `.done` extension:
 
 ## 🧪 **Testing Results**
 
+Total Violation Score: 4 points
+
+📋 Detailed Violations:
+  - BM-001: Direct commit to main/master branch not allowed (3 points - Level 2)
+  - CH-001: Missing model disclosure in commit message (1 points - Level 1)
+✅ Good compliance with minor issues.
+```
 ### **Violation Script Testing**
 ```bash
 # Test Results: ✅ PASSED
@@ -178,6 +185,15 @@ When all tasks in a state capsule are completed, rename with `.done` extension:
 ✅ Pre-commit configuration compliance
 
 📊 Violation Summary
+Total Violation Score: 4 points
+
+📋 Detailed Violations:
+  - BM-001: Direct commit to main/master branch not allowed (3 points - Level 2)
+  - CH-001: Missing model disclosure in commit message (1 points - Level 1)
+✅ Good compliance with minor issues.
+```
+
+**Note**: All `git log` commands in this documentation use `--no-pager` flag for HEE compliance.
 ===================
 Total Violation Score: 4 points
 
