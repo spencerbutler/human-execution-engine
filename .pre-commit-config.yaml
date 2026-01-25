@@ -11,6 +11,13 @@ repos:
         files: '.*'
         pass_filenames: false
 
+      - id: hee-conflict-prevention-check
+        name: HEE Conflict Prevention Check
+        entry: bash -c 'echo "🔍 Checking for potential merge conflicts..." && git fetch origin 2>/dev/null && if git diff origin/main...HEAD --exit-code 2>/dev/null; then echo "✅ No conflicts detected with main branch"; else echo "⚠️  Potential conflicts detected - consider rebasing"; echo "💡 Run: git fetch origin && git rebase origin/main"; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
       - id: hee-state-capsule-validation
         name: HEE State Capsule Validation
         entry: bash -c 'echo "🔍 Validating HEE state capsule format..." && if [ -d "docs/STATE_CAPSULES" ]; then echo "✅ State capsule directory found"; else echo "⚠️  No state capsule directory found"; fi'
@@ -27,10 +34,9 @@ repos:
 
       - id: model-disclosure-check
         name: Model Disclosure Check
-        entry: bash -c 'echo "🔍 Checking for model disclosure in current commit..." && commit_msg_file="${1:-.git/COMMIT_EDITMSG}" && if [ -f "$commit_msg_file" ]; then commit_msg=$(cat "$commit_msg_file" 2>/dev/null || echo ""); else commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo ""); fi && if echo "$commit_msg" | grep -q "\[model:[[:space:]]*[a-zA-Z0-9._-]\+"; then echo "✅ Model disclosure found: $(echo "$commit_msg" | grep -o "\[model:[^]]*\")"; else echo "❌ HEE Violation: Model disclosure required"; echo "📋 Format: [model: claude-3.5-sonnet] or [model: gpt-4]"; echo "💡 Add model disclosure to commit message"; echo "🔧 Example: git commit -m '\''feat: add feature [model: claude-3.5-sonnet]'\''"; exit 1; fi'
+        entry: ./scripts/check_model_disclosure.sh
         language: system
-        files: '.*'
-        pass_filenames: false
+        stages: [commit-msg]
 
       - id: hee-documentation-check
         name: HEE Documentation Check
