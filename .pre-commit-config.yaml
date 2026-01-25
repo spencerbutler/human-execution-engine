@@ -1,0 +1,117 @@
+# HEE Pre-commit Configuration
+# Enforces HEE policies and best practices before commits
+
+repos:
+  - repo: local
+    hooks:
+      - id: hee-pager-prevention-check
+        name: HEE Pager Prevention Check
+        entry: bash -c 'echo "🔍 Checking for pager prevention in shell commands..." && (grep -r "git log" --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention" | head -1 && echo "❌ Found git log without pager prevention" && exit 1 || echo "✅ Pager prevention check passed")'
+        language: system
+        files: '.*\.(md|sh|yml|yaml)$'
+        pass_filenames: false
+
+      - id: hee-state-capsule-validation
+        name: HEE State Capsule Validation
+        entry: bash -c 'echo "🔍 Validating HEE state capsule format..." && if [ -d "docs/STATE_CAPSULES" ]; then echo "✅ State capsule directory found"; else echo "⚠️  No state capsule directory found"; fi'
+        language: system
+        files: 'docs/STATE_CAPSULES/.*\.md$'
+        pass_filenames: false
+
+      - id: hee-policy-compliance
+        name: HEE Policy Compliance Check
+        entry: bash -c 'echo "🔍 Checking HEE policy compliance..." && if [ -f "docs/HEE_POLICY.md" ]; then echo "✅ HEE policy file found"; else echo "❌ HEE policy file missing"; exit 1; fi && if [ -f "prompts/PROMPTING_RULES.md" ]; then echo "✅ Prompting rules found"; else echo "❌ Prompting rules missing"; exit 1; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: model-disclosure-check
+        name: Model Disclosure Check
+        entry: bash -c 'echo "🔍 Checking for model disclosure..." && if git log --oneline -5 | grep -q "\[model:"; then echo "✅ Model disclosure found"; else echo "⚠️  No model disclosure in recent commits"; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: hee-documentation-check
+        name: HEE Documentation Check
+        entry: bash -c 'echo "🔍 Checking HEE documentation..." && for doc in "docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md"; do if [ -f "$doc" ]; then echo "✅ $doc found"; else echo "⚠️  $doc missing"; fi; done'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: hee-branch-management-check
+        name: HEE Branch Management Check
+        entry: bash -c 'echo "🔍 Checking branch management compliance..." && if [ "$GITHUB_HEAD_REF" != "" ] && [ "$GITHUB_HEAD_REF" != "main" ] && [ "$GITHUB_HEAD_REF" != "master" ]; then if echo "$GITHUB_HEAD_REF" | grep -q "^feature/"; then echo "✅ Feature branch naming followed"; else echo "⚠️  Branch naming may not follow HEE conventions"; fi; else echo "✅ Main/master branch or no PR context"; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: hee-security-check
+        name: HEE Security Check
+        entry: bash -c 'echo "🔍 Running HEE security checks..." && if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo" | head -1; then echo "⚠️  Potential sensitive information found"; else echo "✅ No obvious security issues"; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: hee-formatting-check
+        name: HEE Formatting Check
+        entry: bash -c 'echo "🔍 Checking HEE formatting standards..." && if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then echo "✅ State capsule formatting check passed"; else echo "⚠️  State capsule formatting may need attention"; fi'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+      - id: hee-violation-check
+        name: HEE Violation Prevention Check
+        entry: bash -c 'echo "🔍 Running HEE violation prevention check..." && ./scripts/violation_checker.sh'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
+  # Standard pre-commit hooks for code quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: debug-statements
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.37.0
+    hooks:
+      - id: markdownlint
+        args: ['--fix']
+        files: '\.md$'
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.29.0
+    hooks:
+      - id: yamllint
+        args: ['-d', 'relaxed']
+        files: '\.(yaml|yml)$'
+
+# Configuration for pre-commit
+default_stages: [commit, push]
+fail_fast: false
+
+# Exclude patterns
+exclude: |
+  (?x)^(
+      \.git/|
+      \.github/|
+      node_modules/|
+      build/|
+      dist/|
+      target/|
+      \.vscode/|
+      \.idea/|
+      \.cursor/|
+      \.DS_Store|
+      \.gitignore|
+      \.pre-commit-config\.yaml
+  )$
