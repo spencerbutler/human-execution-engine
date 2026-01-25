@@ -170,6 +170,90 @@ Example: [model: claude-3.5-sonnet]
 - Breaking changes require ecosystem coordination
 - Integration examples must be executable immediately
 
+### 9. Conflict Prevention Policy
+
+**CRITICAL HEE VIOLATION**: Conflicts must be prevented, not resolved
+
+**Rationale**: Manual conflict resolution wastes tokens and time, violating HEE efficiency principles.
+
+**Enforcement**:
+
+- Mandatory daily rebasing for active branches
+- Automated conflict detection in pre-commit hooks
+- Merge readiness validation required before PR creation
+- Branch health monitoring and alerts
+
+**New HEE Rules**:
+
+#### Rule 1: Mandatory Daily Rebase
+
+**Requirement**: All active feature branches must be rebased onto main daily
+**Enforcement**: Automated validation in CI/CD pipeline
+**Exception**: Branches inactive for more than 48 hours
+
+#### Rule 2: Pre-Commit Conflict Detection
+
+**Requirement**: All commits must pass conflict detection validation
+**Enforcement**: Pre-commit hooks with automated conflict checking
+**Scope**: All file types and modifications
+
+#### Rule 3: Merge Readiness Validation
+
+**Requirement**: All PRs must pass merge readiness validation before review
+**Enforcement**: Automated validation in pull request checks
+**Criteria**: No conflicts, up-to-date with main, passing all tests
+
+#### Rule 4: Branch Health Monitoring
+
+**Requirement**: All branches must maintain acceptable health scores
+**Enforcement**: Automated monitoring and alerts
+**Threshold**: Health score below 80% triggers mandatory rebase
+
+**Implementation**:
+
+```bash
+# Pre-commit hook for conflict detection
+#!/bin/bash
+# Check for potential conflicts before commit
+git fetch origin
+git diff origin/main...HEAD --exit-code
+```
+
+**Examples**:
+
+```bash
+# CORRECT: Conflict prevention practices
+git checkout feature/work
+git fetch origin
+git rebase origin/main
+git push origin feature/work
+
+# INCORRECT: Conflict creation practices
+# Working on stale branch without rebasing
+# Pushing without checking merge readiness
+# Creating PR without conflict validation
+```
+
+### 10. Token Optimization Policy
+
+**Requirement**: Token usage must balance efficiency with process integrity
+
+**Rationale**: Short-term token savings should not compromise long-term process efficiency.
+
+**Enforcement**:
+
+- Cost-benefit analysis for optimization decisions
+- Token usage monitoring and reporting
+- Automated decision-making for routine optimizations
+- Manual override available for complex scenarios
+
+**Guidelines**:
+
+- Regular rebasing costs vs. conflict resolution costs
+- Automated systems should handle routine optimization
+- Token efficiency should not compromise code quality
+- Process integrity takes precedence over token optimization
+
 ## Violation Reporting
 
 ### HEE Rule Violation Documentation
