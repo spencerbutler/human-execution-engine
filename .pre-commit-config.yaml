@@ -67,6 +67,13 @@ repos:
         files: '.*'
         pass_filenames: false
 
+      - id: hee-agent-instruction-check
+        name: HEE Agent Instruction Check
+        entry: bash -c 'echo "📋 HEE Agent Instructions:" && echo "⚠️  If this pre-commit hook blocks your commit, it is working correctly!" && echo "📝 Report the violation in your output and document it in the state capsule" && echo "🔧 This is expected behavior - the system is preventing violations" && echo "✅ Always update the state capsule with violation reports before pushing" && echo "🎯 Violations should be documented, not bypassed"'
+        language: system
+        files: '.*'
+        pass_filenames: false
+
   # Standard pre-commit hooks for code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0

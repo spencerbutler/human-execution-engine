@@ -102,19 +102,38 @@ Comprehensive violation tracking system for Human Execution Engine (HEE) complia
 
 ## Trend Analysis
 
-### Weekly Violation Tracking
-| Week | Total Points | Violation Count | Trend |
-|------|-------------|----------------|-------|
-| 2026-W04 | 18 | 4 | ⬆️ Increasing |
+### Session-Based Metrics
+| Session | Start Time | End Time | Violations | Points | Same Violation Count |
+|---------|------------|----------|------------|--------|---------------------|
+| Session 1 | 2026-01-24 17:00 | 2026-01-24 19:45 | 5 | 18 | BM-001 (2x), WC-001 (1x) |
+| Current Session | 2026-01-24 19:30 | Active | 3 | 5 | BM-001 (1x), CH-001 (1x), PA-001 (1x) |
 
-### Violation Type Frequency
-| Category | Count | Percentage |
-|----------|-------|------------|
-| Branch Management | 1 | 25% |
-| Commit Hygiene | 1 | 25% |
-| Workflow Compliance | 2 | 50% |
+### Violation Frequency Analysis
+| Violation Code | Total Occurrences | Sessions Affected | Pattern |
+|----------------|------------------|-------------------|---------|
+| BM-001 | 3 | 2 | Repeated - escalating severity |
+| CH-001 | 2 | 2 | Consistent - needs attention |
+| WC-001 | 2 | 1 | Resolved pattern |
+| WC-002 | 2 | 2 | Ongoing issue |
+
+### Time-Based Trends
+| Time Period | Violations | Points | Trend |
+|-------------|------------|--------|-------|
+| Today | 5 | 18 | ⬆️ Increasing |
+| This Week | 5 | 18 | ➡️ Stable |
+| Last 30 Days | 5 | 18 | ➡️ Stable |
+
+### Violation Pattern Analysis
+| Pattern Type | Description | Count | Impact |
+|--------------|-------------|-------|--------|
+| **Same Violation Multiple Times** | BM-001 occurred 3 times | High | Escalating severity |
+| **Session Clustering** | Multiple violations in single session | Medium | Workflow issues |
+| **Category Concentration** | WC violations in 100% of sessions | High | Process gaps |
+| **Resolution Rate** | 2/5 violations resolved | Medium | Improvement needed |
 
 ### Improvement Targets
+- **Session Goal**: Max 1 violation per session
+- **Same Violation Goal**: Zero repeat violations of same type
 - **Short-term goal**: Reduce to 10 points or less within 2 weeks
 - **Medium-term goal**: Achieve 5 points or less within 1 month
 - **Long-term goal**: Maintain 0-2 points consistently

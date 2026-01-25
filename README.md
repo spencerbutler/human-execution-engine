@@ -31,6 +31,7 @@ The enforcement layer defining state machines, scheduling semantics, and determi
 - [**🗺️ Roadmap**](docs/ROADMAP.md) - 7-phase development plan with file trees
 - [**📝 Development Guide**](prompts/PROMPTING_RULES.md) - Security-first development methodology
 - [**🔧 Implementation Prompts**](prompts/) - Structured phase-by-phase guidance
+- [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
 
 ## 🏃‍♂️ Quick Start
 
