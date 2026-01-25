@@ -11,7 +11,11 @@ commit_msg_file="${1:-.git/COMMIT_EDITMSG}"
 # Extract commit message
 if [ -f "$commit_msg_file" ]; then
     commit_msg=$(cat "$commit_msg_file" 2>/dev/null || echo "")
+elif [ -n "$GIT_COMMIT" ]; then
+    # In pre-commit hook context with specific commit
+    commit_msg=$(git --no-pager log --format=%B -n 1 "$GIT_COMMIT" 2>/dev/null || echo "")
 else
+    # Fallback to last commit (for testing/debugging)
     commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo "")
 fi
 
