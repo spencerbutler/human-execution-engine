@@ -31,7 +31,13 @@ The enforcement layer defining state machines, scheduling semantics, and determi
 - [**🗺️ Roadmap**](docs/ROADMAP.md) - 7-phase development plan with file trees
 - [**📝 Development Guide**](prompts/PROMPTING_RULES.md) - Security-first development methodology
 - [**🔧 Implementation Prompts**](prompts/) - Structured phase-by-phase guidance
+<<<<<<< HEAD
 - [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
+=======
+- [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
+- [**🛡️ HEE Compliance**](scripts/README.md) - Automated compliance monitoring and prevention systems
+- [**📋 State Capsules**](docs/STATE_CAPSULES/) - Post-mortem procedures and violation tracking
+>>>>>>> 3b95276 (docs: Update README and create CHANGELOG for HEE compliance improvements [model: claude-3.5-sonnet])
 
 ## 🏃‍♂️ Quick Start
 
@@ -91,6 +97,13 @@ This repository provides the **canonical specifications** that implementations m
 - Complete development methodology (prompts 00-06)
 - Comprehensive implementation roadmap
 - Repository infrastructure and security foundations
+
+### ✅ **Enhanced: HEE Compliance & Governance**
+- **Automated Compliance Monitoring**: Real-time violation detection and prevention
+- **Pre-commit Hooks**: Block main branch commits and enforce HEE standards
+- **Post-Mortem Procedures**: Standardized violation analysis and documentation
+- **State Capsule Integration**: Structured violation tracking and resolution
+- **Continuous Improvement**: Automated monitoring and enhancement processes
 
 ### 🚧 **Next: Phase 2 (Architecture & API Design)**
 Following `prompts/01-architecture-api.md` for core abstractions and API contracts.
