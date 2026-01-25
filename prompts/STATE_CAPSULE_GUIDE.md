@@ -188,7 +188,7 @@ graph TD
 
 ```bash
 # Create new HEE capsule from template
-cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-[Project]-Session.md
+cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-[Project]-Session.md
 ```
 
 ## Usage Patterns
@@ -320,11 +320,11 @@ decisions:
 
 ```bash
 # Add HEE state capsule to git
-git add docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-*.md
+git add docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-*.md
 
 # Commit with HEE state reference
 git commit -m "feat: Implement CI monitoring [hee-agent]
-State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
+State Capsule: docs/history/state_capsules/2026-01-24/HEE-CI-Integration.md"
 ```
 
 ### 2. HEE CI/CD Integration
@@ -341,7 +341,7 @@ State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
 ```yaml
 # .github/workflows/hee-ci.yml
 - name: Validate HEE State Capsules
-  run: python scripts/validate_hee_capsules.py --state-dir docs/STATE_CAPSULES/
+  run: python scripts/validate_hee_capsules.py --state-dir docs/history/state_capsules/
 ```
 
 ### 3. HEE Project Management
@@ -375,7 +375,7 @@ State Capsule: docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md"
 ```bash
 # Validate HEE capsule structure
 python scripts/validate_hee_capsule.py \
-  --input docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md \
+  --input docs/history/state_capsules/2026-01-24/HEE-CI-Integration.md \
   --hee-rules strict
 ```
 
@@ -452,7 +452,7 @@ docs/
 ```bash
 # Create new HEE capsule from template
 cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md \
-   docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-[Project]-Session.md
+   docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-[Project]-Session.md
 
 # Validate HEE template compliance
 python scripts/validate_hee_template.py \
@@ -465,13 +465,13 @@ python scripts/validate_hee_template.py \
 
 ```bash
 # Create HEE date directory if needed
-mkdir -p docs/STATE_CAPSULES/$(date +%Y-%m-%d)
+mkdir -p docs/history/state_capsules/$(date +%Y-%m-%d)
 
 # Find latest HEE capsule
-LATEST_HEE=$(ls -dt docs/STATE_CAPSULES/*/ | head -1)/HEE-*.md
+LATEST_HEE=$(ls -dt docs/history/state_capsules/*/ | head -1)/HEE-*.md
 
 # List all HEE capsules
-find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
+find docs/history/state_capsules/ -name "HEE-*.md" | sort
 ```
 
 ## HEE-Specific Validation
@@ -560,11 +560,11 @@ find docs/STATE_CAPSULES/ -name "HEE-*.md" | sort
 python scripts/generate_hee_capsule.py \
   --project "CI Monitoring Integration" \
   --phase "Phase 1" \
-  --output docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-CI-Integration.md
+  --output docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-CI-Integration.md
 
 # Validate HEE state capsule
 python scripts/validate_hee_capsule.py \
-  --input docs/STATE_CAPSULES/2026-01-24/HEE-CI-Integration.md \
+  --input docs/history/state_capsules/2026-01-24/HEE-CI-Integration.md \
   --hee-rules strict
 
 # Update HEE state capsule
@@ -582,7 +582,7 @@ python scripts/update_hee_capsule.py \
 # Archive old HEE capsules
 python scripts/archive_hee_capsules.py \
   --older-than 30 \
-  --destination docs/STATE_CAPSULES/archive/
+  --destination docs/history/state_capsules/archive/
 
 # Find HEE capsules by project
 python scripts/find_hee_capsules.py \
@@ -591,7 +591,7 @@ python scripts/find_hee_capsules.py \
 
 # Generate HEE capsule index
 python scripts/generate_hee_index.py \
-  --input docs/STATE_CAPSULES/ \
+  --input docs/history/state_capsules/ \
   --output HEE_CAPSULE_INDEX.md
 ```
 

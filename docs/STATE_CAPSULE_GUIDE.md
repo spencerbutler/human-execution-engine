@@ -1,4 +1,16 @@
 # HEE State Capsule Guide
+## Status
+
+OPTIONAL / HISTORICAL LOGGING (NON-AUTHORITATIVE)
+
+## Rules
+
+- State Capsules are historical working notes, not a control-plane mechanism.
+- No workflow may REQUIRE State Capsules for handoff, sequencing, or authorization.
+- AUTHZ is granted only via explicit chat-line sentinel:
+  `AUTHZ: APPROVED_TO_ACT`
+- Commit-time authority governs; working notes are provisional.
+- If content becomes durable doctrine, it MUST be promoted to `docs/doctrine/`.
 
 ## Overview
 
@@ -9,7 +21,7 @@ State Capsules are structured documentation artifacts that preserve critical pro
 State Capsules serve multiple critical functions:
 
 - **Knowledge Preservation**: Capture decisions, context, and progress
-- **Seamless Handoffs**: Enable agents to resume work with full context
+- **Contextual Reference**: Provide optional historical context for agents and operators
 - **Progress Tracking**: Document what was accomplished and what remains
 - **Compliance Assurance**: Maintain HEE governance standards
 - **Audit Trail**: Provide historical record of project evolution
@@ -17,9 +29,9 @@ State Capsules serve multiple critical functions:
 ## Directory Structure
 
 ```
-docs/STATE_CAPSULES/
+docs/history/state_capsules/
 ├── README.md                    # Directory overview and conventions
-├── CURRENT_TASKS.md             # Canonical entry point for current state
+├── CURRENT_TASKS.md             # Optional operator dashboard (non-authoritative)
 ├── 2026-01-24/                  # Date-organized session capsules
 │   ├── HEE-Session-Report.md
 │   ├── HEE-Implementation-Plan-100-Compliance.md

@@ -52,7 +52,7 @@ Successfully merged both open PRs (#18 and #19) for the human-execution-engine r
 
 - `README.md` - Updated with HEE compliance improvements
 - `CHANGELOG.md` - Added comprehensive change documentation
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
 
 ### Deleted Files
 

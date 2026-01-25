@@ -295,7 +295,7 @@ docs/TEMPLATES/
 
 ```bash
 # Create new HEE capsule from template
-cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-Session.md
+cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-Session.md
 
 # Validate HEE capsule structure
 python scripts/validate_hee_capsule.py --input capsule.md --hee-rules
@@ -307,10 +307,10 @@ python scripts/validate_hee_capsule.py --input capsule.md --hee-rules
 
 ```bash
 # Create HEE date directory if needed
-mkdir -p docs/STATE_CAPSULES/$(date +%Y-%m-%d)
+mkdir -p docs/history/state_capsules/$(date +%Y-%m-%d)
 
 # Find latest HEE capsule
-LATEST_HEE=$(ls -dt docs/STATE_CAPSULES/*/ | head -1)/HEE-*.md
+LATEST_HEE=$(ls -dt docs/history/state_capsules/*/ | head -1)/HEE-*.md
 ```
 
 ## HEE-Specific Validation

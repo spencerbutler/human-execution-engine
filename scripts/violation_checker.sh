@@ -165,7 +165,7 @@ fi
 # Check 4: State Capsule Updates
 echo ""
 echo "📋 Checking State Capsule Updates..."
-state_capsule_dir="$project_root/docs/STATE_CAPSULES"
+state_capsule_dir="$project_root/docs/history/state_capsules"
 
 # Check for .done extension rule
 if [[ -d "$state_capsule_dir" ]]; then

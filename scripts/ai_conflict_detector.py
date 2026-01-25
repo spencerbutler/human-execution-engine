@@ -21,7 +21,7 @@ class AIConflictDetector:
                 r'docs/.*\.md$',           # Documentation files
                 r'prompts/.*\.md$',        # Prompt files
                 r'\.github/workflows/.*',  # CI/CD workflows
-                r'docs/STATE_CAPSULES/',  # State capsules
+                r'docs/history/state_capsules/',  # State capsules
             ],
             'medium_risk': [
                 r'scripts/.*\.py$',        # Python scripts
@@ -159,7 +159,7 @@ class AIConflictDetector:
     def get_file_recommendation(self, file_path: str, risk_level: str) -> str:
         """Get recommendation for handling a risky file."""
         if risk_level == 'high_risk':
-            if 'docs/STATE_CAPSULES' in file_path:
+            if 'docs/history/state_capsules' in file_path:
                 return "Rebase immediately - state capsules are critical for HEE operations"
             elif 'workflows' in file_path:
                 return "Coordinate with team - CI/CD changes require synchronization"

@@ -41,7 +41,7 @@ The enforcement layer defining state machines, scheduling semantics, and determi
 =======
 - [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
 - [**🛡️ HEE Compliance**](scripts/README.md) - Automated compliance monitoring and prevention systems
-- [**📋 State Capsules**](docs/STATE_CAPSULES/) - Post-mortem procedures and violation tracking
+- [**📋 Historical State Capsules**](docs/history/state_capsules/) - Post-mortems and historical working notes (non-authoritative)
 
 >>>>>>> 3b95276 (docs: Update README and create CHANGELOG for HEE compliance improvements [model: claude-3.5-sonnet])
 

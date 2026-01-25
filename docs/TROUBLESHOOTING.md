@@ -162,7 +162,7 @@ git push origin feature/new-name
 #### Validate State Capsule
 ```bash
 # Run validation script
-python scripts/validate_hee_capsule.py --input docs/STATE_CAPSULES/current.md
+python scripts/validate_hee_capsule.py --input docs/history/state_capsules/current.md
 ```
 
 #### Fix Format Issues
@@ -194,10 +194,10 @@ next_chat_bootstrap:
 **Solutions**:
 ```bash
 # Update task status immediately
-sed -i 's/- \[ \] Task description/- [x] Task description/' docs/STATE_CAPSULES/current.md
+sed -i 's/- \[ \] Task description/- [x] Task description/' docs/history/state_capsules/current.md
 
 # Add new tasks
-echo "- [ ] New task description" >> docs/STATE_CAPSULES/current.md
+echo "- [ ] New task description" >> docs/history/state_capsules/current.md
 ```
 
 ## Security Issues
@@ -458,7 +458,7 @@ Escalate immediately if:
 
 2. **Update State Capsule**
    ```bash
-   echo "🚨 CRITICAL: [Issue description]" >> docs/STATE_CAPSULES/current.md
+   echo "🚨 CRITICAL: [Issue description]" >> docs/history/state_capsules/current.md
    ```
 
 3. **Notify Team**

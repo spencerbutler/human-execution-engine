@@ -55,7 +55,7 @@ classDiagram
 ```yaml
 hee_monitoring:
   version: "1.0"
-  state_capsule: "docs/STATE_CAPSULES/2026-01-24/HEE-Monitoring.md"
+  state_capsule: "docs/history/state_capsules/2026-01-24/HEE-Monitoring.md"
   governance_rules: "strict"
   quality_gates:
     - spec_coverage: 100%
@@ -256,9 +256,9 @@ jobs:
         run: |
           git config --global user.name "HEE Monitoring Agent"
           git config --global user.email "hee-monitor@example.com"
-          git add docs/STATE_CAPSULES/
+          git add docs/history/state_capsules/
           git commit -m "chore: HEE auto-fix CI issues [hee-agent]
-          State Capsule: docs/STATE_CAPSULES/$(date +%Y-%m-%d)/HEE-Monitoring-AutoFix.md"
+          State Capsule: docs/history/state_capsules/$(date +%Y-%m-%d)/HEE-Monitoring-AutoFix.md"
           git push origin HEAD
 ```
 
@@ -625,7 +625,7 @@ hee-monitoring = "^1.0"  # HEE monitoring engine
 # Start HEE monitoring with full state integration
 python scripts/hee_monitor.py \
   --mode full \
-  --state-capsule docs/STATE_CAPSULES/2026-01-24/HEE-Monitoring.md \
+  --state-capsule docs/history/state_capsules/2026-01-24/HEE-Monitoring.md \
   --hee-governance strict \
   --alert-level high
 
@@ -643,7 +643,7 @@ python scripts/hee_monitor.py \
 # Apply HEE-safe fixes with full state preservation
 python scripts/hee_auto_fix.py \
   --mode hee-safe \
-  --state-capsule docs/STATE_CAPSULES/2026-01-24/HEE-Monitoring.md \
+  --state-capsule docs/history/state_capsules/2026-01-24/HEE-Monitoring.md \
   --max-severity medium \
   --hee-governance strict
 
@@ -660,7 +660,7 @@ python scripts/hee_auto_fix.py \
 ```bash
 # Validate HEE state capsule with governance rules
 python scripts/validate_hee_state_capsule.py \
-  --input docs/STATE_CAPSULES/2026-01-24/HEE-Monitoring.md \
+  --input docs/history/state_capsules/2026-01-24/HEE-Monitoring.md \
   --hee-rules strict \
   --governance-check full
 
