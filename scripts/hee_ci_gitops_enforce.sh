@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# CI enforcement:
+# - required files exist
+# - prompts reference scripts/hee_git_ops.sh
+# - runbook exists
+# - CI workflow includes enforcement step
+#
+# This script should be invoked by .github/workflows/ci.yml.
+
+fail() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+
+req_files=(
+  "docs/guides/GIT_GH_WORKFLOW.md"
+  "scripts/hee_git_ops.sh"
+  "scripts/hee_ci_gitops_enforce.sh"
+  ".github/workflows/ci.yml"
+)
+
+for f in "${req_files[@]}"; do
+  [[ -f "$f" ]] || fail "Missing required file: $f"
+done
+
+# Ensure scripts are at least parseable and have strict mode.
+grep -q "set -euo pipefail" scripts/hee_git_ops.sh || fail "hee_git_ops.sh must use 'set -euo pipefail'"
+grep -q "set -euo pipefail" scripts/hee_ci_gitops_enforce.sh || fail "hee_ci_gitops_enforce.sh must use 'set -euo pipefail'"
+
+# Prompts must reference the guarded script.
+prompt_files=(
+  "prompts/INIT.md"
+  "prompts/PROMPTING_RULES.md"
+  "prompts/AGENT_STATE_HANDOFF.md"
+)
+
+missing_prompt=0
+for p in "${prompt_files[@]}"; do
+  if [[ ! -f "$p" ]]; then
+    printf 'WARN: Prompt file missing (expected by policy): %s\n' "$p" >&2
+    missing_prompt=1
+  fi
+done
+
+if [[ "$missing_prompt" -eq 1 ]]; then
+  fail "One or more required prompt files are missing. Expected: ${prompt_files[*]}"
+fi
+
+for p in "${prompt_files[@]}"; do
+  grep -q "scripts/hee_git_ops.sh" "$p" || fail "Prompt must reference scripts/hee_git_ops.sh: $p"
+  grep -q "BLOCKER" "$p" || fail "Prompt must include BLOCKER semantics: $p"
+done
+
+# CI workflow must call this enforcement script.
+grep -q "scripts/hee_ci_gitops_enforce.sh" .github/workflows/ci.yml \
+  || fail "ci.yml must run scripts/hee_ci_gitops_enforce.sh"
+
+# Optional: doc-path alignment guardrail (presence check, not correctness of content)
+# We only enforce that the workflow is no longer hard-coded to legacy docs/*.md.
+if grep -qE "(^|[^/])docs/\*\.md" .github/workflows/ci.yml; then
+  fail "ci.yml still references legacy 'docs/*.md' glob; update to docs/doctrine/* and docs/specs/* (and/or docs/guides/*)."
+fi
+
+printf "OK: HEE GitOps admission control enforcement checks passed.\n"
