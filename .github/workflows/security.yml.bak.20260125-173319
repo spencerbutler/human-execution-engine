@@ -40,9 +40,9 @@ jobs:
 
         # Check for hardcoded secrets
         echo "Checking for potential secrets..."
-        if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" --include="*.env*" . | grep -v "docs/doctrine/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo\|sample" | head -10; then
+        if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" --include="*.env*" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo\|sample" | head -10; then
           echo "⚠️  Potential sensitive information found:"
-          grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" --include="*.env*" . | grep -v "docs/doctrine/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo\|sample" | head -10
+          grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" --include="*.env*" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo\|sample" | head -10
         else
           echo "✅ No obvious sensitive information detected"
         fi
@@ -52,14 +52,14 @@ jobs:
         echo "🔍 Validating security policy compliance..."
 
         # Check for security policy
-        if [ -f "docs/doctrine/SECURITY.md" ]; then
+        if [ -f "docs/SECURITY.md" ]; then
           echo "✅ Security policy found"
         else
           echo "⚠️  Security policy missing"
         fi
 
         # Check for HEE policy security sections
-        if [ -f "docs/doctrine/HEE_POLICY.md" ] && grep -q "security" docs/doctrine/HEE_POLICY.md; then
+        if [ -f "docs/HEE_POLICY.md" ] && grep -q "security" docs/HEE_POLICY.md; then
           echo "✅ HEE policy includes security sections"
         else
           echo "⚠️  HEE policy security sections may be missing"
@@ -117,7 +117,7 @@ jobs:
         fi
 
         # Check for pager prevention compliance
-        if [ -f "docs/doctrine/HEE_POLICY.md" ] && grep -q "pager prevention" docs/doctrine/HEE_POLICY.md; then
+        if [ -f "docs/HEE_POLICY.md" ] && grep -q "pager prevention" docs/HEE_POLICY.md; then
           echo "✅ Pager prevention policy documented"
         else
           echo "❌ Pager prevention policy missing"
@@ -176,8 +176,8 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./
-        base: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
-        head: ${{ github.sha }}
+        base: main
+        head: HEAD
         extra_args: --debug --only-verified
 
   final-security-summary:
