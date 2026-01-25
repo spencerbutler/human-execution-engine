@@ -143,7 +143,38 @@ case "$op" in
     if ! printf '%s\0' "$@" | tr '\0' '\n' | grep -qE '^-m$'; then
       die "commit requires -m \"message\""
     fi
-    git commit "$@"
+    
+# --- BEGIN: model disclosure precheck based on commit argv (-m) ---
+extract_commit_message_from_args() {
+  local msg=""
+  local prev=""
+  for a in "$@"; do
+    if [ "$prev" = "-m" ] || [ "$prev" = "--message" ]; then
+      if [ -n "$msg" ]; then
+        msg="${msg}"$'\n'
+      fi
+      msg="${msg}${a}"
+      prev=""
+      continue
+    fi
+    prev="$a"
+  done
+  printf "%s" "$msg"
+}
+
+commit_msg="$(extract_commit_message_from_args "$@")"
+
+if [ -n "${commit_msg:-}" ]; then
+  tmp_msg="$(mktemp)"
+  printf "%s\n" "$commit_msg" > "$tmp_msg"
+  if [ -x "scripts/check_model_disclosure.sh" ]; then
+    scripts/check_model_disclosure.sh "$tmp_msg" || { rm -f "$tmp_msg"; exit 1; }
+  fi
+  rm -f "$tmp_msg"
+fi
+# --- END: model disclosure precheck based on commit argv (-m) ---
+
+git commit "$@"
     ;;
 
   push)
