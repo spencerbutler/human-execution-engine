@@ -149,4 +149,17 @@ This repository has achieved 100% HEE compliance with advanced automation system
 
 ---
 
+## Agent Handoff Reference
+
+**Final Handoff Capsule**: `docs/STATE_CAPSULES/2026-01-24/HEE-Final-Handoff-Capsule.md`
+- Complete project handoff from Implementation Agent to Operations Agent
+- Includes critical decisions, open threads, and next steps
+- Production deployment requirements and procedures
+
+**Project Context Documents**:
+- **README**: `README.md` - Current project status and architecture overview
+- **CHANGELOG**: `CHANGELOG.md` - Recent development history and compliance improvements
+
+---
+
 **For detailed historical information, see**: `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md`
