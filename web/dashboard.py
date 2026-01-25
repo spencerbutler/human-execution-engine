@@ -6,8 +6,12 @@ Web interface for real-time branch health monitoring and analytics.
 
 import json
 import os
+import sys
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.branch_health_monitor import BranchHealthMonitor
 
 

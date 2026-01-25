@@ -41,11 +41,17 @@ class HistoricalData:
 
 
 class PredictiveAnalytics:
-    """Advanced analytics engine for conflict prediction and trend analysis."""
+    """Advanced analytics engine for conflict prediction and trend analysis with performance optimization."""
 
     def __init__(self, db_path: str = "docs/BRANCH_ANALYTICS.db"):
         self.db_path = db_path
         self.initialize_database()
+
+        # Performance optimization caches
+        self._prediction_cache: Dict[str, PredictiveMetrics] = {}
+        self._analytics_cache: Dict[str, Any] = {}
+        self._cache_timestamp: Optional[datetime] = None
+        self._cache_ttl_seconds = 300  # Cache for 5 minutes (predictions change less frequently)
 
     def initialize_database(self) -> None:
         """Initialize SQLite database for analytics storage."""
