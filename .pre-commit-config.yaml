@@ -36,8 +36,6 @@ repos:
         name: Model Disclosure Check
         entry: ./scripts/check_model_disclosure.sh
         language: system
-        files: '.*'
-        pass_filenames: true
         stages: [commit-msg]
 
       - id: hee-documentation-check
