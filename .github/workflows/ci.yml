@@ -13,36 +13,36 @@ jobs:
   hee-compliance-check:
     name: HEE Compliance Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Check for pager invocation prevention
       run: |
         echo "🔍 Validating pager prevention in shell commands..."
-        
+
         # Check for common pager-invoking commands without prevention
         if grep -r "git log" --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention"; then
           echo "❌ Found git log commands without pager prevention"
           exit 1
         fi
-        
+
         if grep -r "man " --include="*.md" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "man -P cat\|MANPAGER=cat" | grep -v "pager prevention"; then
           echo "❌ Found man commands without pager prevention"
           exit 1
         fi
-        
+
         echo "✅ Pager prevention validation passed"
 
     - name: Validate HEE state capsule format
       run: |
         echo "🔍 Validating HEE state capsule format..."
-        
+
         # Check for state capsule files
         if [ -d "docs/STATE_CAPSULES" ]; then
           echo "✅ State capsule directory found"
-          
+
           # Validate YAML format in state capsules
           for file in docs/STATE_CAPSULES/**/*.md; do
             if [ -f "$file" ] && grep -q "chat:" "$file"; then
@@ -56,9 +56,9 @@ jobs:
     - name: Check for model disclosure in commits
       run: |
         echo "🔍 Checking for model disclosure in recent commits..."
-        
+
         # Check last 10 commits for model disclosure
-        if git log --oneline -10 | grep -q "\[model:"; then
+        if git --no-pager log --oneline -10 | grep -q "\[model:"; then
           echo "✅ Model disclosure found in recent commits"
         else
           echo "⚠️  No model disclosure found in recent commits"
@@ -67,7 +67,7 @@ jobs:
     - name: Validate HEE policy compliance
       run: |
         echo "🔍 Validating HEE policy compliance..."
-        
+
         # Check for HEE policy file
         if [ -f "docs/HEE_POLICY.md" ]; then
           echo "✅ HEE policy file found"
@@ -75,7 +75,7 @@ jobs:
           echo "❌ HEE policy file missing"
           exit 1
         fi
-        
+
         # Check for prompting rules
         if [ -f "prompts/PROMPTING_RULES.md" ]; then
           echo "✅ Prompting rules found"
@@ -87,15 +87,15 @@ jobs:
   security-scan:
     name: Security Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Run security scanner
       run: |
         echo "🔍 Running security validation..."
-        
+
         # Check for security scanner script
         if [ -f "scripts/security_scanner.py" ]; then
           echo "✅ Security scanner found"
@@ -103,10 +103,10 @@ jobs:
         else
           echo "⚠️  Security scanner not found, skipping security validation"
         fi
-        
+
         # Basic security checks
         echo "🔍 Checking for sensitive information..."
-        
+
         # Check for hardcoded secrets
         if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo"; then
           echo "⚠️  Potential sensitive information found (review required)"
@@ -117,18 +117,18 @@ jobs:
   documentation-check:
     name: Documentation Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Validate documentation structure
       run: |
         echo "🔍 Validating documentation structure..."
-        
+
         # Check for required documentation files
         required_docs=("docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md")
-        
+
         for doc in "${required_docs[@]}"; do
           if [ -f "$doc" ]; then
             echo "✅ $doc found"
@@ -136,7 +136,7 @@ jobs:
             echo "⚠️  $doc missing"
           fi
         done
-        
+
         # Check for cross-references
         if grep -r "docs/STATE_CAPSULE_GUIDE.md" --include="*.md" .; then
           echo "✅ Cross-references to state capsule guide found"
@@ -145,15 +145,15 @@ jobs:
   branch-management-check:
     name: Branch Management Validation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Validate branch management compliance
       run: |
         echo "🔍 Validating branch management compliance..."
-        
+
         # Check for feature branch naming
         if [ "$GITHUB_REF" != "refs/heads/main" ] && [ "$GITHUB_REF" != "refs/heads/master" ]; then
           if echo "$GITHUB_HEAD_REF" | grep -q "^feature/"; then
@@ -168,15 +168,15 @@ jobs:
   pager-prevention-validation:
     name: Pager Prevention Specific Checks
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Comprehensive pager prevention check
       run: |
         echo "🔍 Running comprehensive pager prevention validation..."
-        
+
         # Check for pager prevention documentation
         if [ -f "docs/HEE_POLICY.md" ] && grep -q "pager prevention" docs/HEE_POLICY.md; then
           echo "✅ Pager prevention policy documented"
@@ -184,7 +184,7 @@ jobs:
           echo "❌ Pager prevention policy missing"
           exit 1
         fi
-        
+
         # Check for pager prevention in prompting rules
         if [ -f "prompts/PROMPTING_RULES.md" ] && grep -q "pager prevention" prompts/PROMPTING_RULES.md; then
           echo "✅ Pager prevention rules documented"
@@ -192,7 +192,7 @@ jobs:
           echo "❌ Pager prevention rules missing"
           exit 1
         fi
-        
+
         # Check for troubleshooting documentation
         if [ -f "docs/TROUBLESHOOTING.md" ] && grep -q "pager" docs/TROUBLESHOOTING.md; then
           echo "✅ Pager troubleshooting documented"
@@ -205,15 +205,15 @@ jobs:
     name: Final HEE Validation
     runs-on: ubuntu-latest
     needs: [hee-compliance-check, security-scan, documentation-check, branch-management-check, pager-prevention-validation]
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Final HEE compliance summary
       run: |
         echo "🔍 Running final HEE compliance summary..."
-        
+
         echo "✅ HEE CI Pipeline validation completed"
         echo "📋 Summary:"
         echo "   - Pager prevention: Validated"
@@ -222,5 +222,5 @@ jobs:
         echo "   - Security compliance: Validated"
         echo "   - Documentation structure: Validated"
         echo "   - Branch management: Validated"
-        
+
         echo "🎯 All HEE compliance checks passed!"

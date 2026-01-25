@@ -5,8 +5,10 @@ This directory contains scripts for monitoring and enforcing HEE (Human Executio
 ## Scripts
 
 ### `hee_compliance_monitor.py`
+
 **Purpose**: Continuous monitoring of HEE governance compliance
-**Usage**: 
+**Usage**:
+
 ```bash
 # Run compliance checks
 python scripts/hee_compliance_monitor.py
@@ -16,6 +18,7 @@ python scripts/hee_compliance_monitor.py --report
 ```
 
 **Features**:
+
 - **Main Branch Protection**: Detects direct commits to main branch
 - **Model Disclosure**: Ensures commit messages include AI model disclosure
 - **Branch Naming**: Validates feature branch naming conventions
@@ -24,6 +27,7 @@ python scripts/hee_compliance_monitor.py --report
 - **Reporting**: Generates detailed compliance reports
 
 **Integration**:
+
 - Can be run manually or integrated into CI/CD pipelines
 - Creates violation logs in `docs/STATE_CAPSULES/compliance_violations.json`
 - Provides actionable feedback for violation resolution
@@ -31,31 +35,37 @@ python scripts/hee_compliance_monitor.py --report
 ## Pre-commit Hooks
 
 ### `.git/hooks/pre-commit`
+
 **Purpose**: Prevents HEE governance violations at commit time
 **Features**:
+
 - Blocks direct commits to main branch
 - Validates commit message format includes model disclosure
 - Provides helpful error messages and solutions
 
-**Installation**: 
+**Installation**:
+
 - Automatically installed when cloning the repository
 - Made executable during setup process
 
 ## Usage Examples
 
 ### Manual Compliance Check
+
 ```bash
 cd human-execution-engine
 python scripts/hee_compliance_monitor.py
 ```
 
 ### Generate Compliance Report
+
 ```bash
 cd human-execution-engine
 python scripts/hee_compliance_monitor.py --report
 ```
 
 ### CI/CD Integration
+
 ```yaml
 # .github/workflows/hee-compliance.yml
 - name: Run HEE Compliance Check
@@ -65,9 +75,11 @@ python scripts/hee_compliance_monitor.py --report
 ## Violation Types
 
 ### HIGH Severity
+
 - **MAIN_BRANCH_COMMIT**: Direct commit to main branch
 
-### MEDIUM Severity  
+### MEDIUM Severity
+
 - **MISSING_MODEL_DISCLOSURE**: Commit message missing [model: ...] disclosure
 - **INVALID_BRANCH_NAME**: Branch name doesn't follow feature/ or fix/ convention
 
@@ -88,10 +100,12 @@ python scripts/hee_compliance_monitor.py --report
 ## Troubleshooting
 
 ### Pre-commit Hook Not Working
+
 - Ensure the hook file is executable: `chmod +x .git/hooks/pre-commit`
 - Check git configuration: `git config core.hooksPath`
 
 ### Compliance Monitor Errors
+
 - Ensure Python 3.6+ is installed
 - Check that git is properly configured
 - Verify script has read/write permissions to repository
@@ -99,6 +113,7 @@ python scripts/hee_compliance_monitor.py --report
 ## Integration with State Capsules
 
 The compliance monitoring system integrates with HEE state capsules by:
+
 - Logging violations to state capsule directories
 - Providing violation details for post-mortem analysis
 - Tracking compliance trends over time

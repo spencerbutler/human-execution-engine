@@ -9,6 +9,7 @@ This document provides comprehensive guidance for preparing Human Execution Engi
 ### 1. HEE Release Philosophy
 
 **HEE-Specific Principles**:
+
 - **Spec-First Releases**: Release specifications precede all implementation
 - **State-Preserving Releases**: All releases maintain HEE state integrity
 - **Decision-Driven Process**: Release decisions documented and preserved
@@ -76,12 +77,14 @@ next_chat_bootstrap:
 ### 1. HEE Planning Phase
 
 **HEE Planning Requirements**:
+
 - HEE release specifications documented
 - HEE state capsule structure defined
 - HEE governance compliance plan
 - HEE quality discipline requirements
 
 **HEE Planning Checklist**:
+
 - [ ] HEE release specs documented
 - [ ] HEE state version compatibility verified
 - [ ] HEE governance rules identified
@@ -91,12 +94,14 @@ next_chat_bootstrap:
 ### 2. HEE Feature Complete Phase
 
 **HEE Feature Complete Criteria**:
+
 - All HEE planned features implemented
 - 100% HEE spec coverage achieved
 - HEE state capsule integration complete
 - HEE documentation drafts available
 
 **HEE Feature Complete Checklist**:
+
 - [ ] HEE feature implementation complete
 - [ ] HEE spec coverage at 100%
 - [ ] HEE state capsules created
@@ -106,12 +111,14 @@ next_chat_bootstrap:
 ### 3. HEE Stabilization Phase
 
 **HEE Stabilization Activities**:
+
 - HEE bug fixing and edge case handling
 - HEE performance optimization
 - HEE security hardening
 - HEE state capsule validation
 
 **HEE Stabilization Checklist**:
+
 - [ ] HEE bug fixes completed
 - [ ] HEE performance benchmarks met
 - [ ] HEE security review passed
@@ -121,12 +128,14 @@ next_chat_bootstrap:
 ### 4. HEE Release Candidate Phase
 
 **HEE RC Process**:
+
 1. HEE version tagging with state references
 2. HEE release candidate build generation
 3. HEE comprehensive testing
 4. HEE state capsule validation and signing
 
 **HEE RC Checklist**:
+
 - [ ] HEE version tagged with state references
 - [ ] HEE RC build generated
 - [ ] HEE testing completed
@@ -136,6 +145,7 @@ next_chat_bootstrap:
 ### 5. HEE Production Release Phase
 
 **HEE Production Steps**:
+
 1. HEE final state capsule generation
 2. HEE cryptographic signing
 3. HEE Git tag creation
@@ -143,6 +153,7 @@ next_chat_bootstrap:
 5. HEE distribution channel updates
 
 **HEE Production Checklist**:
+
 - [ ] HEE final state capsule generated
 - [ ] HEE artifacts signed
 - [ ] HEE Git tags created
@@ -164,6 +175,7 @@ next_chat_bootstrap:
 | HEE Governance Compliance | 100% | [Value]% | [Pass/Fail] |
 
 **HEE Validation Commands**:
+
 ```bash
 # Validate HEE release readiness
 python scripts/validate_hee_release.py \
@@ -180,12 +192,14 @@ python scripts/generate_hee_validation_report.py \
 ### 2. HEE State Capsule Validation
 
 **HEE State Validation**:
+
 - HEE state version compatibility
 - HEE decision preservation
 - HEE context stability
 - HEE governance compliance
 
 **HEE State Validation Command**:
+
 ```bash
 # Validate HEE release state capsule
 python scripts/validate_hee_state_capsule.py \
@@ -199,6 +213,7 @@ python scripts/validate_hee_state_capsule.py \
 ### 1. HEE Changelog Requirements
 
 **HEE Changelog Structure**:
+
 ```markdown
 # HEE Changelog
 
@@ -233,6 +248,7 @@ python scripts/validate_hee_state_capsule.py \
 ### 2. HEE Documentation Requirements
 
 **HEE Documentation Checklist**:
+
 - [ ] HEE user guide updated
 - [ ] HEE developer guide updated
 - [ ] HEE API reference updated
@@ -279,6 +295,7 @@ python scripts/validate_hee_package.py \
 ### 1. HEE Deployment Checklist
 
 **HEE Deployment Requirements**:
+
 - [ ] HEE package validation completed
 - [ ] HEE state capsules verified
 - [ ] HEE governance compliance confirmed
@@ -312,12 +329,14 @@ gh release upload v1.2.3 \
 ### 1. HEE Post-Release Monitoring
 
 **HEE Monitoring Requirements**:
+
 - HEE health monitoring
 - HEE error tracking
 - HEE performance metrics
 - HEE user feedback analysis
 
 **HEE Monitoring Commands**:
+
 ```bash
 # Monitor HEE release health
 python scripts/monitor_hee_release.py \
@@ -334,6 +353,7 @@ python scripts/generate_hee_post_release_report.py \
 ### 2. HEE Maintenance Process
 
 **HEE Maintenance Checklist**:
+
 - [ ] HEE health checks daily
 - [ ] HEE performance reviews weekly
 - [ ] HEE security patches monthly
@@ -344,12 +364,14 @@ python scripts/generate_hee_post_release_report.py \
 ### 1. HEE Rollback Procedures
 
 **HEE Rollback Triggers**:
+
 - HEE critical failures in production
 - HEE security vulnerabilities discovered
 - HEE state corruption detected
 - HEE governance violations identified
 
 **HEE Rollback Commands**:
+
 ```bash
 # Initiate HEE rollback
 python scripts/initiate_hee_rollback.py \
@@ -368,6 +390,7 @@ python scripts/execute_hee_rollback.py \
 ### 2. HEE Rollback Validation
 
 **HEE Rollback Checklist**:
+
 - [ ] HEE state integrity restored
 - [ ] HEE decision continuity verified
 - [ ] HEE context stability confirmed
@@ -391,6 +414,7 @@ python scripts/execute_hee_rollback.py \
 ### 2. HEE Governance Validation
 
 **HEE Governance Commands**:
+
 ```bash
 # Validate HEE release governance
 python scripts/validate_hee_release_governance.py \

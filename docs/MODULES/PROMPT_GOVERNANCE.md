@@ -11,6 +11,7 @@ This document establishes the governance framework for agent prompts within the 
 **Rule**: The `prompts/` directory is the **only** authoritative source for all agent prompts.
 
 **Rationale**:
+
 - Ensures editor-agnostic prompt management
 - Prevents prompt drift across different environments
 - Provides a single source of truth for all agents
@@ -21,6 +22,7 @@ This document establishes the governance framework for agent prompts within the 
 **Rule**: Editor-specific directories (e.g., `.cursor/prompts/`) contain **only** non-canonical wrapper stubs.
 
 **Implementation**:
+
 - `.cursor/prompts/` exists solely for Cursor usability improvements
 - Wrapper files must clearly point to canonical sources
 - No unique or authoritative instructions in wrapper files
@@ -41,11 +43,13 @@ graph TD
 ### 2. Mandatory Synchronization Requirements
 
 **Requirements**:
+
 - Any change to `prompts/` **requires** corresponding `.cursor/prompts/` update
 - Both changes must be in the **same commit**
 - Reviewers must treat synchronization mismatches as blocking issues
 
 **Violation Handling**:
+
 - Short-term: Enforced via agent rules and PR checklists
 - Long-term: Automated via pre-commit and CI hooks
 
@@ -54,6 +58,7 @@ graph TD
 **Pattern**: For every `prompts/<filename>.md`, there MUST exist `.cursor/prompts/<filename>.md`
 
 **Wrapper File Requirements**:
+
 1. Must contain clear reference to canonical source
 2. Must be safe to overwrite automatically
 3. Must contain no unique authoritative content
@@ -63,6 +68,7 @@ graph TD
 ### 1. Pre-Commit Validation
 
 **Checks**:
+
 - Canonical file exists for every wrapper
 - Wrapper references are accurate
 - No authoritative content in wrapper files
@@ -71,6 +77,7 @@ graph TD
 ### 2. CI Pipeline Integration
 
 **Automated Checks**:
+
 - Synchronization validation script
 - Content drift detection
 - Reference integrity verification
@@ -79,6 +86,7 @@ graph TD
 ### 3. Review Process
 
 **Reviewer Responsibilities**:
+
 - Verify canonical/wrapper synchronization
 - Ensure no authoritative content in wrappers
 - Validate reference accuracy
@@ -117,6 +125,7 @@ This file exists solely for Cursor editor integration. All authoritative content
 ### 1. Agent Rules
 
 **Agent Responsibilities**:
+
 - Proactively enforce canonicalization rules
 - Flag synchronization violations
 - Maintain wrapper file hygiene
@@ -125,6 +134,7 @@ This file exists solely for Cursor editor integration. All authoritative content
 ### 2. Human Reviewer Rules
 
 **Human Responsibilities**:
+
 - Validate canonical/wrapper synchronization
 - Reject PRs with governance violations
 - Maintain documentation consistency
@@ -133,6 +143,7 @@ This file exists solely for Cursor editor integration. All authoritative content
 ### 3. Automation Rules
 
 **Automation Requirements**:
+
 - Pre-commit hooks for basic validation
 - CI scripts for comprehensive checking
 - Automated synchronization tools
@@ -151,12 +162,14 @@ This file exists solely for Cursor editor integration. All authoritative content
 ### 2. Reporting Framework
 
 **Metrics**:
+
 - Synchronization compliance rate
 - Violation detection rate
 - Resolution time
 - Recurrence rate
 
 **Reporting**:
+
 - Weekly governance reports
 - PR-level compliance status
 - Repository health dashboard
@@ -183,12 +196,14 @@ This file exists solely for Cursor editor integration. All authoritative content
 ### ✅ Correct Patterns
 
 **Pattern 1**: Synchronized canonical/wrapper pair
+
 ```bash
 prompts/agent-protocol.md          # Canonical
 .cursor/prompts/agent-protocol.md  # Wrapper
 ```
 
 **Pattern 2**: Clear wrapper reference
+
 ```markdown
 # Wrapper: Agent Protocol
 **Canonical**: prompts/agent-protocol.md
@@ -198,18 +213,21 @@ prompts/agent-protocol.md          # Canonical
 ### ❌ Anti-Patterns
 
 **Anti-Pattern 1**: Missing wrapper synchronization
+
 ```bash
 prompts/agent-protocol.md          # Canonical exists
 .cursor/prompts/agent-protocol.md  # Wrapper missing
 ```
 
 **Anti-Pattern 2**: Authoritative content in wrapper
+
 ```markdown
 # Agent Protocol (WRONG - authoritative content in wrapper)
 This is the actual protocol...  # Should be in canonical only
 ```
 
 **Anti-Pattern 3**: Stale references
+
 ```markdown
 # Wrapper: Agent Protocol
 **Canonical**: prompts/old-name.md  # File was renamed
