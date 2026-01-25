@@ -270,3 +270,15 @@ repos:
 - [State Capsule Guide](STATE_CAPSULE_GUIDE.md)
 - [Prompting Rules](PROMPTING_RULES.md)
 - [Troubleshooting Guide](TROUBLESHOOTING.md)
+
+---
+
+## Structural Compliance Audit Summary (2026-01-25)
+
+**Structural violations found**: 8
+**Auto-remediated**: 5
+**Requiring human decision**: 3
+
+**Details**:
+- Auto-remediated: Created target directory structure, moved 5 core files to proper locations
+- Human decision required: Resolve docs-vs-prompts conflicts (2 files), classify unclear intent files (6 files)
