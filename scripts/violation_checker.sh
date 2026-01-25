@@ -125,13 +125,13 @@ commit_msg=""
 # Check if we're in a pre-commit hook context
 if [[ -n "${GIT_COMMIT:-}" ]]; then
     # We're in a commit hook, get the commit message
-    commit_msg=$(git log --format=%B -n 1 "$GIT_COMMIT" 2>/dev/null || echo "")
+    commit_msg=$(git --no-pager log --format=%B -n 1 "$GIT_COMMIT" 2>/dev/null || echo "")
 elif [[ -f ".git/COMMIT_EDITMSG" ]]; then
     # Try to read from the commit message file
     commit_msg=$(cat .git/COMMIT_EDITMSG 2>/dev/null || echo "")
 else
     # Fall back to last commit (for testing/debugging)
-    commit_msg=$(git log --format=%B -n 1 HEAD 2>/dev/null || echo "")
+    commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo "")
 fi
 
 if [[ -z "$commit_msg" ]]; then

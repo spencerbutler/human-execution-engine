@@ -56,7 +56,7 @@ commit_msg=$(git log --format=%B -n 1 HEAD 2>/dev/null || echo "")
 
 # After: Safe command execution with validation
 if git rev-parse --git-dir > /dev/null 2>&1; then
-    commit_msg=$(git log --format=%B -n 1 HEAD 2>/dev/null || echo "")
+    commit_msg=$(git --no-pager log --format=%B -n 1 HEAD 2>/dev/null || echo "")
     # Additional validation and error handling
 fi
 ```
