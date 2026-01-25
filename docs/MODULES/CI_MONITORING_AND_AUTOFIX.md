@@ -290,7 +290,7 @@ jobs:
         run: |
           git config --global user.name "HEE Auto-Fix Agent"
           git config --global user.email "hee-agent@example.com"
-          git add docs/STATE_CAPSULES/
+          git add docs/history/state_capsules/
           git commit -m "chore: Auto-fix CI failures [hee-agent]"
           git push origin HEAD
 ```

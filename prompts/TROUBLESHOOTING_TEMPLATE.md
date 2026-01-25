@@ -32,7 +32,7 @@ This is a template version of the comprehensive troubleshooting guide. Replace a
 
 # HEE Configuration (if using HEE)
 {HEE_INTEGRATION}: "enabled|disabled"           # Whether HEE is used
-{STATE_CAPSULE_PATH}: "docs/STATE_CAPSULES/"   # Path to state capsules
+{STATE_CAPSULE_PATH}: "docs/history/state_capsules/"   # Path to state capsules
 {PROMPT_PATH}: "prompts/"                       # Path to prompt files
 
 # Date Information

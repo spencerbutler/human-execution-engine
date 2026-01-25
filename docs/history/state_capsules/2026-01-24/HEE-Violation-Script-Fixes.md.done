@@ -18,7 +18,7 @@ Fix violation script issues that allow characters to escape (foo not found, etc.
 **Related Files**:
 - `scripts/violation_checker.sh` - Main violation checker script
 - `docs/VIOLATION_METRICS.md` - Violation tracking documentation
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Current task tracking
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - Current task tracking
 
 **Description**
 Fix violation script that doesn't work as intended and allows characters to escape (foo not found, etc.).
@@ -53,8 +53,8 @@ Fix violation script that doesn't work as intended and allows characters to esca
 
 **Files Involved**:
 - `scripts/violation_checker.sh` - Primary script to fix
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Violation-Script-Fixes.md` - This session report
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Task tracking
+- `docs/history/state_capsules/2026-01-24/HEE-Violation-Script-Fixes.md` - This session report
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - Task tracking
 
 **Dependencies**:
 - Understanding of shell scripting best practices
@@ -69,14 +69,14 @@ Fix violation script that doesn't work as intended and allows characters to esca
 ## HEE State Management
 
 ### Current State Capsule
-- **File**: `docs/STATE_CAPSULES/2026-01-24/HEE-Violation-Script-Fixes.md`
+- **File**: `docs/history/state_capsules/2026-01-24/HEE-Violation-Script-Fixes.md`
 - **Status**: Active and being updated
 - **Branch**: `fix-violation-script-20260124`
 
 ### Previous State Capsules
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - General task tracking
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Post-Mortem-PR-Conflicts.md` - Post-mortem analysis
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Implementation-Plan-100-Compliance.md` - Compliance implementation
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - General task tracking
+- `docs/history/state_capsules/2026-01-24/HEE-Post-Mortem-PR-Conflicts.md` - Post-mortem analysis
+- `docs/history/state_capsules/2026-01-24/HEE-Implementation-Plan-100-Compliance.md` - Compliance implementation
 
 ### .done Extension Rule
 **Rule**: When all tasks in a state capsule are completed, rename with `.done` extension
@@ -143,7 +143,7 @@ capsule_age=$(($(date +%s) - $(stat -c "%Y" "$latest_capsule" 2>/dev/null || ech
 - ⚠️ Pre-commit checks to be configured
 
 ## Files Modified
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Violation-Script-Fixes.md` - Created (this file)
+- `docs/history/state_capsules/2026-01-24/HEE-Violation-Script-Fixes.md` - Created (this file)
 
 ## Pending Actions
 - Fix violation checker script implementation
@@ -233,7 +233,7 @@ Total Violation Score: 4 points
 
 ### New Files Created:
 1. `docs/STATE_CAPSULE_GUIDE.md` - Comprehensive state capsule management guide
-2. `docs/STATE_CAPSULES/2026-01-24/HEE-Violation-Script-Fixes.md` - This session report
+2. `docs/history/state_capsules/2026-01-24/HEE-Violation-Script-Fixes.md` - This session report
 
 ### Files Modified:
 1. `scripts/violation_checker.sh` - Complete rewrite with robust error handling and .done extension support

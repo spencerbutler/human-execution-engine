@@ -11,10 +11,10 @@ Track ongoing HEE development tasks and troubleshooting with file references for
 **Last Updated**: 2026-01-24 at 20:35:00 CST
 **Related Files**:
 
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Post-Mortem-PR-Conflicts.md` - Comprehensive post-mortem analysis
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Implementation-Plan-100-Compliance.md` - Detailed implementation plan
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Immediate-Action-Plan.md` - Immediate actionable steps
-- `docs/STATE_CAPSULES/2026-01-24/HEE-PR-Merge-Completion.md` - PR merge completion documentation
+- `docs/history/state_capsules/2026-01-24/HEE-Post-Mortem-PR-Conflicts.md` - Comprehensive post-mortem analysis
+- `docs/history/state_capsules/2026-01-24/HEE-Implementation-Plan-100-Compliance.md` - Detailed implementation plan
+- `docs/history/state_capsules/2026-01-24/HEE-Immediate-Action-Plan.md` - Immediate actionable steps
+- `docs/history/state_capsules/2026-01-24/HEE-PR-Merge-Completion.md` - PR merge completion documentation
 
 **Incident Summary**: PR conflicts #18 and #19 caused significant wasted tokens and time due to inadequate conflict prevention systems. Comprehensive post-mortem analysis identified root causes and created detailed improvement plan.
 
@@ -134,7 +134,7 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 
 - `prompts/GROQ_OPTIMIZATION_RULES.md` - Complete optimization framework
 - `prompts/AGENT_COMPARISON_ANALYSIS.md` - Comprehensive agent analysis
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Complete documentation
+- `docs/history/state_capsules/2026-01-24/HEE-Prompt-Optimization-Done.md` - Complete documentation
 
 **Results**
 
@@ -273,7 +273,7 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 
 **Status**: COMPLETED ✅
 
-- **Session Report**: `docs/STATE_CAPSULES/2026-01-24/HEE-Session-Report.md`
+- **Session Report**: `docs/history/state_capsules/2026-01-24/HEE-Session-Report.md`
 - **Final Score**: 5 points (Good compliance)
 - **Improvement**: 72% reduction from initial 18 points
 - **Session Violations**: 3 (no repeats)
@@ -396,8 +396,8 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 **Completed**: 2026-01-24
 **Related Files**:
 
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - This document
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - This document
+- `docs/history/state_capsules/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work
 - `prompts/TROUBLESHOOTING.md` - New troubleshooting prompt
 
 **Description**
@@ -413,8 +413,8 @@ Updated state capsule after successful PR merge and cleanup.
 
 **Files Involved**
 
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
-- `docs/STATE_CAPSULES/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work documentation
+- `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md` - Updated with completion status
+- `docs/history/state_capsules/2026-01-24/HEE-Prompt-Optimization-Done.md` - Completed work documentation
 - `prompts/TROUBLESHOOTING.md` - New comprehensive troubleshooting prompt
 
 **Results**

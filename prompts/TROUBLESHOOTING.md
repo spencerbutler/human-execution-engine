@@ -372,7 +372,7 @@ Issues with agent coordination, handoffs, or role confusion.
 **Related Files**:
 
 - `prompts/STATE_CAPSULE_GUIDE.md` - State preservation rules
-- State capsule files in `docs/STATE_CAPSULES/`
+- State capsule files in `docs/history/state_capsules/`
 - `prompts/AGENT_STATE_HANDOFF.md` - State handoff procedures
 
 **Description**
@@ -389,7 +389,7 @@ State information not being properly preserved across agent transitions or sessi
 **Files Involved**
 
 - `prompts/STATE_CAPSULE_GUIDE.md` - State preservation rules
-- State capsule files in `docs/STATE_CAPSULES/`
+- State capsule files in `docs/history/state_capsules/`
 - `prompts/AGENT_STATE_HANDOFF.md` - Handoff procedures
 
 **Dependencies**

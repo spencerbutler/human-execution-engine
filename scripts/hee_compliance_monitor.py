@@ -15,7 +15,7 @@ from pathlib import Path
 class HEEComplianceMonitor:
     def __init__(self, repo_path="."):
         self.repo_path = Path(repo_path)
-        self.violations_log = self.repo_path / "docs" / "STATE_CAPSULES" / "compliance_violations.json"
+        self.violations_log = self.repo_path / "docs" / "history" / "state_capsules" / "compliance_violations.json"
         self.ensure_violations_log_exists()
 
     def ensure_violations_log_exists(self):

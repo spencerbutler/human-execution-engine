@@ -36,7 +36,7 @@ This audit assessed the Human Execution Engine repository structure against the 
 - `docs/HEE_VENDOR_HARDENING_SPEC.md` - Unclear if specs or doctrine (LOW)
 
 **Operational/State Tracking**
-- `docs/STATE_CAPSULES/` - State preservation (appropriate to remain)
+- `docs/history/state_capsules/` - State preservation (appropriate to remain)
 - `docs/TEMPLATES/` - Operational templates (appropriate to remain)
 
 **Project-Specific Content**
@@ -55,7 +55,7 @@ This audit assessed the Human Execution Engine repository structure against the 
 ### 📅 CALENDAR-TIME COUPLING FINDINGS
 
 **Embedded Date References**
-- `docs/STATE_CAPSULES/2026-01-24/` - Directory names contain dates
+- `docs/history/state_capsules/2026-01-24/` - Directory names contain dates
 - State capsule filenames contain dates (appropriate for historical tracking)
 - No calendar references in primary structure ✓
 

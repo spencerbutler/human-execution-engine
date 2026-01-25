@@ -114,7 +114,7 @@ next_chat_bootstrap:
 ### 1. Directory Organization
 
 ```
-docs/STATE_CAPSULES/
+docs/history/state_capsules/
 ├── README.md                    # Directory documentation
 ├── 2026-01-23/                 # Date-based organization
 │   ├── MT-logo-render-Phase3-CI-Troubleshooting.md
@@ -321,7 +321,7 @@ open_threads:
 
 ```bash
 # Create new capsule from template
-cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d)/New-Session.md
+cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/history/state_capsules/$(date +%Y-%m-%d)/New-Session.md
 ```
 
 ### 2. Directory Management
@@ -330,10 +330,10 @@ cp docs/TEMPLATES/STATE_CAPSULE_TEMPLATE.md docs/STATE_CAPSULES/$(date +%Y-%m-%d
 
 ```bash
 # Create date directory if needed
-mkdir -p docs/STATE_CAPSULES/$(date +%Y-%m-%d)
+mkdir -p docs/history/state_capsules/$(date +%Y-%m-%d)
 
 # Find latest capsule
-LATEST=$(ls -dt docs/STATE_CAPSULES/*/ | head -1)/*.md
+LATEST=$(ls -dt docs/history/state_capsules/*/ | head -1)/*.md
 ```
 
 ## Integration with HEE Principles
