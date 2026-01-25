@@ -69,7 +69,7 @@ This repository has achieved 100% HEE compliance with advanced automation system
 
 - **Status**: Complete
 - **Description**: Full state preservation and handoff system implemented
-- **Files**: Multiple state capsule files in `docs/STATE_CAPSULES/2026-01-24/`
+- **Files**: Multiple state capsule files in `docs/history/state_capsules/2026-01-24/`
 - **PR**: #22 merged successfully
 
 ### ✅ HEE Workflow Compliance
@@ -151,7 +151,7 @@ This repository has achieved 100% HEE compliance with advanced automation system
 
 ## Agent Handoff Reference
 
-**Final Handoff Capsule**: `docs/STATE_CAPSULES/2026-01-24/HEE-Final-Handoff-Capsule.md`
+**Final Handoff Capsule**: `docs/history/state_capsules/2026-01-24/HEE-Final-Handoff-Capsule.md`
 - Complete project handoff from Implementation Agent to Operations Agent
 - Includes critical decisions, open threads, and next steps
 - Production deployment requirements and procedures
@@ -162,4 +162,4 @@ This repository has achieved 100% HEE compliance with advanced automation system
 
 ---
 
-**For detailed historical information, see**: `docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md`
+**For detailed historical information, see**: `docs/history/state_capsules/2026-01-24/HEE-Current-Tasks.md`
