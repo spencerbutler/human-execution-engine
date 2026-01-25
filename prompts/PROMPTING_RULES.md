@@ -272,6 +272,40 @@ git push origin --delete feature/merged-branch  # Remote
 - Prevents branch confusion and conflicts
 - Keep repository clean and organized
 
+## Admission Control: PLAN→ACT Handshake
+
+**CRITICAL PROTOCOL**: All HEE prompts require explicit human authorization before any mutation.
+
+**PLAN Phase Requirements**:
+- Agent MUST produce a PLAN response and then STOP
+- Agent MUST end PLAN output with: WAITING_FOR: APPROVED_TO_ACT
+- Agent MUST wait for exact token: APPROVED_TO_ACT
+- Agent MAY run read-only commands: ls, cat, rg, git status/diff/log
+- Agent MUST NOT run any command that could change the working tree
+- Agent MUST NOT perform file writes, moves, deletes, copies, or formatting
+- Agent MUST NOT execute git operations (add/commit/push/merge)
+- Agent MUST NOT run scripts that modify repository state
+
+**ACT Phase Requirements**:
+- Agent MUST NOT begin mutations until receiving exact token: APPROVED_TO_ACT
+- Token must match exactly: APPROVED_TO_ACT (case-sensitive, no quotes, no surrounding whitespace)
+- Any mutation before approval constitutes RULE VIOLATION
+- Agent MUST treat unauthorized mutations as HEE governance failure
+
+**Mutation Definition**:
+- File writes, moves, deletes, copies
+- Git add/commit/push/merge operations
+- Running scripts that write files or modify repository state
+- Any command that changes working tree or git history
+- Format, generate, or install operations that modify files
+
+**Protocol Violation Handling**:
+- Agent MUST report violations immediately
+- Only human decides whether to revert/keep unauthorized mutations
+- Agent must not auto-revert unless explicitly instructed by human
+- Human MUST have opportunity to reject unauthorized changes
+- Unauthorized mutations MAY be reverted by human decision
+
 ---
 
 **These are ENFORCEMENT RULES, not guidelines. Violation constitutes process failure.**
