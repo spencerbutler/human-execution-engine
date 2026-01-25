@@ -14,7 +14,8 @@
 2. **Understand Active Tasks**: What's in progress, what's completed
 3. **Identify Violations**: Any active HEE rule violations
 4. **Check Branch Status**: Current branch state and open PRs
-5. **Proceed with INIT tasks** based on current state
+5. **Review Agent Handoff Reference**: Check for final handoff capsule and project context documents
+6. **Proceed with INIT tasks** based on current state
 
 ### If Current-Tasks Capsule is MISSING or EMPTY/DEFAULT
 
@@ -25,6 +26,24 @@
 3. **Read Troubleshooting** (`prompts/TROUBLESHOOTING.md`) - Problem-solving
 4. **Create Initial Current-Tasks Capsule** - Establish state tracking
 5. **Proceed with INIT tasks** from beginning
+
+### Step 2: Review All State Capsules (If Available)
+
+**Directory to Check**: `docs/STATE_CAPSULES/` (All dated subdirectories)
+
+**Hydration Process**:
+
+1. **List All Capsule Directories**: Check for dated folders (e.g., `2026-01-24/`)
+2. **Read Historical Capsules**: Review previous state capsules in reverse chronological order
+3. **Identify Outstanding Tasks**: Look for unresolved issues, open threads, or pending decisions
+4. **Check Final Handoff Capsule**: Review `HEE-Final-Handoff-Capsule.md` for complete project transition
+5. **Review Project Context**: Read README.md and CHANGELOG.md for current status and history
+
+**Capsule Reading Order**:
+- Start with `CURRENT_TASKS.md` (current status)
+- Review most recent dated capsules (newest first)
+- Check for final handoff capsule references
+- Cross-reference with README and CHANGELOG for context
 
 ## Current-Tasks Capsule Validation
 
