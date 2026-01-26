@@ -38,7 +38,7 @@ jobs:
         fi
 
         # Ensure single entrypoint (no arbitrary sourcing)
-        if grep -q "source.*\.sh" ci/governance/check.sh; then
+        if grep -o "source.*\.sh" ci/governance/check.sh | grep -v "rules.sh" | grep -q .; then
           echo "❌ check.sh must not source arbitrary files (only rules.sh)"
           exit 1
         fi
