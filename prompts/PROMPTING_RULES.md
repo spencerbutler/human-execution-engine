@@ -334,3 +334,12 @@ git push origin --delete feature/merged-branch  # Remote
 - Create Cursor wrappers for all prompt modifications
 - Commit frequently to preserve state during development
 - Create PRs for all changes and wait for proper review/merge
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

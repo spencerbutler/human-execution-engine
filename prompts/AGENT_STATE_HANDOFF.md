@@ -573,3 +573,15 @@ python scripts/recover_hee_handoff.py \
 - Unauthorized mutations MAY be reverted by human decision
 
 This HEE Agent State Handoff Protocol provides a comprehensive framework for seamless agent transitions within the Human Execution Engine ecosystem, ensuring state preservation, decision continuity, and governance compliance across all HEE operations.
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

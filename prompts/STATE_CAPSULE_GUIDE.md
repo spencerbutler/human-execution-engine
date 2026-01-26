@@ -596,3 +596,15 @@ python scripts/generate_hee_index.py \
 ```
 
 This HEE State Capsule Guide provides comprehensive instructions for creating, using, and managing State Capsules within the Human Execution Engine ecosystem, ensuring full compliance with HEE's governance rules, quality discipline, and state preservation requirements.
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

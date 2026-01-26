@@ -98,3 +98,15 @@ You are implementing the foundational specifications for the Human Execution Eng
 - [ ] No dynamic content generation
 - [ ] Specifications contain no implementation code
 - [ ] All content validated for security compliance
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.
