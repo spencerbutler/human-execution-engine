@@ -163,6 +163,7 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
   secret-scanning:
     name: Secret Scanning
     runs-on: ubuntu-latest
