@@ -90,7 +90,7 @@ jobs:
     - name: Test bad-missing-prompts fixture (should fail with GOV-STRUCT-001)
       run: |
         echo "🔍 Testing fixture: bad-missing-prompts (expected: FAIL with GOV-STRUCT-001)"
-        output=$(bash ci/governance/check.sh --path governance/fixtures/bad-missing-prompts 2>&1)
+        output=$(./ci/governance/check.sh --path governance/fixtures/bad-missing-prompts 2>&1)
         exit_code=$?
         echo "Exit code: $exit_code"
         echo "Output length: ${#output}"
