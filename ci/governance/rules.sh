@@ -18,7 +18,6 @@ check_gov_struct_001() {
   local root_path="$1"
   local violations=()
 
-  # Check required directories
   local required_paths=("docs" "prompts" ".github/workflows")
 
   for path in "${required_paths[@]}"; do
@@ -28,7 +27,10 @@ check_gov_struct_001() {
   done
 
   if [[ ${#violations[@]} -gt 0 ]]; then
-    echo "GOV-STRUCT-001: missing required path: ${violations[*]}"
+    printf 'GOV-STRUCT-001: %s: missing required path(s)\n' "<root>" >&2
+    for v in "${violations[@]}"; do
+      printf 'GOV-STRUCT-001: %s: missing required path\n' "$v" >&2
+    done
     return 1
   fi
 
@@ -40,20 +42,18 @@ check_gov_struct_001() {
 # Requirement: docs/doctrine/ directory exists with ≥1 file
 check_gov_doc_001() {
   local root_path="$1"
-
   local doctrine_dir="$root_path/docs/doctrine"
 
   if [[ ! -d "$doctrine_dir" ]]; then
-    echo "GOV-DOC-001: doctrine directory missing"
+    printf 'GOV-DOC-001: %s: doctrine directory missing\n' "docs/doctrine/" >&2
     return 1
   fi
 
-  # Check if directory has any files (not just subdirectories)
   local file_count
   file_count=$(find "$doctrine_dir" -maxdepth 1 -type f | wc -l)
 
   if [[ $file_count -eq 0 ]]; then
-    echo "GOV-DOC-001: doctrine directory exists but contains no documents"
+    printf 'GOV-DOC-001: %s: doctrine directory exists but contains no documents\n' "docs/doctrine/" >&2
     return 1
   fi
 
@@ -65,7 +65,6 @@ check_gov_doc_001() {
 # Required sections: Authority, Scope, Invariants (case-insensitive)
 check_gov_prompt_001() {
   local root_path="$1"
-
   local prompts_dir="$root_path/prompts"
 
   if [[ ! -d "$prompts_dir" ]]; then
@@ -73,40 +72,43 @@ check_gov_prompt_001() {
     return 0
   fi
 
-  local violations=()
+  local violations_found=false
 
-  # Check all .md files in prompts directory
   while IFS= read -r -d '' prompt_file; do
     local has_authority=false
     local has_scope=false
     local has_invariants=false
 
-    # Check for required sections (case-insensitive, must be at start of line)
     if grep -qi "^#\+[[:space:]]*authority" "$prompt_file"; then
       has_authority=true
     fi
-
     if grep -qi "^#\+[[:space:]]*scope" "$prompt_file"; then
       has_scope=true
     fi
-
     if grep -qi "^#\+[[:space:]]*invariant" "$prompt_file"; then
       has_invariants=true
     fi
 
-    # If any required section is missing, record violation
     if [[ $has_authority != true || $has_scope != true || $has_invariants != true ]]; then
       local missing_sections=()
       [[ $has_authority != true ]] && missing_sections+=("Authority")
       [[ $has_scope != true ]] && missing_sections+=("Scope")
       [[ $has_invariants != true ]] && missing_sections+=("Invariants")
 
-      violations+=("$(basename "$prompt_file"): missing ${missing_sections[*]}")
+      # Subject should be a stable repo-relative path
+      local subject="$prompt_file"
+      if [[ "$subject" == "$root_path/"* ]]; then
+        subject="${subject#$root_path/}"
+      else
+        subject="$(basename "$prompt_file")"
+      fi
+
+      printf 'GOV-PROMPT-001: %s: missing %s\n' "$subject" "${missing_sections[*]}" >&2
+      violations_found=true
     fi
   done < <(find "$prompts_dir" -name "*.md" -type f -print0)
 
-  if [[ ${#violations[@]} -gt 0 ]]; then
-    echo "GOV-PROMPT-001: ${violations[*]}"
+  if [[ $violations_found == true ]]; then
     return 1
   fi
 
@@ -119,15 +121,12 @@ run_governance_checks() {
   local root_path="$1"
   local violations_found=false
 
-  # Run each rule
   if ! check_gov_struct_001 "$root_path"; then
     violations_found=true
   fi
-
   if ! check_gov_doc_001 "$root_path"; then
     violations_found=true
   fi
-
   if ! check_gov_prompt_001 "$root_path"; then
     violations_found=true
   fi
