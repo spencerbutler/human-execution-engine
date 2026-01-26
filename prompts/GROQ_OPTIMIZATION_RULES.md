@@ -392,3 +392,15 @@ This Groq free tier optimization framework provides a comprehensive approach to 
 - Improved task completion times
 - Maintained HEE compliance rates
 - Positive user feedback and adoption
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.
