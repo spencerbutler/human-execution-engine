@@ -333,7 +333,7 @@ task_branches() {
   local stale_report="$GC_REPORTS/branches_stale.txt"
 
   run_task "branch_hygiene" "
-    set -euo pipefail
+    set -eo pipefail
     cd '$GC_ROOT'
     git fetch --prune >/dev/null 2>&1 || true
 
@@ -373,7 +373,8 @@ set -euo pipefail
 git fetch --prune
 # REVIEW BEFORE RUNNING.
 # Deletes ONLY merged remote branches (origin/*) excluding main/master/HEAD.
-git branch -r --merged origin/main | sed 's/^  //' | grep -vE 'origin/(main|master|HEAD)$' | while read -r rb; do
+git branch -r --merged origin/main | sed 's/^  //' | grep -vE 'origin/(main|master|HEAD)$' | while IFS= read -r rb; do
+  [[ -z "${rb:-}" ]] && continue
   b="${rb#origin/}"
   echo "Deleting remote branch: $b"
   git push origin --delete "$b"
