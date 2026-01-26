@@ -192,38 +192,34 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Conflict Prevention Validation
+    - name: Validate merge readiness
       shell: bash
       run: |
         set -euo pipefail
+          echo "🔍 Validating merge readiness against origin/main..."
+
+          git fetch origin main:refs/remotes/origin/main --force
+
+          if ! git merge --no-commit --no-ff origin/main; then
+            echo "❌ Conflicts detected with main branch"
+            echo "Files in conflict:"
+            git diff --name-only --diff-filter=U || true
+            if [ -f .git/MERGE_HEAD ]; then
+              git merge --abort || true
+            fi
+            exit 1
+          fi
+
+          if [ -f .git/MERGE_HEAD ]; then
+            git merge --abort
+          fi
+
+          echo "✅ Merge readiness check passed (no conflicts with origin/main)"
 
   final-validation:
     name: Final HEE Validation
     runs-on: ubuntu-latest
     needs: [hee-compliance-check, security-scan, documentation-check, branch-management-check, pager-prevention-validation, conflict-prevention-check]
-    echo "🔍 Validating merge readiness against origin/main..."
-    
-    git fetch origin main:refs/remotes/origin/main --force
-    
-    # Attempt a merge to detect true conflicts
-    if ! git merge --no-commit --no-ff origin/main; then
-      echo "❌ Conflicts detected with main branch"
-      echo "Files in conflict:"
-      git diff --name-only --diff-filter=U || true
-    
-      # Abort only if merge state exists
-      if [ -f .git/MERGE_HEAD ]; then
-        git merge --abort || true
-      fi
-      exit 1
-    fi
-    
-    # Success path: abort only if merge state exists
-    if [ -f .git/MERGE_HEAD ]; then
-      git merge --abort
-    fi
-    
-    echo "✅ Merge readiness check passed (no conflicts with origin/main)"
 
     steps:
     - name: Checkout code
