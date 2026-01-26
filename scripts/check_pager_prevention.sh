@@ -1,72 +1,81 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# HEE Pager Prevention Check Script
-# Governance intent: in non-interactive CI contexts, git commands must not invoke an interactive pager.
-#
-# Deterministic scope:
-# - Only scan tracked files under:
-#     - .github/workflows/** (executed by CI)
-#     - scripts/**          (invoked by CI or automation)
-#
-# Recognized pager-prevention mechanisms (any is sufficient):
-# - git --no-pager log ...
-# - git -c core.pager=cat log ...
-# - env-level prevention in the same file:
-#     - GIT_PAGER=cat / PAGER=cat (shell style)
-#     - env: GIT_PAGER: cat / env: PAGER: cat (GitHub Actions YAML style)
+echo "🔍 Validating pager prevention in CI-executed contexts..."
 
-echo "🔍 Checking for pager prevention in CI-executed contexts..."
-
-# Deterministically list tracked files in relevant execution contexts.
-# (Avoid scanning docs/markdown; only scan automation and workflow definitions.)
+# Deterministic scope: only tracked files that can actually execute in CI contexts.
+# Do NOT scan docs/markdown.
 mapfile -t files < <(
-  git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml' 'scripts/*.sh' 2>/dev/null || true
+  git ls-files \
+    '.github/workflows/*.yml' '.github/workflows/*.yaml' \
+    'scripts/*.sh' \
+    2>/dev/null || true
 )
 
 if (( ${#files[@]} == 0 )); then
-  echo "✅ Pager prevention check passed (no scoped files found)"
+  echo "✅ Pager prevention validation passed (no scoped files found)"
   exit 0
 fi
 
+# Skip this script to avoid self-matching in comments/strings.
+self_path="scripts/check_pager_prevention.sh"
+
 # Patterns
 git_log_re='(^|[[:space:];|&])git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+log\b'
-inline_ok_re='(--no-pager|-c[[:space:]]+core\.pager=|GIT_PAGER=cat|PAGER=cat|core\.pager=cat)'
+man_re='(^|[[:space:];|&])man[[:space:]]+[^[:space:]]'
 
-# YAML env-level prevention (same-file mitigation)
-yaml_env_ok_re='(^|[[:space:]])GIT_PAGER:[[:space:]]*cat\b|(^|[[:space:]])PAGER:[[:space:]]*cat\b'
+# Inline mitigations
+git_inline_ok_re='(--no-pager|-c[[:space:]]+core\.pager=|GIT_PAGER=cat|PAGER=cat|core\.pager=cat)'
+man_inline_ok_re='(man[[:space:]]+-P[[:space:]]+cat|MANPAGER=cat|PAGER=cat)'
+
+# YAML env-level mitigations (same-file)
+yaml_env_ok_re='(^|[[:space:]])GIT_PAGER:[[:space:]]*cat\b|(^|[[:space:]])PAGER:[[:space:]]*cat\b|(^|[[:space:]])MANPAGER:[[:space:]]*cat\b'
 
 violations=0
 
 for f in "${files[@]}"; do
-  # If the file declares global env pager prevention, we accept git log occurrences in that file
-  # even when the line itself doesn't include --no-pager.
+  [[ "$f" == "$self_path" ]] && continue
+
+  # File-level mitigation present?
   file_has_global_ok=0
   if grep -Eq "$yaml_env_ok_re" "$f" 2>/dev/null; then
     file_has_global_ok=1
-  elif grep -Eq '(^|[[:space:]])(export[[:space:]]+)?GIT_PAGER=cat\b|(^|[[:space:]])(export[[:space:]]+)?PAGER=cat\b' "$f" 2>/dev/null; then
+  elif grep -Eq '(^|[[:space:]])(export[[:space:]]+)?GIT_PAGER=cat\b|(^|[[:space:]])(export[[:space:]]+)?PAGER=cat\b|(^|[[:space:]])(export[[:space:]]+)?MANPAGER=cat\b' "$f" 2>/dev/null; then
     file_has_global_ok=1
   fi
 
-  # Scan line-by-line to produce actionable output (file + line number).
-  # Only flag pager-risk git log calls that lack any prevention.
+  # Line-by-line scan; ignore pure comment lines to reduce noise.
+  lineno=0
   while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" =~ $git_log_re ]]; then
-      if [[ "$line" =~ $inline_ok_re ]]; then
-        continue
-      fi
-      if (( file_has_global_ok == 1 )); then
-        continue
-      fi
+    lineno=$((lineno+1))
 
-      # Emit first few violations with line number for auditability.
-      lineno=$(grep -nF -- "$line" "$f" | head -n 1 | cut -d: -f1 || echo "?")
-      echo "❌ Pager-risk git log without prevention: ${f}:${lineno}"
-      echo "   $line"
-      violations=$((violations+1))
-      if (( violations >= 5 )); then
-        break
+    # Ignore comment-only lines (bash/yaml comments). This is safe because comments are non-executable.
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+
+    # --- git log ---
+    if [[ "$line" =~ $git_log_re ]]; then
+      if [[ "$line" =~ $git_inline_ok_re ]] || (( file_has_global_ok == 1 )); then
+        :
+      else
+        echo "❌ Pager-risk git log without prevention: ${f}:${lineno}"
+        echo "   $line"
+        violations=$((violations+1))
       fi
+    fi
+
+    # --- man ---
+    if [[ "$line" =~ $man_re ]]; then
+      if [[ "$line" =~ $man_inline_ok_re ]] || (( file_has_global_ok == 1 )); then
+        :
+      else
+        echo "❌ Pager-risk man without prevention: ${f}:${lineno}"
+        echo "   $line"
+        violations=$((violations+1))
+      fi
+    fi
+
+    if (( violations >= 5 )); then
+      break
     fi
   done < "$f"
 
@@ -77,13 +86,13 @@ done
 
 if (( violations > 0 )); then
   echo
-  echo "Failing pager-prevention check: add one of:"
+  echo "Failing pager-prevention validation. Fix by adding one of:"
   echo "  - git --no-pager log ..."
   echo "  - git -c core.pager=cat log ..."
-  echo "  - workflow env: GIT_PAGER: cat (or PAGER: cat)"
-  echo "  - script env: export GIT_PAGER=cat (or PAGER=cat)"
+  echo "  - workflow env: GIT_PAGER: cat (and/or PAGER: cat)"
+  echo "  - script env: export GIT_PAGER=cat (and/or PAGER=cat)"
+  echo "  - man -P cat <topic>  OR  MANPAGER=cat"
   exit 1
 fi
 
-echo "✅ Pager prevention check passed"
-exit 0
+echo "✅ Pager prevention validation passed"
