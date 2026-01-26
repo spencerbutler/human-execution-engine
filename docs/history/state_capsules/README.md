@@ -16,3 +16,8 @@ This directory contains historical working notes such as session reports, post-m
 
 ## Prior Location
 These historical notes previously lived at `docs/history/state_capsules/`. That location is deprecated to avoid any implication of control-plane authority.
+
+## History
+
+- [CI/CD greenline post-mortem (merge conflicts, YAML/shell failure modes, pager enforcement)](2026-01-26/HEE-CI-CD-Greenline-Postmortem.md)
+
