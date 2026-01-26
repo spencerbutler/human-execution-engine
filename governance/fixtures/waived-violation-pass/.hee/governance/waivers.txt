@@ -1,0 +1,2 @@
+GOV-STRUCT-001 | docs/ | 2026-12-31 | Temporary waiver for fixture testing missing docs directory
+GOV-DOC-001 | docs/doctrine/ | 2026-12-31 | Temporary waiver for fixture testing missing doctrine directory
