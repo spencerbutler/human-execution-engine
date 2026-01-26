@@ -26,21 +26,7 @@ jobs:
 
     - name: Check for pager invocation prevention
       run: |
-        echo "🔍 Validating pager prevention in shell commands..."
-
-        # Check for common pager-invoking commands without prevention
-        if grep -r "git log" --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "git --no-pager\|GIT_PAGER=cat" | grep -v "pager prevention"; then
-          echo "❌ Found git log commands without pager prevention"
-          exit 1
-        fi
-
-        if grep -r "man " --include="*.sh" --include="*.yml" --include="*.yaml" . | grep -v "man -P cat\|MANPAGER=cat" | grep -v "pager prevention"; then
-          echo "❌ Found man commands without pager prevention"
-          exit 1
-        fi
-
-        echo "✅ Pager prevention validation passed"
-
+        ./scripts/check_pager_prevention.sh
     - name: Validate HEE state capsule format
       run: |
         echo "🔍 Validating HEE state capsule format..."
