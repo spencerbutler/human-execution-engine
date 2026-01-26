@@ -192,42 +192,27 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Validate merge readiness
+    - name: Conflict Prevention Validation
+      shell: bash
       run: |
-        echo "🔍 Validating merge readiness and conflict prevention..."
-
-        # Fetch main branch for comparison
-        git fetch origin main
-
-        # Check for potential conflicts with main
-        if git diff origin/main...HEAD --exit-code 2>/dev/null; then
-          echo "✅ No conflicts detected with main branch"
-        else
+        set -euo pipefail
+        echo "🔍 Validating merge readiness against origin/main..."
+    
+        # Ensure we have enough history + the main ref
+        git fetch origin main:refs/remotes/origin/main --force
+    
+        # Attempt a merge to detect true conflicts
+        if ! git merge --no-commit --no-ff origin/main; then
           echo "❌ Conflicts detected with main branch"
-          echo "💡 Please rebase your branch:"
-          echo "   git fetch origin"
-          echo "   git rebase origin/main"
+          echo "Files in conflict:"
+          git diff --name-only --diff-filter=U || true
+          git merge --abort || true
           exit 1
         fi
-
-        # Check branch freshness (not stale)
-        BRANCH_AGE=$(git --no-pager log --since="2 days ago" --oneline | wc -l)
-        if [ "$BRANCH_AGE" -gt 0 ]; then
-          echo "✅ Branch has recent commits (not stale)"
-        else
-          echo "⚠️  Branch appears stale (no commits in 2 days)"
-          echo "💡 Consider rebasing to stay current with main"
-        fi
-
-        # Validate branch naming convention
-        BRANCH_NAME="${GITHUB_HEAD_REF:-$(git rev-parse --abbrev-ref HEAD)}"
-        if echo "$BRANCH_NAME" | grep -q "^feature/"; then
-          echo "✅ Branch follows HEE naming convention: $BRANCH_NAME"
-        else
-          echo "⚠️  Branch name may not follow HEE conventions: $BRANCH_NAME"
-        fi
-
-        echo "🎯 Merge readiness validation completed successfully"
+    
+        # No conflicts; abort the test merge
+        git merge --abort
+        echo "✅ Merge readiness check passed (no conflicts with origin/main)"
 
   final-validation:
     name: Final HEE Validation
