@@ -691,3 +691,15 @@ This comprehensive analysis demonstrates that optimal agent usage in the HEE eco
 - 30-50% improvement in task completion times
 - 90% maintenance of quality standards
 - 80% improvement in agent coordination efficiency
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

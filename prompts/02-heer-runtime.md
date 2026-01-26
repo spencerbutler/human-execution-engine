@@ -185,3 +185,15 @@ You are implementing the core HEER runtime as the reference implementation for d
 - [ ] State machine prevents invalid transitions
 - [ ] Validation framework includes security checks
 - [ ] Test suite includes security test vectors
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

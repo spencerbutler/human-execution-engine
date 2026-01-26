@@ -672,3 +672,15 @@ python scripts/generate_hee_state_report.py \
 ```
 
 This HEE CI/CD Monitoring and Automated Error Fixing system provides a comprehensive framework for maintaining pipeline reliability while preserving critical HEE state, decisions, and context across all execution environments, with full compliance with HEE's governance rules and quality discipline.
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.
