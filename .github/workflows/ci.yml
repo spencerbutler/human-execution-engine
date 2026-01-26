@@ -201,7 +201,6 @@ jobs:
     name: Final HEE Validation
     runs-on: ubuntu-latest
     needs: [hee-compliance-check, security-scan, documentation-check, branch-management-check, pager-prevention-validation, conflict-prevention-check]
-    set -euo pipefail
     echo "🔍 Validating merge readiness against origin/main..."
     
     git fetch origin main:refs/remotes/origin/main --force
