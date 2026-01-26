@@ -56,3 +56,6 @@ docs/BRANCH_HEALTH_REPORT.json
 docs/health_reports/
 docs/BRANCH_HEALTH_CONFIG.json
 docs/AUTOMATION_CONFIG.json
+
+# GC Report Pack outputs (generated)
+/var/gc/
