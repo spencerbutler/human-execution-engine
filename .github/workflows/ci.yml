@@ -8,6 +8,8 @@ on:
 
 env:
   MODEL: GPT-5.2
+  GIT_PAGER: cat
+  PAGER: cat
 
 jobs:
   hee-compliance-check:

@@ -14,6 +14,8 @@ on:
 
 env:
   MODEL: claude-3-5-sonnet-20250929
+  GIT_PAGER: cat
+  PAGER: cat
 
 jobs:
   documentation-validation:
