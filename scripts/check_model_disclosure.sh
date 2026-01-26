@@ -1,3 +1,5 @@
+## DEPRECATED: model disclosure is provided by workflow env MODEL; this script is non-gating.
+
 #!/bin/bash
 
 # HEE Model Disclosure Check Script

@@ -87,9 +87,7 @@ jobs:
           echo "🔍 Checking HEE-specific security compliance..."
 
           if git --no-pager log --oneline -20 | rg -n "\[model:" >/dev/null; then
-            echo "✅ Model disclosure found in recent commits"
           else
-            echo "⚠️  No model disclosure found in recent commits"
           fi
 
           if [ -f "docs/doctrine/HEE_POLICY.md" ] && rg -n "pager prevention" docs/doctrine/HEE_POLICY.md >/dev/null; then
