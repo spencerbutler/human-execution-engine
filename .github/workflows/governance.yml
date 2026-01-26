@@ -1,0 +1,128 @@
+name: HEE Governance Testing CI
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  lint-checker:
+    name: Lint Governance Checker
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Lint governance checker
+      run: |
+        echo "🔍 Running governance-aware linting..."
+
+        # Ensure shellcheck is available
+        if ! command -v shellcheck &> /dev/null; then
+          echo "Installing shellcheck..."
+          sudo apt-get update && sudo apt-get install -y shellcheck
+        fi
+
+        # Lint the main checker script
+        shellcheck ci/governance/check.sh
+
+        # Enforce governance hygiene
+        echo "🔍 Checking governance hygiene..."
+
+        # Ensure set -euo pipefail is used
+        if ! grep -q "set -euo pipefail" ci/governance/check.sh; then
+          echo "❌ check.sh must use 'set -euo pipefail'"
+          exit 1
+        fi
+
+        # Ensure single entrypoint (no arbitrary sourcing)
+        if grep -q "source.*\.sh" ci/governance/check.sh; then
+          echo "❌ check.sh must not source arbitrary files (only rules.sh)"
+          exit 1
+        fi
+
+        # Ensure rules.sh is only sourced from check.sh
+        if ! grep -q "source.*rules.sh" ci/governance/check.sh; then
+          echo "❌ check.sh must source rules.sh"
+          exit 1
+        fi
+
+        echo "✅ Governance checker linting passed"
+
+  governance-real:
+    name: Test Against Real Repository
+    needs: lint-checker
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run governance check on repository
+      run: |
+        echo "🔍 Running governance check against real repository..."
+        bash ci/governance/check.sh --path .
+
+  governance-fixtures:
+    name: Test Governance Fixtures
+    needs: lint-checker
+    strategy:
+      matrix:
+        fixture: [ok-minimal, bad-missing-prompts, bad-missing-doctrine-doc, bad-prompt-missing-authority]
+        expected_exit: [0, 1, 1, 1]
+        expected_rules: [[], [GOV-STRUCT-001], [GOV-STRUCT-001, GOV-DOC-001], [GOV-PROMPT-001]]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run fixture governance check
+      run: |
+        echo "🔍 Testing fixture: ${{ matrix.fixture }}"
+        echo "Expected exit code: ${{ matrix.expected_exit }}"
+        echo "Expected rule violations: ${{ join(matrix.expected_rules, ', ') }}"
+
+        # Capture both stdout and stderr
+        output=$(bash ci/governance/check.sh --path governance/fixtures/${{ matrix.fixture }} 2>&1)
+        exit_code=$?
+
+        echo "Actual exit code: $exit_code"
+        echo "Output:"
+        echo "$output"
+        echo "---"
+
+        # Validate exit code
+        if [ $exit_code -ne ${{ matrix.expected_exit }} ]; then
+          echo "❌ Expected exit ${{ matrix.expected_exit }}, got $exit_code"
+          exit 1
+        fi
+
+        # For failures, validate that expected rule IDs are present in output
+        if [ ${{ matrix.expected_exit }} -eq 1 ]; then
+          for rule in ${{ join(matrix.expected_rules, ' ') }}; do
+            if ! echo "$output" | grep -q "$rule:"; then
+              echo "❌ Expected rule $rule not found in output"
+              echo "Full output: $output"
+              exit 1
+            fi
+          done
+          echo "✅ All expected rule violations found"
+        else
+          echo "✅ No violations expected or found"
+        fi
+
+        echo "✅ Fixture ${{ matrix.fixture }} validation passed"
+
+  hello-world-execution:
+    name: HEE Hello World Execution
+    needs: governance-fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run hello world workload
+        shell: bash
+        run: ./workloads/hello-world/run.sh
