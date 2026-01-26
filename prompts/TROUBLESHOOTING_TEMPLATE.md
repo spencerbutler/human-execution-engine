@@ -619,3 +619,15 @@ Critical issues requiring immediate attention and resolution.
 - **CRITICAL**: NEVER commit directly to main branch - ALWAYS use feature branches
 - This guide is self-contained - no external file references required
 - Replace ALL template variables before using this template
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.

@@ -501,3 +501,15 @@ python scripts/archive_hee_release_capsules.py \
 ```
 
 This HEE Release Preparation Protocol provides a comprehensive framework for preparing, validating, and executing HEE releases while maintaining full compliance with HEE's governance rules, quality discipline, and state preservation requirements.
+
+## Authority
+Canonical authority: HEE doctrine and repository governance rules.
+This prompt is subordinate to docs/doctrine/ and repository policy enforcement.
+
+## Scope
+Defines the operating rules and intended usage for this prompt file only.
+
+## Invariants
+- Do not contradict docs/doctrine/.
+- Prefer minimal diffs; no opportunistic refactors.
+- If requirements conflict, escalate rather than invent policy.
