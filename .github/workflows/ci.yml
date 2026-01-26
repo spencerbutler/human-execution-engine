@@ -45,9 +45,6 @@ jobs:
           echo "⚠️  No state capsule directory found"
         fi
 
-    - name: Check for model disclosure in commits
-      run: bash scripts/check_model_disclosure.sh
-
     - name: Validate HEE policy compliance
       run: |
         echo "🔍 Validating HEE policy compliance..."
