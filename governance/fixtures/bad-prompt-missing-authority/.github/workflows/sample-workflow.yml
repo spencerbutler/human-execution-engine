@@ -1,0 +1,12 @@
+name: Sample Workflow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sample step
+      run: echo "Hello from bad-prompt-missing-authority fixture"
