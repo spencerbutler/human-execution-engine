@@ -27,11 +27,17 @@ check_gov_struct_001() {
   done
 
   if [[ ${#violations[@]} -gt 0 ]]; then
-    printf 'GOV-STRUCT-001: %s: missing required path(s)\n' "<root>" >&2
+    local any_violations_reported=false
     for v in "${violations[@]}"; do
-      printf 'GOV-STRUCT-001: %s: missing required path\n' "$v" >&2
+      report_violation "GOV-STRUCT-001" "$v" "missing required path"
+      if [[ $? -eq 1 ]]; then
+        any_violations_reported=true
+      fi
     done
-    return 1
+    if [[ $any_violations_reported == true ]]; then
+      report_violation "GOV-STRUCT-001" "<root>" "missing required path(s)" || return 1
+      return 1
+    fi
   fi
 
   return 0
@@ -45,7 +51,9 @@ check_gov_doc_001() {
   local doctrine_dir="$root_path/docs/doctrine"
 
   if [[ ! -d "$doctrine_dir" ]]; then
-    printf 'GOV-DOC-001: %s: doctrine directory missing\n' "docs/doctrine/" >&2
+    if ! report_violation "GOV-DOC-001" "docs/doctrine/" "doctrine directory missing"; then
+      return 0
+    fi
     return 1
   fi
 
@@ -53,7 +61,9 @@ check_gov_doc_001() {
   file_count=$(find "$doctrine_dir" -maxdepth 1 -type f | wc -l)
 
   if [[ $file_count -eq 0 ]]; then
-    printf 'GOV-DOC-001: %s: doctrine directory exists but contains no documents\n' "docs/doctrine/" >&2
+    if ! report_violation "GOV-DOC-001" "docs/doctrine/" "doctrine directory exists but contains no documents"; then
+      return 0
+    fi
     return 1
   fi
 
@@ -103,8 +113,7 @@ check_gov_prompt_001() {
         subject="$(basename "$prompt_file")"
       fi
 
-      printf 'GOV-PROMPT-001: %s: missing %s\n' "$subject" "${missing_sections[*]}" >&2
-      violations_found=true
+      report_violation "GOV-PROMPT-001" "$subject" "missing ${missing_sections[*]}" || violations_found=true
     fi
   done < <(find "$prompts_dir" -name "*.md" -type f -print0)
 
@@ -115,19 +124,40 @@ check_gov_prompt_001() {
   return 0
 }
 
+# Report a violation, checking for waivers first
+# Only outputs if not waived
+report_violation() {
+  local rule_id="$1"
+  local subject="$2"
+  local description="$3"
+
+  if is_violation_waived "$rule_id" "$subject"; then
+    return 0
+  fi
+
+  printf '%s: %s: %s\n' "$rule_id" "$subject" "$description" >&2
+  return 1
+}
+
 # Main rule execution function
 # Runs all governance rules against the specified path
 run_governance_checks() {
   local root_path="$1"
   local violations_found=false
 
-  if ! check_gov_struct_001 "$root_path"; then
+  # Load waivers first - function exits with 2 on validation error
+  load_waivers "$root_path"
+
+  check_gov_struct_001 "$root_path"
+  if [[ $? -ne 0 ]]; then
     violations_found=true
   fi
-  if ! check_gov_doc_001 "$root_path"; then
+  check_gov_doc_001 "$root_path"
+  if [[ $? -ne 0 ]]; then
     violations_found=true
   fi
-  if ! check_gov_prompt_001 "$root_path"; then
+  check_gov_prompt_001 "$root_path"
+  if [[ $? -ne 0 ]]; then
     violations_found=true
   fi
 

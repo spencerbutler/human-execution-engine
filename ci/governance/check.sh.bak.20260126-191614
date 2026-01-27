@@ -155,25 +155,18 @@ is_violation_waived() {
 # Expected: RULE_ID: SUBJECT: MESSAGE
 # Echoes "RULE_ID|SUBJECT" on success, returns 0. Returns 1 on parse failure.
 parse_violation_line() {
-  # Whitelist-only parser: emit ONLY real governance violations.
-  # Everything else (including bash -x / xtrace noise) is ignored.
-  local line="${1-}"
+  local line=""
 
-  # normalize CRLF + trim leading whitespace
-  line="${line//$\r\/}"
-  line="${line#\"${line%%[![:space:]]*}\"}"
+  # Ignore shell xtrace/debug lines
+  [[ "" =~ ^\+{1,3}[[:space:]] ]] && return 1
 
-  # ignore empty, comments, waiver markers, and any non-violation noise
-  [[ -z "$line" ]] && return 1
-  [[ "$line" == \#* ]] && return 1
-  [[ "$line" == WAIVER_APPLIED:* ]] && return 1
+  # Ignore waiver logging lines
+  [[ "" =~ ^WAIVER_APPLIED: ]] && return 1
 
-  # Accept ONLY these shapes:
-  #   GOV-XXXX-001: ... 
-  #   GOV-XXXX-001 | subject | description
-  #   VIOLATION: GOV-XXXX-001 | subject | description
-  if [[ "$line" =~ ^(VIOLATION:[[:space:]]*)?GOV-[A-Z0-9]+-[0-9]{3}[[:space:]]*(:|\|) ]]; then
-    printf "%s\n" "$line"
+  # Strictly match real governance violations only
+  # Expected format: GOV-XXX-NNN: SUBJECT: MESSAGE
+  if [[ "" =~ ^(GOV-[A-Z0-9-]+):[[:space:]]*([^:]+): ]]; then
+    printf "%s|%s\n" "" "1000 4 20 24 25 27 29 30 44 46 116 1000echo "" | xargs)"
     return 0
   fi
 
