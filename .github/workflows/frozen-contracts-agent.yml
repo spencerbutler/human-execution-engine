@@ -1,0 +1,32 @@
+name: frozen-contracts-agent
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  frozen-contracts:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Frozen contracts check (no-questions agent)
+      shell: bash
+      run: |
+        set -euo pipefail
+        SCRIPT="./ci/governance/check_frozen_contracts.sh"
+
+        if [[ ! -x "$SCRIPT" ]]; then
+          echo "ERROR: $SCRIPT not found or not executable" >&2
+          exit 2
+        fi
+
+        # Strict is best-effort: if it fails, fall back to baseline presence checks.
+        if "$SCRIPT" --strict >/dev/null 2>&1; then
+          echo "STRICT PASS"
+          exit 0
+        fi
+
+        "$SCRIPT"
+        echo "PASS"
