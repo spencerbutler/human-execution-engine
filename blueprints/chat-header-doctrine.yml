@@ -1,0 +1,148 @@
+# blueprints/chat-header-doctrine.yml
+
+identity:
+  seed: chat-header
+  id: I-hee-00000000
+  derivation:
+    input: "I|hee|chat-header"
+    notes:
+      - "id is deterministically derived from derivation.input."
+      - "derivation.input is REQUIRED when id is present."
+
+result: false
+schema-version: 1
+
+title: "HEE Chat Header Doctrine"
+
+intent:
+  - "Define a minimal, declarative header schema for chat instances."
+  - "Minimize required fields via defaults."
+  - "Prevent semantic drift and typo-footguns via validation."
+  - "Define structure only; authorization/policy is defined elsewhere."
+  - "Reserve RFC-style identifiers for narrative docs only."
+
+notes:
+  - "RFC-style identifiers (e.g. RFC-0001) are reserved exclusively for docs in docs/rfc/."
+  - "Blueprint doctrine MUST use seed + derived id; RFC numbering MUST NOT be used for doctrine identity."
+  - "RFC documents MAY reference invariant IDs but MUST NOT redefine them."
+
+normative-keywords:
+  reference: RFC-2119
+  accepted: [MUST, MUST NOT, SHOULD, SHOULD NOT, MAY, RECOMMENDED, NOT RECOMMENDED, OPTIONAL]
+
+reserved-keys: [chat-class, chat-state, purpose, artifacts, name, x-]
+
+defaults:
+  chat-class: chat-gpt
+  chat-state_by_class:
+    chat-gpt: ephemeral
+    chat-agent: plan
+  purpose: ""
+  artifacts: []
+  name: ""
+
+instance-header:
+  fields:
+    chat-class:
+      type: enum
+      enum: [chat-gpt, chat-agent]
+      default: chat-gpt
+      notes:
+        - "Class of chat instance (descriptive)."
+        - "Does not grant authorization."
+
+    chat-state:
+      type: enum
+      enum_by_class:
+        chat-gpt: [ephemeral, archive]
+        chat-agent: [plan, apply]
+      default_by_class:
+        chat-gpt: ephemeral
+        chat-agent: plan
+      notes:
+        - "State is orthogonal to class."
+
+    purpose:
+      type: string
+      default: ""
+      notes:
+        - "If omitted or empty, purpose is treated as implicit/obvious."
+        - "Purpose is informational, not authoritative."
+
+    artifacts:
+      type: list
+      item_type: string
+      default: []
+      notes:
+        - "Declarative list of expected deliverables."
+        - "Artifacts are intended to be written to disk outside the chat UI."
+
+    name:
+      type: string
+      default: ""
+      notes:
+        - "OPTIONAL and non-authoritative."
+
+    x-extensions:
+      type: map
+      key_prefix: "x-"
+      notes:
+        - "x-* keys MAY be used for experimental/local metadata."
+        - "x-* keys MUST NOT redefine reserved keys."
+
+vocabulary:
+  roles:
+    planner:
+      description: "Produces plans, reasoning, non-terminal outputs."
+    applier:
+      description: "Applies changes to external state; produces disk evidence."
+  descriptive-mapping:
+    typical-role_by_chat-class:
+      chat-gpt: planner
+      chat-agent: applier
+  notes:
+    - "Role mapping is descriptive only; authorization is defined elsewhere."
+
+identity-rules:
+  - "identity.derivation.input MUST be present when identity.id is present."
+  - "identity.derivation.input MUST follow '<TYPE>|<NAMESPACE>|<SEED>'."
+  - "identity.id MUST be deterministically derivable from identity.derivation.input."
+
+validation-contract:
+  modes: [tolerant, strict]
+
+  cross-field-rules:
+    class_state_compatibility:
+      tolerant:
+        - "If mismatch, WARN CH-HDR-XF-001."
+      strict:
+        - "If mismatch, ERROR CH-HDR-XF-001 and fail validation."
+
+  unknown-keys:
+    tolerant:
+      - "Unknown keys WARN CH-HDR-KEY-001; x-* is RECOMMENDED."
+    strict:
+      - "Unknown non-x-* keys ERROR CH-HDR-KEY-001; x-* keys accepted."
+
+  unknown-enums:
+    tolerant:
+      - "Unknown enum WARN CH-ENUM-001."
+    strict:
+      - "Unknown enum ERROR CH-ENUM-001."
+
+  violation-format:
+    required-fields: [code, message, json_pointer, severity]
+    severity-enum: [error, warn]
+
+minimal-usage:
+  recommended-minimal-header: [purpose, artifacts]
+  examples:
+    - comment: "Trivial chat; defaults apply."
+      header:
+        purpose: "add 2+2"
+    - comment: "Agent plan chat."
+      header:
+        chat-class: chat-agent
+        chat-state: plan
+        purpose: "prepare PLAN-YML"
+        artifacts: ["PLAN-YML: ops/plan/x.yml"]
