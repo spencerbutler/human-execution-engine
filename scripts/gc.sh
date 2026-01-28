@@ -371,7 +371,6 @@ for dt,b in rows:
 PY
 
     # Proposed deletion script (NEVER auto-run)
-        # Proposed deletion script (NEVER auto-run)
     : > "$propose"
     printf '%s\n' \
       '#!/usr/bin/env bash' \
@@ -379,11 +378,11 @@ PY
       'git fetch --prune' \
       '# REVIEW BEFORE RUNNING.' \
       '# Deletes ONLY merged remote branches (origin/*) excluding main/master/HEAD.' \
-      'git branch -r --merged origin/main | sed '"'"'s/^  //'"'"' | grep -vE '"'"'origin/(main|master|HEAD)$'"'"' | while IFS= read -r rb; do' \
-      '  [[ -z "${rb:-}" ]] && continue' \
-      '  b="${rb#origin/}"' \
-      '  echo "Deleting remote branch: $b"' \
-      '  git push origin --delete "$b"' \
+      'git branch -r --merged origin/main | sed '\''s/^  //'\'' | grep -vE '\''origin/(main|master|HEAD)$'\'' | while IFS= read -r rb; do' \
+      '  [[ -z ${rb:-} ]] && continue' \
+      '  b=${rb#origin/}' \
+      '  echo Deleting remote branch: $b' \
+      '  git push origin --delete $b' \
       'done' \
       > "$propose"
     chmod +x "$propose"
