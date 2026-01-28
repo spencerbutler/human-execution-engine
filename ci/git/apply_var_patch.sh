@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+usage() {
+  cat <<'USAGE'
+apply_var_patch.sh - apply a unified diff stored in $VAR
+
+Usage:
+  ci/git/apply_var_patch.sh --check
+  ci/git/apply_var_patch.sh --apply
+
+Requirements:
+  - VAR must contain a unified diff (beginning with "diff --git ...").
+
+Options:
+  --check        Dry-run (default): git apply --check
+  --apply        Apply: git apply
+  --allow-dirty  Allow dirty worktree (default: refuse)
+  -h, --help     Help
+USAGE
+}
+
+mode="check"
+allow_dirty=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check) mode="check"; shift ;;
+    --apply) mode="apply"; shift ;;
+    --allow-dirty) allow_dirty=1; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "ERROR: unknown arg: $1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+[[ -n "${VAR:-}" ]] || { echo "ERROR: VAR is empty or unset." >&2; exit 2; }
+
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "ERROR: not in a git repo." >&2; exit 2; }
+
+if [[ "$allow_dirty" -ne 1 ]] && [[ -n "$(git status --porcelain)" ]]; then
+  echo "ERROR: dirty worktree. Commit/stash or use --allow-dirty." >&2
+  exit 2
+fi
+
+if [[ "$mode" == "check" ]]; then
+  printf '%s\n' "$VAR" | git apply --check -
+  echo "Patch check OK (dry-run). Use --apply to apply."
+else
+  printf '%s\n' "$VAR" | git apply -
+  echo "Applied patch."
+fi
