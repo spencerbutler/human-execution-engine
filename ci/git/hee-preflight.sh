@@ -50,19 +50,41 @@ Contract:
 USAGE
 }
 
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  usage
-  exit 0
-fi
+CI_MODE=0
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  --ci)
+    CI_MODE=1
+    ;;
+  "")
+    ;;
+  *)
+    fail "unknown argument: ${1}
+FIX: run: $PROG --help"
+    ;;
+esac
+
 
 # 1) must be inside a git repo
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "not inside a git repository
 FIX: cd into the repo root"
 
-# 2) must not be detached HEAD
+# 2) must not be detached HEAD (except in explicit CI mode)
 branch="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
-[[ -n "$branch" ]] || fail "detached HEAD state
+if [[ -z "$branch" ]]; then
+  if [[ "$CI_MODE" -eq 1 ]]; then
+    [[ "${GITHUB_ACTIONS:-}" == "true" ]] || fail "detached HEAD is only permitted in CI mode under GitHub Actions
+FIX:
+  - run without --ci in local development"
+    branch="(detached-ci)"
+  else
+    fail "detached HEAD state
 FIX: git checkout <branch>"
+  fi
+fi
 
 # 3) required tools must exist
 missing=()
