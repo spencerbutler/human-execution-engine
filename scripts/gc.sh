@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rb=""
+
 # ============================================================
 # GC Report Pack — repo hygiene monitoring (recommend-only)
 # Outputs per run:
