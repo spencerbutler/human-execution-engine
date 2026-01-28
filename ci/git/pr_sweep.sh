@@ -143,3 +143,10 @@ for b in "${NEEDS[@]}"; do
   gh pr create \
     --head "$b" \
     --base "$BASE" \
+      --title "$t" \
+      --body "$(body_for_branch "$b")"
+  done
+
+  echo
+  echo "Done."
+  exit 0
