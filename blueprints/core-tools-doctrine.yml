@@ -1,0 +1,48 @@
+# blueprints/core-tools-doctrine.yml
+blueprint:
+  name: core-tools-doctrine
+  schema-version: 1
+  priority: p0
+  result: false
+  idea: "Define the canonical set of core-tools used by the Human Execution Engine."
+  summary: >
+    Core-tools represent inherent, immutable primitives derived from the world.
+    They are not authored or invented, only recognized and accepted.
+    This doctrine defines the minimal set of core-tools used across HEE constructs.
+    Standing and non-terminal by design.
+  plan: []
+
+core-tools:
+  priority:
+    type: ordinal
+    levels:
+      p0: highest
+      p5: lowest
+    description: "Ordinal urgency/importance. Lower number indicates higher priority."
+
+  result:
+    type: boolean
+    aliases:
+      true: done
+      false: not-done
+    description: "Indicates whether the claimed outcome has been achieved."
+
+  evidence:
+    type: boolean
+    description: >
+      Indicates whether sufficient, externally checkable evidence exists
+      to support a claimed result.
+
+  existence:
+    type: boolean
+    description: >
+      Indicates whether the referenced entity, artifact, or resource exists
+      in the observed world.
+
+  cost:
+    type: scalar
+    constraint: non-negative
+    optional: true
+    description: >
+      Represents scarcity/expenditure (time, energy, money, attention).
+      Units are contextual and explicitly non-core.
