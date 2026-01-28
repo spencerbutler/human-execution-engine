@@ -15,4 +15,4 @@ jobs:
       - name: Ensure local main exists
         run: git fetch origin +refs/heads/main:refs/remotes/origin/main
       - name: HEE preflight
-        run: ci/git/hee-preflight.sh
+        run: ci/git/hee-preflight.sh --ci
