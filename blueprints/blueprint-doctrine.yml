@@ -1,0 +1,130 @@
+# blueprints/blueprint-doctrine.yml
+blueprint:
+  name: blueprint-doctrine
+  schema-version: 2
+  priority: p0
+  result: false
+  idea: "Define the authoritative schema for creating blueprints."
+  summary: >
+    Standing doctrinal blueprint that defines the required structure and field
+    contracts for blueprints, plans, phases, tasks, and items.
+    Depends on core-tools-doctrine and does not redefine core-tools.
+    Doctrines are alive and non-terminal: doctrinal result must always remain false.
+  plan: []
+
+dependencies:
+  - doctrine: core-tools-doctrine
+    schema-version: 1
+
+conventions:
+  ordering:
+    default: unordered
+    values: [unordered, ordered]
+    notes:
+      - "Ordering must be explicit when needed. Default is unordered."
+      - "Do not imply order from list position unless ordering: ordered is set."
+
+identity:
+  seed:
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+    description: "Immutable, human-grep'able token (kebab-case)."
+  id:
+    pattern: "^[A-Z]-[a-z0-9]+-[a-f0-9]{8}$"
+    description: >
+      Deterministic, derived identifier. Recommended derivation input:
+      '<TYPE>|<NAMESPACE>|<SEED>' (e.g., 'I|hee|first-admission-control').
+
+blueprint-schema:
+  priority: core-tools
+  result: core-tools
+
+  # non-core metadata (optional)
+  name: optional
+  schema-version: optional
+
+  # core blueprint fields
+  idea: required
+  summary: optional
+  plan: optional
+
+  # one-offs / experimental provenance (non-core, optional)
+  origin: optional
+
+  # descriptive constraints (normative text; not executable by itself)
+  constraints:
+    - "Doctrinal blueprints must maintain result: false."
+    - "Only doctrine artifacts declare dependencies. Instances must not."
+    - "EXCEPTION: experimental one-off plans (no parent blueprint) may declare dependencies for portability."
+    - "If blueprint.plan exists and is non-empty, blueprint.schema-version is required."
+    - "Unknown keys are WARN in open-world; they must be acknowledged and either promoted (schema-version bump) or removed."
+
+origin:
+  type: object
+  optional: true
+  fields:
+    kind:
+      type: enum
+      values: [chat, ticket, file, url, other]
+      required: true
+    ref:
+      type: string
+      required: true
+    note:
+      type: string
+      required: false
+
+plan:
+  priority: required        # from core-tools
+  result: required          # from core-tools
+  name: optional            # non-core
+  schema-version: optional  # non-core (typically inherited via parent blueprint)
+  origin: optional          # non-core (useful for one-offs)
+  dependencies: optional    # only for experimental one-offs (see constraints)
+
+  parent:
+    type: optional
+    constraint: blueprint-only
+
+  ordering:
+    type: optional
+    values: [unordered, ordered]
+    default: unordered
+
+  phase: optional           # list of phases (containers)
+  task: optional            # list of tasks (work lives in plans)
+
+phase:
+  name: optional            # non-core
+  priority: core-tools
+  result: core-tools
+
+  ordering:
+    type: optional
+    values: [unordered, ordered]
+    default: unordered
+
+  subplan: required         # list of plan blocks (work is inside subplans)
+  notes:
+    - "Phase is a container for subplans."
+    - "Tasks live in plans (including subplans), not at phase level."
+
+task:
+  name: optional            # non-core
+  seed: optional            # non-core, immutable once set
+  id: optional              # non-core, deterministic derived identifier
+  priority: core-tools
+  result: core-tools
+
+  ordering:
+    type: optional
+    values: [unordered, ordered]
+    default: unordered
+
+  item: required            # checklist of items (unordered by default)
+
+item:
+  seed: optional            # non-core, immutable once set
+  id: optional              # non-core, deterministic derived identifier
+  priority: core-tools
+  result: core-tools
+  action: required          # concrete action
