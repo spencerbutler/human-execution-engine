@@ -7,7 +7,7 @@ The files here define:
 - the schema for creating blueprints and plans,
 - and the validator contract used to reason about correctness.
 
-Nothing in this directory represents operational work.
+Nothing in this directory represents operational work.  
 Everything here is **standing doctrine**.
 
 ---
@@ -21,6 +21,7 @@ This repository separates **doctrine**, **instances**, and **operations**.
   - core-tools
   - blueprint schema
   - validator contract
+  - chat header schema
 
 - `docs/` (if present)  
   Narrative documentation, specs, RFCs, explanations.
@@ -31,9 +32,19 @@ This repository separates **doctrine**, **instances**, and **operations**.
 - Project artifacts elsewhere  
   Actual blueprints, plans, tasks, and outputs.
 
-Doctrine defines correctness.
-Operations enforce it.
+Doctrine defines correctness.  
+Operations enforce it.  
 Instances execute within it.
+
+---
+
+## RFC Naming (Explicit Reservation)
+
+RFC-style identifiers (e.g. `RFC-0001`) are reserved **exclusively** for narrative documents in:
+
+- `docs/rfc/`
+
+RFC documents **may reference** doctrine identities, but RFC numbering **must not** be used as doctrine identity.
 
 ---
 
@@ -76,6 +87,25 @@ It specifies:
 - validation order.
 
 It does not prescribe tooling or implementation.
+
+---
+
+### `chat-header-doctrine.yml`
+Defines the **schema and rules** for chat headers:
+- `chat-class` and `chat-state`,
+- defaults that minimize required fields,
+- strict vs tolerant validation behavior,
+- reserved keys and `x-*` extensions.
+
+It defines structure only; authorization/policy is defined elsewhere.
+
+---
+
+### `hee-doctrine.yml`
+Defines the **HEE doctrine index** for this repository:
+- a canonical anchor for doctrine discovery,
+- explicit doctrine dependencies,
+- non-duplication by design.
 
 ---
 
