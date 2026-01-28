@@ -1,0 +1,168 @@
+# blueprints/validator-contract-doctrine.yml
+blueprint:
+  name: validator-contract-doctrine
+  schema-version: 2
+  priority: p0
+  result: false
+  idea: "Define the minimal, descriptive validator contract for HEE doctrine and instances."
+  summary: >
+    Describes validator behavior (inputs/outputs/exit-codes/violation format)
+    without prescribing implementation language or tooling.
+    Open-world by default: unknown keys emit WARN; strict mode upgrades WARN->ERROR.
+    JSON pointers are required; line/col are optional best-effort.
+    Standing and non-terminal by design.
+  plan: []
+
+dependencies:
+  - doctrine: core-tools-doctrine
+    schema-version: 1
+  - doctrine: blueprint-doctrine
+    schema-version: 2
+
+validator-contract:
+  contract-version: 2
+  validator-id: hee-validate
+
+  defaults:
+    mode: all                  # schema | instance | all
+    strict: false              # open-world by default
+    open-world: true
+    warn-as-error-when-strict: true
+    unknown-keys:
+      behavior: warn           # warn | ignore | error
+      notes:
+        - "Unknown keys emit WARN in open-world."
+        - "In strict=true, WARN must be emitted as ERROR (or treated as fatal)."
+        - "Unknown keys are expected to be temporary: acknowledge, then promote (schema-version bump) or remove."
+
+  inputs:
+    targets:
+      type: list
+      items: path
+      required: true
+    mode:
+      type: enum
+      values: [schema, instance, all]
+      required: false
+    strict:
+      type: boolean
+      required: false
+    allow-unknown-keys:
+      type: list
+      items: json-pointer-pattern
+      required: false
+      description: >
+        Optional temporary allowlist for known unknown keys (ratchet mechanism).
+        Intended to be reduced over time; strict mode may still treat unknown keys as errors.
+
+  outputs:
+    result:
+      type: boolean
+      required: true
+    violations:
+      type: list
+      required: true
+    warnings:
+      type: list
+      required: true
+    meta:
+      type: object
+      required: false
+
+  exit-codes:
+    0: PASS
+    1: VIOLATIONS
+    2: ERROR
+
+  violation-format:
+    line-format: "<SEVERITY> <CODE> <PATH> <JSON>"
+    severity:
+      type: enum
+      values: [ERROR, WARN]
+      notes:
+        - "If strict=true, WARN must be emitted as ERROR (or treated as fatal)."
+    code:
+      pattern: "^(CT|BD|BI)-(PARSE|REQ|TYPE|ENUM|RULE|REF)-[0-9]{3}$"
+    json:
+      type: object
+      required-fields: [message, pointer]
+      optional-fields:
+        - rule
+        - expected
+        - found
+        - line
+        - col
+
+  pointers:
+    required: true
+    format: json-pointer
+    notes:
+      - "pointer must identify the failing field/location in the parsed document."
+      - "line/col are optional and must not be relied upon for identity."
+
+  identity:
+    deterministic-id:
+      required-fields:
+        - seed
+      optional-fields:
+        - id
+      validation-notes:
+        - "If id is present and seed is present, validator MAY verify id matches deterministic derivation."
+        - "In strict mode, mismatched derived ids SHOULD be ERROR."
+
+  validation-order:
+    - "Load + validate core-tools-doctrine"
+    - "Load + validate blueprint-doctrine (must reference core-tools-doctrine schema-version)"
+    - "Validate instances using blueprint-doctrine schema and inherited core-tools meanings"
+
+  minimum-checks:
+    core-tools-doctrine:
+      - code: CT-PARSE-001
+        rule: "core-tools.parseable"
+        description: "Core-tools doctrine is parseable YAML."
+      - code: CT-REQ-001
+        rule: "core-tools.required.present"
+        description: "Required core-tools exist (priority, result, evidence, existence; cost optional)."
+      - code: CT-ENUM-001
+        rule: "core-tools.priority.levels.valid"
+        description: "priority.levels includes p0..p5."
+      - code: CT-TYPE-001
+        rule: "core-tools.types.valid"
+        description: "Types conform (result/evidence/existence boolean; priority ordinal; cost scalar>=0 if present)."
+
+    blueprint-doctrine:
+      - code: BD-PARSE-001
+        rule: "blueprint-doctrine.parseable"
+        description: "Blueprint doctrine is parseable YAML."
+      - code: BD-REF-001
+        rule: "blueprint-doctrine.depends.on.core-tools"
+        description: "Blueprint doctrine declares dependency on core-tools-doctrine schema-version."
+      - code: BD-RULE-001
+        rule: "doctrine.result.always.false"
+        description: "Doctrinal blueprints maintain result: false."
+      - code: BD-REQ-001
+        rule: "blueprint-schema.idea.required"
+        description: "blueprint-schema requires idea."
+
+    blueprint-instances:
+      - code: BI-PARSE-001
+        rule: "instance.parseable"
+        description: "Instance file is parseable YAML."
+      - code: BI-REQ-001
+        rule: "blueprint.idea.required"
+        description: "blueprint.idea is present."
+      - code: BI-ENUM-001
+        rule: "blueprint.priority.valid"
+        description: "blueprint.priority is one of p0..p5."
+      - code: BI-TYPE-001
+        rule: "blueprint.result.boolean"
+        description: "blueprint.result is boolean."
+      - code: BI-RULE-001
+        rule: "blueprint.schema-version.required.when.plan.non-empty"
+        description: "If blueprint.plan exists and is non-empty, blueprint.schema-version is required."
+      - code: BI-RULE-002
+        rule: "unknown.keys.warn.open-world"
+        description: "Unknown keys emit WARN in open-world; strict upgrades to ERROR."
+      - code: BI-REF-001
+        rule: "plan.parent.blueprint-only"
+        description: "If plan.parent is present, it references a blueprint (not a plan/task/item)."
