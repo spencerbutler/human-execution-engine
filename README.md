@@ -3,160 +3,129 @@
 [![CI/CD Pipeline](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Canonical source of truth for Human Execution Engine standards**
->
-> Defines HEE (conceptual model) and HEER (operational runtime) specifications
-> for deterministic human work orchestration.
+# Human Execution Engine (HEE)
 
-## 🏗️ Architecture Layers
+HEE is a **doctrine-first execution framework** for coordinating human reasoning, machine assistance, and automation **without ambiguity**.
 
-### HEE (Human Execution Engine) - Conceptual Model
+It prioritizes:
+- correctness over consensus,
+- structure over vibes,
+- determinism over convenience.
 
-The normative definition of systems treating humans as constrained processing units.
-
-### HEER (Human Execution Engine Runtime) - Operational Substrate
-
-The enforcement layer defining state machines, scheduling semantics, and deterministic replay.
-
-## 📚 Documentation
-
-### 📋 **Core Specifications**
-
-- [**🎯 HEE**](docs/HEE.md) - Canonical conceptual model specification
-- [**⚙️ HEER**](docs/HEER.md) - Runtime contract and operational semantics
-- [**📋 SPEC**](docs/SPEC.md) - Standards requirements and implementation criteria
-
-### 🔒 **Security Foundation**
-
-- [**🛡️ SECURITY**](docs/SECURITY.md) - Security requirements and threat model
-- [**✅ Security Validator**](scripts/security_validator.py) - Input validation and compliance testing
-- [**🔍 Security Scanner**](scripts/security_scanner.py) - Automated vulnerability scanning
-
-### 🛠️ **Implementation & Standards**
-
-- [**🗺️ Roadmap**](docs/ROADMAP.md) - 7-phase development plan with file trees
-- [**📝 Development Guide**](prompts/PROMPTING_RULES.md) - Security-first development methodology
-- [**🔧 Implementation Prompts**](prompts/) - Structured phase-by-phase guidance
-<<<<<<< HEAD
-- [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
-=======
-- [**📊 Violation Metrics**](docs/VIOLATION_METRICS.md) - Compliance tracking and violation accountability system
-- [**🛡️ HEE Compliance**](scripts/README.md) - Automated compliance monitoring and prevention systems
-- [**📋 Historical State Capsules**](docs/history/state_capsules/) - Post-mortems and historical working notes (non-authoritative)
-
->>>>>>> 3b95276 (docs: Update README and create CHANGELOG for HEE compliance improvements [model: claude-3.5-sonnet])
-
-## 🏃‍♂️ Quick Start
-
-### For Standards Compliance
-
-```bash
-# Clone the canonical specifications
-git clone git@github.com:spencerbutler/human-execution-engine.git
-cd human-execution-engine
-
-# Read the core specifications
-cat docs/HEE.md    # Conceptual model
-cat docs/HEER.md   # Runtime contract
-
-# Follow the development roadmap
-cat docs/ROADMAP.md
-```
-
-### For Implementation Guidance
-
-```bash
-# Start with foundational prompts
-cat prompts/PROMPTING_RULES.md  # Development rules
-cat prompts/00-specs-foundation.md  # Phase 1 guidance
-```
-
-## 🏗️ Ecosystem Integration
-
-### Current Implementations
-
-- [**tick-task**](https://github.com/spencerbutler/tick-task) - Task management with HEER runtime
-- [**MT-logo-render**](https://github.com/spencerbutler/MT-logo-render) - Logo generation with HEE semantics
-
-### Standards Compliance
-
-This repository provides the **canonical specifications** that implementations must follow:
-
-- **HEE Compliance**: 8 normative properties for human work orchestration
-- **HEER Compliance**: Deterministic runtime with state machines and event journaling
-- **Security Requirements**: Comprehensive validation and sanitization standards
-- **Interoperability**: Standard APIs for ecosystem integration
-
-## 🤝 Contributing
-
-### Development Process
-
-1. **📖 Read the Specs** - HEE.md and HEER.md are normative
-2. **📝 Follow Prompts** - Use numbered prompts (00-06) for structured development
-3. **🔒 Security First** - All changes validated against security requirements
-4. **✅ Compliance** - New features must maintain specification compliance
-5. **🧪 Testing** - Security validation before implementation
-
-### Standards Evolution
-
-- HEE/HEER specifications require consensus across ecosystem maintainers
-- Breaking changes require migration guides and coordination
-- Security changes require immediate ecosystem notification
-
-## 📊 Project Status
-
-### ✅ **Completed: Phase 1 (Specifications Foundation)**
-
-- Canonical HEE and HEER specifications
-- Complete development methodology (prompts 00-06)
-- Comprehensive implementation roadmap
-- Repository infrastructure and security foundations
-
-### ✅ **Enhanced: HEE Compliance & Governance**
-
-- **Automated Compliance Monitoring**: Real-time violation detection and prevention
-- **Pre-commit Hooks**: Block main branch commits and enforce HEE standards
-- **Post-Mortem Procedures**: Standardized violation analysis and documentation
-- **State Capsule Integration**: Structured violation tracking and resolution
-- **Continuous Improvement**: Automated monitoring and enhancement processes
-
-### 🚧 **Next: Phase 2 (Architecture & API Design)**
-
-Following `prompts/01-architecture-api.md` for core abstractions and API contracts.
-
-## 📄 License
-
-**MIT License** - see [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Market Thesis Ecosystem** - Integrated standards for human work orchestration
-- **tick-task & MT-logo-render** - Reference implementations validating the standards
-- **AI Development** - Claude, GPT, and other models contributing to HEE/HEER evolution
+This repository is the **canonical source of HEE doctrine**.
 
 ---
 
-**Defining the future of human work orchestration** 🚀
+## Core Principles
 
-## 📖 Technical Specifications
+- **Doctrine defines correctness.**
+- **Operations enforce doctrine.**
+- **Instances execute within doctrine.**
 
-### Human Execution Engine (HEE)
-
-A bounded, stateful execution system treating humans as primary runtime with deterministic orchestration. See [HEE Specification](docs/HEE.md) for complete normative definition.
-
-### Human Execution Engine Runtime (HEER)
-
-Deterministic execution runtime with state machines, event journaling, and admission control. See [HEER Specification](docs/HEER.md) for complete operational contract.
-
-### Development Standards
-
-Security-first development with numbered prompts ensuring consistent, high-quality implementation. See [Prompting Rules](prompts/PROMPTING_RULES.md) for enforcement guidelines.
+Doctrine is **standing, non-terminal**, and validated **strictly**.
 
 ---
 
-## Repos using HEE
+## Repository Layout
 
-The following repositories vendor or otherwise consume the Human Execution Engine.
-New repos are appended to this list as they adopt HEE.
+### `blueprints/`
+Authoritative doctrine.  
+This directory defines:
+- world-derived core tools,
+- blueprint and plan schemas,
+- validator contracts,
+- chat header structure,
+- the HEE doctrine index.
 
-- **market-thesis-news** — vendored policy (`prompts/hee/`, `docs/hee/`)
+Nothing here is operational.
+
+> **Rule:** Doctrine MUST validate in strict mode.
+
+### `docs/`
+Narrative documentation only:
+- explanations,
+- rationale,
+- examples,
+- RFCs.
+
+RFC-style identifiers are **reserved exclusively** for `docs/rfc/`.  
+RFCs may reference doctrine identities but MUST NOT define them.
+
+### Operational directories (e.g. `ci/`, `ops/`, scripts)
+Automation and enforcement that **consume doctrine**.
+These are implementation details, not sources of truth.
+
+---
+
+## Doctrine Rules (Non-Negotiable)
+
+- Doctrine files:
+  - MUST have `result: false`
+  - MUST validate in **strict** mode
+  - MUST use deterministic identity (`seed` + derived `id`)
+- YAML:
+  - MUST NOT be hand-edited once tooling exists
+  - MUST be formatted canonically
+  - MUST NOT contain embedded shell scripts
+- Changes:
+  - Prefer **raw GitHub links** over copy/paste when reviewing or merging
+  - Minimize diffs
+  - Increment `schema-version` only when meaning changes
+
+---
+
+## Validation & CI/CD
+
+CI/CD enforces:
+- strict doctrine validation,
+- schema correctness,
+- formatting invariants.
+
+Future lanes include:
+- multi-language “Hello World” compile tests,
+- metrics export compatibility (Prometheus + SNMP),
+- doctrine-driven MIB generation.
+
+---
+
+## What HEE Is Not
+
+- Not a workflow tool
+- Not a prompt library
+- Not an agent framework
+- Not opinionated about implementation language
+
+HEE defines **what must be true**, not **how you make it true**.
+
+---
+
+## Why HEE
+
+Modern development fails less from lack of talent and more from ambiguity:
+unclear authority, drifting scope, unverifiable claims, and
+“works on my machine” reasoning that collapses under handoffs.
+
+HEE exists to make work **correct by construction**.
+
+It does this by:
+- separating **doctrine** from **operations**,
+- enforcing **strict validation**,
+- requiring **evidence** for terminal actions,
+- and using **deterministic identity** so changes remain auditable and merge-safe.
+
+The goal is simple:  
+turn intent into **verifiable outcomes** without relying on memory, vibes,
+or fragile UI state.
+
+---
+
+## Status
+
+HEE doctrine is **active and evolving**.
+History is preserved via:
+- git history (authoritative),
+- explicit `schema-version`,
+- narrative RFCs when needed.
+
+If you are reading this to “get started,” start in `blueprints/`.
+
