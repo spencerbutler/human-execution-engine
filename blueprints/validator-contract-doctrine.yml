@@ -1,17 +1,21 @@
 # blueprints/validator-contract-doctrine.yml
+
 blueprint:
   name: validator-contract-doctrine
   schema-version: 2
   priority: p0
   result: false
-  idea: "Define the minimal, descriptive validator contract for HEE doctrine and instances."
-  summary: >
-    Describes validator behavior (inputs/outputs/exit-codes/violation format)
-    without prescribing implementation language or tooling.
-    Open-world by default: unknown keys emit WARN; strict mode upgrades WARN->ERROR.
-    JSON pointers are required; line/col are optional best-effort.
-    Standing and non-terminal by design.
-  plan: []
+
+idea: "Define the minimal, descriptive validator contract for HEE doctrine and instances."
+
+summary: >
+  Describes validator behavior (inputs/outputs/exit-codes/violation format)
+  without prescribing implementation language or tooling.
+  Open-world by default: unknown keys emit WARN; strict mode upgrades WARN->ERROR.
+  JSON pointers are required; line/col are optional best-effort.
+  Standing and non-terminal by design.
+
+plan: []
 
 dependencies:
   - doctrine: core-tools-doctrine
@@ -24,29 +28,41 @@ validator-contract:
   validator-id: hee-validate
 
   defaults:
-    mode: all                  # schema | instance | all
-    strict: false              # open-world by default
+    mode: all # schema | instance | all
+    strict: false # open-world by default for instances
     open-world: true
     warn-as-error-when-strict: true
-    unknown-keys:
-      behavior: warn           # warn | ignore | error
-      notes:
-        - "Unknown keys emit WARN in open-world."
-        - "In strict=true, WARN must be emitted as ERROR (or treated as fatal)."
-        - "Unknown keys are expected to be temporary: acknowledge, then promote (schema-version bump) or remove."
+
+  doctrine-policy:
+    doctrine-must-validate-strict: true
+    notes:
+      - "Doctrine validation MUST run with strict=true regardless of defaults."
+
+  unknown-keys:
+    behavior: warn # warn | ignore | error
+    allow-x-prefix: true
+    notes:
+      - "Unknown keys emit WARN in open-world."
+      - "In strict=true, WARN MUST be emitted as ERROR (or treated as fatal)."
+      - "Unknown keys are expected to be temporary: acknowledge, then promote (schema-version bump) or remove."
+      - "Prefer x-* for deliberate extensions; unknown non-x keys are usually typos."
 
   inputs:
     targets:
       type: list
-      items: path
-      required: true
+      items:
+        path:
+          required: true
+
     mode:
       type: enum
       values: [schema, instance, all]
       required: false
+
     strict:
       type: boolean
       required: false
+
     allow-unknown-keys:
       type: list
       items: json-pointer-pattern
@@ -59,39 +75,39 @@ validator-contract:
     result:
       type: boolean
       required: true
+
     violations:
       type: list
       required: true
+
     warnings:
       type: list
       required: true
+
     meta:
       type: object
       required: false
 
-  exit-codes:
-    0: PASS
-    1: VIOLATIONS
-    2: ERROR
+    exit-codes:
+      0: PASS
+      1: VIOLATIONS
+      2: ERROR
 
   violation-format:
-    line-format: "<SEVERITY> <CODE> <PATH> <JSON>"
     severity:
       type: enum
       values: [ERROR, WARN]
-      notes:
-        - "If strict=true, WARN must be emitted as ERROR (or treated as fatal)."
+    notes:
+      - "If strict=true, WARN MUST be emitted as ERROR (or treated as fatal)."
+
     code:
-      pattern: "^(CT|BD|BI)-(PARSE|REQ|TYPE|ENUM|RULE|REF)-[0-9]{3}$"
+      # HDR = HeaDeR (compact namespace chunk)
+      pattern: "^(CT|BD|BI|CH)-(PARSE|REQ|TYPE|ENUM|RULE|REF|KEY|XF|HDR)-[0-9]{3}$"
+
     json:
       type: object
       required-fields: [message, pointer]
-      optional-fields:
-        - rule
-        - expected
-        - found
-        - line
-        - col
+      optional-fields: [rule, expected, found, line, col]
 
   pointers:
     required: true
@@ -106,9 +122,13 @@ validator-contract:
         - seed
       optional-fields:
         - id
-      validation-notes:
-        - "If id is present and seed is present, validator MAY verify id matches deterministic derivation."
-        - "In strict mode, mismatched derived ids SHOULD be ERROR."
+        - derivation
+    rules:
+      - "If id is present, derivation.input MUST be present."
+      - "derivation.input MUST follow '<TYPE>|<NAMESPACE>|<SEED>'."
+    validation-notes:
+      - "If id + seed + derivation.input are present, validator MAY verify id matches deterministic derivation."
+      - "In strict mode, mismatched derived ids SHOULD be ERROR."
 
   validation-order:
     - "Load + validate core-tools-doctrine"
@@ -143,6 +163,9 @@ validator-contract:
       - code: BD-REQ-001
         rule: "blueprint-schema.idea.required"
         description: "blueprint-schema requires idea."
+      - code: BD-RULE-002
+        rule: "doctrine.validation.strict.only"
+        description: "Doctrine validation MUST run with strict=true."
 
     blueprint-instances:
       - code: BI-PARSE-001
@@ -166,3 +189,24 @@ validator-contract:
       - code: BI-REF-001
         rule: "plan.parent.blueprint-only"
         description: "If plan.parent is present, it references a blueprint (not a plan/task/item)."
+
+  validators:
+    chat-header:
+      doctrine:
+        path: "blueprints/chat-header-doctrine.yml"
+        doctrine-mode: strict
+      instance:
+        modes: [strict, tolerant]
+      checks:
+        - code: CH-HDR-REQ-001
+          rule: "chat-header.required.fields"
+          description: "Defaults apply; required fields must be type-correct when present."
+        - code: CH-HDR-XF-001
+          rule: "chat-class.state.compatibility"
+          description: "chat-state must be valid for chat-class; strict=ERROR, tolerant=WARN."
+        - code: CH-ENUM-001
+          rule: "chat-header.enums.known"
+          description: "Unknown enum values follow strict/tolerant behavior."
+        - code: CH-KEY-001
+          rule: "chat-header.unknown.keys"
+          description: "Unknown non-x keys follow strict/tolerant behavior; x-* allowed."
