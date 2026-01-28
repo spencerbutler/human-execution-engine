@@ -140,11 +140,15 @@ is_violation_waived() {
 
   for waiver in "${waivers[@]}"; do
     IFS='|' read -r w_rule_id w_subject_glob w_expires w_reason <<< "$waiver"
-
-    # IMPORTANT: glob semantics require RHS to be unquoted
-    if [[ "$rule_id" == "$w_rule_id" ]] && [[ "$subject" == $w_subject_glob ]]; then
-      echo "WAIVER_APPLIED: $rule_id | $subject | $w_expires | $w_reason" >&2
-      return 0
+    # IMPORTANT: subject matching uses glob semantics (waiver subject is a glob)
+    if [[ "$rule_id" == "$w_rule_id" ]]; then
+      # shellcheck disable=SC2254
+      case "$subject" in
+        $w_subject_glob)
+          echo "WAIVER_APPLIED: $rule_id | $subject | $w_expires | $w_reason" >&2
+          return 0
+          ;;
+      esac
     fi
   done
 
@@ -160,8 +164,8 @@ parse_violation_line() {
   local line="${1-}"
 
   # normalize CRLF + trim leading whitespace
-  line="${line//$\r\/}"
-  line="${line#\"${line%%[![:space:]]*}\"}"
+  line="${line//$'\r'/}"
+  line="${line#"${line%%[![:space:]]*}"}"
 
   # ignore empty, comments, waiver markers, and any non-violation noise
   [[ -z "$line" ]] && return 1
