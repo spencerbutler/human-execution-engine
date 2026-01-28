@@ -1,0 +1,36 @@
+# blueprints/hee-doctrine.yml
+
+identity:
+  seed: hee-doctrine
+  id: I-hee-00000000
+  derivation:
+    input: "I|hee|hee-doctrine"
+    notes:
+      - "id is deterministically derived from derivation.input."
+      - "derivation.input is REQUIRED when id is present."
+
+result: false
+schema-version: 1
+priority: p0
+
+title: "HEE Doctrine Index"
+
+idea: >
+  Canonical index for HEE doctrine files in this repository.
+  This file is an anchor and discovery surface, not a duplication point.
+  Doctrine remains non-terminal.
+
+dependencies:
+  - doctrine: core-tools-doctrine
+    schema-version: 1
+  - doctrine: blueprint-doctrine
+    schema-version: 2
+  - doctrine: validator-contract-doctrine
+    schema-version: 2
+  - doctrine: chat-header-doctrine
+    schema-version: 1
+
+notes:
+  - "Doctrine MUST validate in strict mode."
+  - "RFC-style identifiers are reserved for docs in docs/rfc/."
+  - "Authorization/policy is defined elsewhere; this file is structural doctrine only."
