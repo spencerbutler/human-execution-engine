@@ -14,6 +14,8 @@ jobs:
           fetch-depth: 0
       - name: Ensure local main exists
         run: git fetch origin +refs/heads/main:refs/remotes/origin/main
+      - name: Ensure local main branch exists
+        run: git branch -f main origin/main
       - name: Install required tools
         run: |
           sudo apt-get update
