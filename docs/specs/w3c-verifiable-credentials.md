@@ -1,0 +1,799 @@
+# docs/specs/w3c-verifiable-credentials.md
+<title>Verifiable Credentials Data Model v2.0</title>
+    
+    
+    
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+--
+  "name": "Verifiable Credentials Data Model v2.0",
+  "inLanguage": "en",
+  "license": "https://www.w3.org/copyright/software-license-2023/",
+  "datePublished": "2025-05-15",
+  "copyrightHolder": {
+    "name": "World Wide Web Consortium",
+    "url": "https://www.w3.org/"
+  },
+  "discussionUrl": "https://github.com/w3c/vc-data-model/issues/",
+  "alternativeHeadline": "",
+  "isBasedOn": "https://www.w3.org/TR/2022/REC-vc-data-model-2.0-20220303/",
+--
+      "name": "Securing Verifiable Credentials using JOSE and COSE",
+      "url": "https://www.w3.org/TR/vc-jose-cose/",
+      "creator": [
+        {
+          "name": "Michael Jones"
+        },
+        {
+          "name": "Gabe Cohen"
+        },
+        {
+          "name": "Michael Prorock"
+--
+      "name": "Verifiable Credentials Use Cases",
+      "url": "https://www.w3.org/TR/vc-use-cases/",
+      "creator": [
+        {
+          "name": "Shane McCarron"
+        },
+        {
+          "name": "Joe Andrieu"
+        },
+        {
+          "name": "Matt Stone"
+--
+      "name": "Verifiable Credentials Overview",
+      "url": "https://www.w3.org/TR/vc-overview/",
+      "creator": [
+        {
+          "name": "Ivan Herman"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+--
+      "name": "Verifiable Credentials JSON Schema Specification",
+      "url": "https://www.w3.org/TR/vc-json-schema/",
+      "creator": [
+        {
+          "name": "Gabe Cohen"
+        },
+        {
+          "name": "Orie Steele"
+        }
+      ],
+      "publisher": {
+        "name": "W3C Verifiable Credentials Working Group"
+      }
+    },
+    {
+      "id": [
+        "https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf"
+      ],
+      "type": "TechArticle",
+      "name": "Electronic Signatures and Infrastructures (ESI); Trusted Lists",
+      "url": [
+        "https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf"
+--
+      "name": "Verifiable Credentials Implementation Guidelines 1.0",
+      "url": "https://www.w3.org/TR/vc-imp-guide/",
+      "creator": [
+        {
+          "name": "Andrei Sambra"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+--
+        "name": "W3C Verifiable Credentials Working Group"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/cid-1.0/",
+      "type": "TechArticle",
+      "name": "Controlled Identifiers v1.0",
+      "url": "https://www.w3.org/TR/cid-1.0/",
+      "creator": [
+        {
+          "name": "Michael Jones"
+--
+      "name": "Verifiable Credentials Data Model v2.0",
+      "url": "https://www.w3.org/TR/vc-data-model-2.0/",
+      "creator": [
+        {
+          "name": "Ivan Herman"
+        },
+        {
+          "name": "Michael Jones"
+        },
+        {
+          "name": "Manu Sporny"
+--
+      "publisher": "W3C Verifiable Credentials Working Group",
+      "id": "vc-extensions"
+    },
+    "ETSI-TRUST-LISTS": {
+      "title": "Electronic Signatures and Infrastructures (ESI); Trusted Lists",
+      "href": [
+        "https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf"
+      ],
+      "authors": [
+        "ETSI"
+      ],
+--
+      "title": "Verifiable Credentials JSON Schema Specification",
+      "href": "https://www.w3.org/TR/vc-json-schema/",
+      "authors": [
+        "Gabe Cohen",
+        "Orie Steele"
+      ],
+      "status": "FPWD",
+      "publisher": "W3C Verifiable Credentials Working Group",
+      "id": "vc-json-schema"
+    },
+    "PRES-EX": {
+      "title": "Presentation Exchange 2.0.0",
+      "href": "https://identity.foundation/presentation-exchange/spec/v2.0.0/",
+      "authors": [
+        "Daniel Buchner",
+        "Brent Zundel",
+        "Martin Riedel",
+        "Kim Hamilton Duffy"
+--
+    <h1 id="title" class="title">Verifiable Credentials Data Model v2.0</h1> 
+    <p id="w3c-state"><a href="https://www.w3.org/standards/types#REC">W3C Recommendation</a> <time class="dt-published" datetime="2025-05-15">15 May 2025</time></p>
+    <details open="">
+      <summary>More details about this document</summary>
+      <dl>
+        <dt>This version:</dt><dd>
+                <a class="u-url" href="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/">https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/</a>
+              </dd>
+        <dt>Latest published version:</dt><dd>
+                <a href="https://www.w3.org/TR/vc-data-model-2.0/">https://www.w3.org/TR/vc-data-model-2.0/</a>
+              </dd>
+--
+    This document was published by the <a href="https://www.w3.org/groups/wg/vc">Verifiable Credentials Working Group</a> as
+    a Recommendation using the
+        <a href="https://www.w3.org/policies/process/20231103/#recs-and-notes">Recommendation track</a>. 
+  </p><p>
+      <abbr title="World Wide Web Consortium">W3C</abbr> recommends the wide deployment of this specification as a standard for
+      the Web.
+    </p><p>
+      A <abbr title="World Wide Web Consortium">W3C</abbr> Recommendation is a specification that, after extensive
+      consensus-building, is endorsed by
+      <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
+      has commitments from Working Group members to
+--
+                    </p></section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a></li><li class="tocline"><a class="tocxref" href="#introduction"><bdi class="secno">1. </bdi>Introduction</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#what-is-a-verifiable-credential"><bdi class="secno">1.1 </bdi>What is a Verifiable Credential?</a></li><li class="tocline"><a class="tocxref" href="#ecosystem-overview"><bdi class="secno">1.2 </bdi>Ecosystem Overview</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">1.3 </bdi>Conformance</a></li></ol></li><li class="tocline"><a class="tocxref" href="#terminology"><bdi class="secno">2. </bdi>Terminology</a></li><li class="tocline"><a class="tocxref" href="#core-data-model"><bdi class="secno">3. </bdi>Core Data Model</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#claims"><bdi class="secno">3.1 </bdi>Claims</a></li><li class="tocline"><a class="tocxref" href="#credentials"><bdi class="secno">3.2 </bdi>Credentials</a></li><li class="tocline"><a class="tocxref" href="#presentations"><bdi class="secno">3.3 </bdi>Presentations</a></li></ol></li><li class="tocline"><a class="tocxref" href="#basic-concepts"><bdi class="secno">4. </bdi>Basic Concepts</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#getting-started"><bdi class="secno">4.1 </bdi>Getting Started</a></li><li class="tocline"><a class="tocxref" href="#verifiable-credentials"><bdi class="secno">4.2 </bdi>Verifiable Credentials</a></li><li class="tocline"><a class="tocxref" href="#contexts"><bdi class="secno">4.3 </bdi>Contexts</a></li><li class="tocline"><a class="tocxref" href="#identifiers"><bdi class="secno">4.4 </bdi>Identifiers</a></li><li class="tocline"><a class="tocxref" href="#types"><bdi class="secno">4.5 </bdi>Types</a></li><li class="tocline"><a class="tocxref" href="#names-and-descriptions"><bdi class="secno">4.6 </bdi>Names and Descriptions</a></li><li class="tocline"><a class="tocxref" href="#issuer"><bdi class="secno">4.7 </bdi>Issuer</a></li><li class="tocline"><a class="tocxref" href="#credential-subject"><bdi class="secno">4.8 </bdi>Credential Subject</a></li><li class="tocline"><a class="tocxref" href="#validity-period"><bdi class="secno">4.9 </bdi>Validity Period</a></li><li class="tocline"><a class="tocxref" href="#status"><bdi class="secno">4.10 </bdi>Status</a></li><li class="tocline"><a class="tocxref" href="#data-schemas"><bdi class="secno">4.11 </bdi>Data Schemas</a></li><li class="tocline"><a class="tocxref" href="#securing-mechanisms"><bdi class="secno">4.12 </bdi>Securing Mechanisms</a></li><li class="tocline"><a class="tocxref" href="#verifiable-presentations"><bdi class="secno">4.13 </bdi>Verifiable Presentations</a></li></ol></li><li class="tocline"><a class="tocxref" href="#advanced-concepts"><bdi class="secno">5. </bdi>Advanced Concepts</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#trust-model"><bdi class="secno">5.1 </bdi>Trust Model</a></li><li class="tocline"><a class="tocxref" href="#extensibility"><bdi class="secno">5.2 </bdi>Extensibility</a></li><li class="tocline"><a class="tocxref" href="#integrity-of-related-resources"><bdi class="secno">5.3 </bdi>Integrity of Related Resources</a></li><li class="tocline"><a class="tocxref" href="#refreshing"><bdi class="secno">5.4 </bdi>Refreshing</a></li><li class="tocline"><a class="tocxref" href="#terms-of-use"><bdi class="secno">5.5 </bdi>Terms of Use</a></li><li class="tocline"><a class="tocxref" href="#evidence"><bdi class="secno">5.6 </bdi>Evidence</a></li><li class="tocline"><a class="tocxref" href="#zero-knowledge-proofs"><bdi class="secno">5.7 </bdi>Zero-Knowledge Proofs</a></li><li class="tocline"><a class="tocxref" href="#representing-time"><bdi class="secno">5.8 </bdi>Representing Time</a></li><li class="tocline"><a class="tocxref" href="#authorization"><bdi class="secno">5.9 </bdi>Authorization</a></li><li class="tocline"><a class="tocxref" href="#reserved-extension-points"><bdi class="secno">5.10 </bdi>Reserved Extension Points</a></li><li class="tocline"><a class="tocxref" href="#ecosystem-compatibility"><bdi class="secno">5.11 </bdi>Ecosystem Compatibility</a></li><li class="tocline"><a class="tocxref" href="#verifiable-credential-graphs"><bdi class="secno">5.12 </bdi>Verifiable Credential Graphs</a></li><li class="tocline"><a class="tocxref" href="#securing-mechanism-specifications"><bdi class="secno">5.13 </bdi>Securing Mechanism Specifications</a></li></ol></li><li class="tocline"><a class="tocxref" href="#syntaxes"><bdi class="secno">6. </bdi>Syntaxes</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#json-ld"><bdi class="secno">6.1 </bdi>JSON-LD</a></li><li class="tocline"><a class="tocxref" href="#media-types"><bdi class="secno">6.2 </bdi>Media Types</a></li><li class="tocline"><a class="tocxref" href="#type-specific-credential-processing"><bdi class="secno">6.3 </bdi>Type-Specific Credential Processing</a></li></ol></li><li class="tocline"><a class="tocxref" href="#algorithms"><bdi class="secno">7. </bdi>Algorithms</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#verification"><bdi class="secno">7.1 </bdi>Verification</a></li><li class="tocline"><a class="tocxref" href="#problem-details"><bdi class="secno">7.2 </bdi>Problem Details</a></li></ol></li><li class="tocline"><a class="tocxref" href="#privacy-considerations"><bdi class="secno">8. </bdi>Privacy Considerations</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#spectrum-of-privacy"><bdi class="secno">8.1 </bdi>Spectrum of Privacy</a></li><li class="tocline"><a class="tocxref" href="#software-trust-boundaries"><bdi class="secno">8.2 </bdi>Software Trust Boundaries</a></li><li class="tocline"><a class="tocxref" href="#personally-identifiable-information"><bdi class="secno">8.3 </bdi>Personally Identifiable Information</a></li><li class="tocline"><a class="tocxref" href="#identifier-based-correlation"><bdi class="secno">8.4 </bdi>Identifier-Based Correlation</a></li><li class="tocline"><a class="tocxref" href="#signature-based-correlation"><bdi class="secno">8.5 </bdi>Signature-Based Correlation</a></li><li class="tocline"><a class="tocxref" href="#metadata-based-correlation"><bdi class="secno">8.6 </bdi>Metadata-based Correlation</a></li><li class="tocline"><a class="tocxref" href="#device-tracking-and-fingerprinting"><bdi class="secno">8.7 </bdi>Device Tracking and Fingerprinting</a></li><li class="tocline"><a class="tocxref" href="#favor-abstract-claims"><bdi class="secno">8.8 </bdi>Favor Abstract Claims</a></li><li class="tocline"><a class="tocxref" href="#the-principle-of-data-minimization"><bdi class="secno">8.9 </bdi>The Principle of Data Minimization</a></li><li class="tocline"><a class="tocxref" href="#bearer-credentials"><bdi class="secno">8.10 </bdi>Bearer Credentials</a></li><li class="tocline"><a class="tocxref" href="#correlation-during-validation"><bdi class="secno">8.11 </bdi>Correlation During Validation</a></li><li class="tocline"><a class="tocxref" href="#storage-providers-and-data-mining"><bdi class="secno">8.12 </bdi>Storage Providers and Data Mining</a></li><li class="tocline"><a class="tocxref" href="#aggregation-of-credentials"><bdi class="secno">8.13 </bdi>Aggregation of Credentials</a></li><li class="tocline"><a class="tocxref" href="#patterns-of-use"><bdi class="secno">8.14 </bdi>Patterns of Use</a></li><li class="tocline"><a class="tocxref" href="#legal-processes"><bdi class="secno">8.15 </bdi>Legal Processes</a></li><li class="tocline"><a class="tocxref" href="#sharing-information-with-the-wrong-party"><bdi class="secno">8.16 </bdi>Sharing Information with the Wrong Party</a></li><li class="tocline"><a class="tocxref" href="#data-theft"><bdi class="secno">8.17 </bdi>Data Theft</a></li><li class="tocline"><a class="tocxref" href="#frequency-of-claim-issuance"><bdi class="secno">8.18 </bdi>Frequency of Claim Issuance</a></li><li class="tocline"><a class="tocxref" href="#prefer-single-use-credentials"><bdi class="secno">8.19 </bdi>Prefer Single-Use Credentials</a></li><li class="tocline"><a class="tocxref" href="#private-browsing"><bdi class="secno">8.20 </bdi>Private Browsing</a></li><li class="tocline"><a class="tocxref" href="#issuer-cooperation-impacts-on-privacy"><bdi class="secno">8.21 </bdi>Issuer Cooperation Impacts on Privacy</a></li></ol></li><li class="tocline"><a class="tocxref" href="#security-considerations"><bdi class="secno">9. </bdi>Security Considerations</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#cryptography-suites-and-libraries"><bdi class="secno">9.1 </bdi>Cryptography Suites and Libraries</a></li><li class="tocline"><a class="tocxref" href="#key-management"><bdi class="secno">9.2 </bdi>Key Management</a></li><li class="tocline"><a class="tocxref" href="#content-integrity-protection"><bdi class="secno">9.3 </bdi>Content Integrity Protection</a></li><li class="tocline"><a class="tocxref" href="#unsigned-claims"><bdi class="secno">9.4 </bdi>Unsigned Claims</a></li><li class="tocline"><a class="tocxref" href="#man-in-the-middle-mitm-replay-and-cloning-attacks"><bdi class="secno">9.5 </bdi>Man-in-the-Middle (MITM), Replay, and Cloning Attacks</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#man-in-the-middle-mitm-attack"><bdi class="secno">9.5.1 </bdi>Man-in-the-Middle (MITM) Attack</a></li><li class="tocline"><a class="tocxref" href="#replay-attack"><bdi class="secno">9.5.2 </bdi>Replay Attack</a></li><li class="tocline"><a class="tocxref" href="#spoofing-attack"><bdi class="secno">9.5.3 </bdi>Spoofing Attack</a></li></ol></li><li class="tocline"><a class="tocxref" href="#bundling-dependent-claims"><bdi class="secno">9.6 </bdi>Bundling Dependent Claims</a></li><li class="tocline"><a class="tocxref" href="#highly-dynamic-information"><bdi class="secno">9.7 </bdi>Highly Dynamic Information</a></li><li class="tocline"><a class="tocxref" href="#device-theft-and-impersonation"><bdi class="secno">9.8 </bdi>Device Theft and Impersonation</a></li><li class="tocline"><a class="tocxref" href="#acceptable-use"><bdi class="secno">9.9 </bdi>Acceptable Use</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#unauthorized-use"><bdi class="secno">9.9.1 </bdi>Unauthorized Use</a></li><li class="tocline"><a class="tocxref" href="#inappropriate-use"><bdi class="secno">9.9.2 </bdi>Inappropriate Use</a></li></ol></li><li class="tocline"><a class="tocxref" href="#code-injection"><bdi class="secno">9.10 </bdi>Code Injection</a></li></ol></li><li class="tocline"><a class="tocxref" href="#accessibility-considerations"><bdi class="secno">10. </bdi>Accessibility Considerations</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#data-first-approaches"><bdi class="secno">10.1 </bdi>Data First Approaches</a></li></ol></li><li class="tocline"><a class="tocxref" href="#internationalization-considerations"><bdi class="secno">11. </bdi>Internationalization Considerations</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#language-and-base-direction"><bdi class="secno">11.1 </bdi>Language and Base Direction</a></li><li class="tocline"><a class="tocxref" href="#providing-default-language-and-direction"><bdi class="secno">11.2 </bdi>Providing Default Language and Direction</a></li></ol></li><li class="tocline"><a class="tocxref" href="#validation"><bdi class="secno">A. </bdi>Validation</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#credential-type"><bdi class="secno">A.1 </bdi>Credential Type</a></li><li class="tocline"><a class="tocxref" href="#credential-subject-0"><bdi class="secno">A.2 </bdi>Credential Subject</a></li><li class="tocline"><a class="tocxref" href="#issuer-0"><bdi class="secno">A.3 </bdi>Issuer</a></li><li class="tocline"><a class="tocxref" href="#holder"><bdi class="secno">A.4 </bdi>Holder</a></li><li class="tocline"><a class="tocxref" href="#issuance-date"><bdi class="secno">A.5 </bdi>Issuance Date</a></li><li class="tocline"><a class="tocxref" href="#proofs-signatures"><bdi class="secno">A.6 </bdi>Proofs (Signatures)</a></li><li class="tocline"><a class="tocxref" href="#validity-periods"><bdi class="secno">A.7 </bdi>Validity Periods</a></li><li class="tocline"><a class="tocxref" href="#status-0"><bdi class="secno">A.8 </bdi>Status</a></li><li class="tocline"><a class="tocxref" href="#schema"><bdi class="secno">A.9 </bdi>Schema</a></li><li class="tocline"><a class="tocxref" href="#fitness-for-purpose"><bdi class="secno">A.10 </bdi>Fitness for Purpose</a></li><li class="tocline"><a class="tocxref" href="#artificial-intelligence-and-machine-learning"><bdi class="secno">A.11 </bdi>"Artificial Intelligence" and "Machine Learning"</a></li></ol></li><li class="tocline"><a class="tocxref" href="#contexts-vocabularies-types-and-credential-schemas"><bdi class="secno">B. </bdi>Contexts, Vocabularies, Types, and Credential Schemas</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#base-context"><bdi class="secno">B.1 </bdi>Base Context</a></li><li class="tocline"><a class="tocxref" href="#vocabularies"><bdi class="secno">B.2 </bdi>Vocabularies</a></li><li class="tocline"><a class="tocxref" href="#datatypes"><bdi class="secno">B.3 </bdi>Datatypes</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#the-sristring-datatype"><bdi class="secno">B.3.1 </bdi>The <code>sriString</code> Datatype</a></li></ol></li><li class="tocline"><a class="tocxref" href="#differences-between-contexts-types-and-credentialschemas"><bdi class="secno">B.4 </bdi>Differences between Contexts, Types, and CredentialSchemas</a></li></ol></li><li class="tocline"><a class="tocxref" href="#iana-considerations"><bdi class="secno">C. </bdi>IANA Considerations</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#vc-ld-media-type"><bdi class="secno">C.1 </bdi>application/vc</a></li><li class="tocline"><a class="tocxref" href="#vp-ld-media-type"><bdi class="secno">C.2 </bdi>application/vp</a></li></ol></li><li class="tocline"><a class="tocxref" href="#additional-diagrams-for-verifiable-presentations"><bdi class="secno">D. </bdi>Additional Diagrams for Verifiable Presentations</a></li><li class="tocline"><a class="tocxref" href="#revision-history"><bdi class="secno">E. </bdi>Revision History</a></li><li class="tocline"><a class="tocxref" href="#acknowledgements"><bdi class="secno">F. </bdi>Acknowledgements</a></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">G. </bdi>References</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#normative-references"><bdi class="secno">G.1 </bdi>Normative references</a></li><li class="tocline"><a class="tocxref" href="#informative-references"><bdi class="secno">G.2 </bdi>Informative references</a></li></ol></li></ol></nav>
+
+    <section class="informative" id="introduction"><div class="header-wrapper"><h2 id="x1-introduction"><bdi class="secno">1. </bdi>Introduction</h2><a class="self-link" href="#introduction" aria-label="Permalink for Section 1."></a></div><p><em>This section is non-normative.</em></p>
+      
+
+      <p>
+<a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-1">Credentials</a> are integral to our daily lives: driver's licenses confirm
+our capability to operate motor vehicles; university degrees assert our level
+of education; and government-issued passports attest to our citizenship when
+traveling between countries. This specification provides a mechanism for
+expressing these sorts of <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-2">credentials</a> on the Web in a way that is
+--
+in <cite><a data-matched-text="[[[VC-USE-CASES]]]" href="https://www.w3.org/TR/vc-use-cases/">Verifiable Credentials Use Cases</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-use-cases" title="Verifiable Credentials Use Cases">VC-USE-CASES</a></cite>].
+      </p>
+
+      <section class="informative" id="what-is-a-verifiable-credential"><div class="header-wrapper"><h3 id="x1-1-what-is-a-verifiable-credential"><bdi class="secno">1.1 </bdi>What is a Verifiable Credential?</h3><a class="self-link" href="#what-is-a-verifiable-credential" aria-label="Permalink for Section 1.1"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+        <p>
+In the physical world, a <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-6">credential</a> might consist of:
+        </p>
+
+        <ul>
+--
+Subject-Holder Relationships</a> section in the <cite><a data-matched-text="[[[VC-IMP-GUIDE]]]" href="https://www.w3.org/TR/vc-imp-guide/">Verifiable Credentials Implementation Guidelines 1.0</a></cite>.
+        </p></div>
+
+        <p>
+For a deeper exploration of the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-25">verifiable credentials</a> ecosystem and
+a concrete lifecycle example, please refer to <cite><a data-matched-text="[[[VC-OVERVIEW]]]" href="https://www.w3.org/TR/vc-overview/">Verifiable Credentials Overview</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-overview" title="Verifiable Credentials Overview">VC-OVERVIEW</a></cite>].
+        </p>
+      </section>
+
+      <section id="conformance" class="normative"><div class="header-wrapper"><h3 id="x1-3-conformance"><bdi class="secno">1.3 </bdi>Conformance</h3><a class="self-link" href="#conformance" aria-label="Permalink for Section 1.3"></a></div><p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.</p><p>
+        The key words <em class="rfc2119">MAY</em>, <em class="rfc2119">MUST</em>, <em class="rfc2119">MUST NOT</em>, <em class="rfc2119">OPTIONAL</em>, <em class="rfc2119">RECOMMENDED</em>, <em class="rfc2119">REQUIRED</em>, <em class="rfc2119">SHOULD</em>, and <em class="rfc2119">SHOULD NOT</em> in this document
+        are to be interpreted as described in
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
+        [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc2119" title="Key words for use in RFCs to Indicate Requirement Levels">RFC2119</a></cite>] [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8174" title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">RFC8174</a></cite>]
+        when, and only when, they appear in all
+        capitals, as shown here.
+--
+<a href="#info-graph-vc-jwt" data-matched-text="[[[#info-graph-vc-jwt]]]" class="fig-ref" title="Information graphs associated with a basic verifiable credential, using an enveloping proof based on Securing Verifiable Credentials using JOSE and COSE [VC-JOSE-COSE].">Figure <bdi class="">7</bdi></a> below shows the same <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-54">verifiable credential</a>
+as <a href="#info-graph-vc" data-matched-text="[[[#info-graph-vc]]]" class="fig-ref" title="Information graphs associated with a basic verifiable credential, using an embedded proof based on Verifiable Credential Data Integrity 1.0 [VC-DATA-INTEGRITY].">Figure <bdi class="">6</bdi></a>, but secured using JOSE [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. The
+payload contains a single information graph, which is the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential-graph" class="internalDFN" id="ref-for-dfn-verifiable-credential-graph-2">verifiable credential graph</a> containing <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-26">credential</a> metadata and other <a data-link-type="dfn|abstract-op" href="#dfn-claims" class="internalDFN" id="ref-for-dfn-claims-31">claims</a>.
+        </p>
+
+        <figure id="info-graph-vc-jwt">
+          <img style="margin: auto; display: block; width: 100%;" src="diagrams/vc-jwt.svg" alt="Diagram with, on the left, a box, labeled as
+'SD-JWT (Decoded)', and with three textual labels stacked vertically,
+namely 'Header', 'Payload', and 'Signature'. The 'Header' label is
+connected, with an arrow, to a separate rectangle on the right hand
+side containing six text fields: 'kid: aB8J-_Z', 'alg: ES384', and
+'cty: vc', 'iss: https://example.com', 'iat: 1704690029', and 'typ:
+--
+            using an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-1">enveloping proof</a> based on <cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite>
+            [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>].
+          </span></figcaption>
+        </figure>
+
+      </section>
+
+      <section class="informative" id="presentations"><div class="header-wrapper"><h3 id="x3-3-presentations"><bdi class="secno">3.3 </bdi>Presentations</h3><a class="self-link" href="#presentations" aria-label="Permalink for Section 3.3"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+        <p>
+Enhancing privacy is a key design feature of this specification. Therefore, it
+--
+<a href="#info-graph-vp-jwt" data-matched-text="[[[#info-graph-vp-jwt]]]" class="fig-ref" title="Information graphs associated with a basic verifiable presentation that is using an enveloping proof based on Securing Verifiable Credentials using JOSE and COSE. The data: URL refers to the verifiable credential shown in .">Figure <bdi class="">10</bdi></a> below shows the same <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-27">verifiable presentation</a> as <a href="#info-graph-vp" data-matched-text="[[[#info-graph-vp]]]" class="fig-ref" title="Information graphs associated with a basic verifiable presentation that uses an embedded proof based on Verifiable Credential Data Integrity 1.0.">Figure <bdi class="">9</bdi></a>, but using an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-2">enveloping proof</a> based on [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. The payload contains only two information
+graphs: the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation-graph" class="internalDFN" id="ref-for-dfn-verifiable-presentation-graph-3">verifiable presentation graph</a> expressing the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-28">verifiable presentation</a> through presentation metadata and the corresponding
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential-graph" class="internalDFN" id="ref-for-dfn-verifiable-credential-graph-7">verifiable credential graph</a>, referred to by the <code>verifiableCredential</code>
+property. The <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential-graph" class="internalDFN" id="ref-for-dfn-verifiable-credential-graph-8">verifiable credential graph</a> contains a single
+<a href="#defn-EnvelopedVerifiableCredential"><code>EnvelopedVerifiableCredential</code></a>
+instance referring, via a <code>data:</code> URL [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc2397" title="The &quot;data&quot; URL scheme">RFC2397</a></cite>], to the verifiable credential
+secured via an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-3">enveloping proof</a> shown in <a href="#info-graph-vc-jwt" data-matched-text="[[[#info-graph-vc-jwt]]]" class="fig-ref" title="Information graphs associated with a basic verifiable credential, using an enveloping proof based on Securing Verifiable Credentials using JOSE and COSE [VC-JOSE-COSE].">Figure <bdi class="">7</bdi></a>.
+        </p>
+
+        <figure id="info-graph-vp-jwt">
+          <img style="margin: auto; display: block; width: 100%;" src="diagrams/vp-jwt.svg" alt="Diagram with, on the left, a box, labeled as
+'JWT (Decoded)', and with three textual labels stacked vertically,
+namely 'Header', 'Payload', and 'Signature'. The 'Header' label is
+connected, with an arrow, to a separate rectangle on the right hand
+side containing six text fields: 'kid: aB8J-_Z', 'alg: ES384', and
+'cty: vc', 'iss: https://example.com', 'iat: 1704690029', and 'typ:
+vp+sd-jwt'. The 'Payload' label of the left side is connected,
+--
+using an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-4">enveloping proof</a> based on <cite><a data-matched-text="[[[?VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite>. The <code>data:</code> URL
+refers to the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-60">verifiable credential</a> shown in
+<a href="#info-graph-vc-jwt" data-matched-text="[[[#info-graph-vc-jwt]]]" class="fig-ref" title="Information graphs associated with a basic verifiable credential, using an enveloping proof based on Securing Verifiable Credentials using JOSE and COSE [VC-JOSE-COSE].">Figure <bdi class="">7</bdi></a>.
+          </span></figcaption>
+        </figure>
+
+
+        <div class="note" role="note" id="issue-container-generatedID-3"><div role="heading" class="note-title marker" id="h-note-3" aria-level="4"><span>Note</span><span class="issue-label">: Presentations can contain multiple verifiable credentials</span></div><p class="">
+It is possible to have a <a data-link-type="dfn|abstract-op" href="#dfn-presentation" class="internalDFN" id="ref-for-dfn-presentation-11">presentation</a>, such as a collection of university
+credentials, which draws on multiple <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-31">credentials</a> about different <a data-link-type="dfn|abstract-op" href="#dfn-subjects" class="internalDFN" id="ref-for-dfn-subjects-22">subjects</a>
+that are often, but not required to be, related. This is achieved by using the
+<code>verifiableCredential</code> property to refer to multiple <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-61">verifiable credentials</a>.
+See Appendix <a href="#additional-diagrams-for-verifiable-presentations" data-matched-text="[[[#additional-diagrams-for-verifiable-presentations]]]" class="sec-ref"><bdi class="secno">D. </bdi>Additional Diagrams for Verifiable Presentations</a> for more
+--
+      <section id="verifiable-credentials"><div class="header-wrapper"><h3 id="x4-2-verifiable-credentials"><bdi class="secno">4.2 </bdi>Verifiable Credentials</h3><a class="self-link" href="#verifiable-credentials" aria-label="Permalink for Section 4.2"></a></div>
+        
+
+        <p>
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-66">Verifiable credentials</a> are used to express properties of one or more
+<a data-link-type="dfn|abstract-op" href="#dfn-subjects" class="internalDFN" id="ref-for-dfn-subjects-23">subjects</a> as well as properties of the <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-32">credential</a> itself. The following
+properties are defined in this specification for a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-67">verifiable credential</a>:
+        </p>
+
+        <dl>
+          <dt>@context</dt>
+--
+Verifiable Credentials Data Model is available at
+<a href="https://www.w3.org/2018/credentials/">https://www.w3.org/2018/credentials/</a>.
+        </p>
+
+        <p>
+The second <a data-link-type="dfn|abstract-op" href="#dfn-url" class="internalDFN" id="ref-for-dfn-url-7">URL</a> (<code>https://www.w3.org/ns/credentials/examples/v2</code>) is used to
+demonstrate examples. Implementations are expected to not use
+this <a data-link-type="dfn|abstract-op" href="#dfn-url" class="internalDFN" id="ref-for-dfn-url-8">URL</a> for any other purpose, such as in pilot or production systems.
+        </p>
+
+        <div class="note" role="note" id="issue-container-generatedID-5"><div role="heading" class="note-title marker" id="h-note-5" aria-level="4"><span>Note</span><span class="issue-label">: See JSON-LD for more information about @context.</span></div><p class="">
+--
+        <div class="note" role="note" id="issue-container-generatedID-8"><div role="heading" class="note-title marker" id="h-note-8" aria-level="4"><span>Note</span><span class="issue-label">: The Verifiable Credentials Data Model is based on JSON-LD</span></div><p class="">
+The <a data-link-type="dfn|abstract-op" href="#dfn-type" class="internalDFN" id="ref-for-dfn-type-9">type</a> system for the Verifiable Credentials Data Model is the same as
+for <cite><a data-matched-text="[[[JSON-LD11]]]" href="https://www.w3.org/TR/json-ld11/">JSON-LD 1.1</a></cite> and is detailed in
+<a href="https://www.w3.org/TR/json-ld/#specifying-the-type">Section 3.5:
+Specifying the Type</a> and
+<a href="https://www.w3.org/TR/json-ld/#json-ld-grammar">Section 9: JSON-LD
+Grammar</a>. When using a JSON-LD context (see Section
+<a href="#extensibility" data-matched-text="[[[#extensibility]]]" class="sec-ref"><bdi class="secno">5.2 </bdi>Extensibility</a>), this specification aliases the
+<code>@type</code> keyword to <code>type</code> to make the JSON-LD documents
+more easily understood. While application developers and document authors do
+not need to understand the specifics of the JSON-LD type system, implementers
+of this specification who want to support interoperable extensibility do.
+--
+Creating New Credential Types</a> section in the <cite><a data-matched-text="[[[?VC-IMP-GUIDE]]]" href="https://www.w3.org/TR/vc-imp-guide/">Verifiable Credentials Implementation Guidelines 1.0</a></cite>.
+        </p></div>
+
+      </section>
+
+      <section id="names-and-descriptions"><div class="header-wrapper"><h3 id="x4-6-names-and-descriptions"><bdi class="secno">4.6 </bdi>Names and Descriptions</h3><a class="self-link" href="#names-and-descriptions" aria-label="Permalink for Section 4.6"></a></div>
+        
+
+        <p>
+When displaying a <a data-link-type="dfn|abstract-op" href="#dfn-credential" class="internalDFN" id="ref-for-dfn-credential-37">credential</a>, it can be helpful to have
+text provided by the <a data-link-type="dfn|abstract-op" href="#dfn-issuers" class="internalDFN" id="ref-for-dfn-issuers-16">issuer</a> that furnishes the
+--
+        <div class="note" role="note" id="issue-container-generatedID-12"><div role="heading" class="note-title marker" id="h-note-12" aria-level="4"><span>Note</span><span class="issue-label">: Validity start period for Verifiable Credentials</span></div><p class="">
+If <code>validFrom</code> and <code>validUntil</code> are not present, the
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-91">verifiable credential</a> validity period is considered valid
+indefinitely. In such cases, the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-92">verifiable credential</a> is assumed to be
+valid from the time the <code>verifiable credential</code> was created.
+        </p></div>
+
+      </section>
+
+      <section id="status"><div class="header-wrapper"><h3 id="x4-10-status"><bdi class="secno">4.10 </bdi>Status</h3><a class="self-link" href="#status" aria-label="Permalink for Section 4.10"></a></div>
+        
+--
+[<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-json-schema" title="Verifiable Credentials JSON Schema Specification">VC-JSON-SCHEMA</a></cite>] validation.
+        </p></div>
+
+        <div class="example" id="example-using-the-credentialschema-property-to-perform-json-schema-validation">
+        <div class="marker">
+    <a class="self-link" href="#example-using-the-credentialschema-property-to-perform-json-schema-validation">Example<bdi> 14</bdi></a><span class="example-title">: Using the credentialSchema property to perform JSON schema validation</span>
+  </div> <pre class="nohighlight">{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+--
+objects, each of which point to a JSON Schema [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-json-schema" title="Verifiable Credentials JSON Schema Specification">VC-JSON-SCHEMA</a></cite>] file that a
+<a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-20">verifier</a> can use to determine whether the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-99">verifiable credential</a> is
+well-formed.
+        </p>
+
+      </section>
+
+      <section id="securing-mechanisms"><div class="header-wrapper"><h3 id="x4-12-securing-mechanisms"><bdi class="secno">4.12 </bdi>Securing Mechanisms</h3><a class="self-link" href="#securing-mechanisms" aria-label="Permalink for Section 4.12"></a></div>
+        
+
+        <p>
+--
+in <cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>].
+        </p>
+
+        <p>
+An <dfn class="export" data-export="" data-plurals="embedded proofs" id="dfn-embedded-proof" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">embedded proof</dfn> is a mechanism where the proof is
+included in the serialization of the data model. One such <em class="rfc2119">RECOMMENDED</em> embedded
+proof mechanism is defined in <cite><a data-matched-text="[[[VC-DATA-INTEGRITY]]]" href="https://www.w3.org/TR/vc-data-integrity/">Verifiable Credential Data Integrity 1.0</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-data-integrity" title="Verifiable Credential Data Integrity 1.0">VC-DATA-INTEGRITY</a></cite>].
+        </p>
+
+        <p>
+These two classes of securing mechanisms are not mutually exclusive. Additional
+--
+        <section class="notoc"><div class="header-wrapper"><h4 id="enveloped-verifiable-credentials">Enveloped Verifiable Credentials</h4><a class="self-link" href="#enveloped-verifiable-credentials" aria-label="Permalink for this Section"></a></div>
+          
+
+          <p>
+It is possible for a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-49">verifiable presentation</a> to include one or more
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-105">verifiable credentials</a> that have been secured using a securing mechanism
+that "envelopes" the payload, such as <cite><a data-matched-text="[[[?VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>].
+This can be accomplished by associating the <code>verifiableCredential</code> property with
+an object that has a <code>type</code> of <code>EnvelopedVerifiableCredential</code>.
+          </p>
+
+          <dl>
+            <dt id="defn-EnvelopedVerifiableCredential">EnvelopedVerifiableCredential</dt>
+            <dd>
+They are used to associate an object containing an enveloped
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-106">verifiable credential</a> with the <code>verifiableCredential</code> property in a
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-50">verifiable presentation</a>. The <code>@context</code> property of the object <em class="rfc2119">MUST</em> be
+--
+<cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. The <code>type</code> value of the object <em class="rfc2119">MUST</em> be
+<code>EnvelopedVerifiableCredential</code>.
+            </dd>
+          </dl>
+
+          <p>
+The example below shows a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-51">verifiable presentation</a> that contains an
+enveloped <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-108">verifiable credential</a>:
+          </p>
+
+          <div class="example" id="example-basic-structure-of-a-presentation-0">
+--
+<cite><a data-matched-text="[[[?VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. This can be accomplished by using an
+object that has a <code>type</code> of <code>EnvelopedVerifiablePresentation</code>.
+          </p>
+
+          <dl>
+            <dt id="defn-EnvelopedVerifiablePresentation">EnvelopedVerifiablePresentation</dt>
+            <dd>
+Used to express an enveloped <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-53">verifiable presentation</a>.
+The <code>@context</code> property of the object <em class="rfc2119">MUST</em> be present and include a context,
+such as the <a href="#base-context">base context for this specification</a>,
+that defines at least the <code>id</code>, <code>type</code>, and <code>EnvelopedVerifiablePresentation</code>
+--
+<cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. The <code>type</code> value of the object <em class="rfc2119">MUST</em> be
+<code>EnvelopedVerifiablePresentation</code>.
+            </dd>
+          </dl>
+
+          <p>
+The example below shows an enveloped <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-55">verifiable presentation</a>:
+          </p>
+
+          <div class="example" id="example-basic-structure-of-an-enveloped-verifiable-presentation">
+        <div class="marker">
+--
+models studied by the Working Group, see the <cite><a data-matched-text="[[[VC-USE-CASES]]]" href="https://www.w3.org/TR/vc-use-cases/">Verifiable Credentials Use Cases</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-use-cases" title="Verifiable Credentials Use Cases">VC-USE-CASES</a></cite>].
+        </p>
+
+        <div class="note" role="note" id="issue-container-generatedID-16"><div role="heading" class="note-title marker" id="h-note-16" aria-level="4"><span>Note</span><span class="issue-label">: Trust model differs from the traditional Certificate Authority system</span></div><p class="">
+The data model detailed in this specification does not imply a transitive trust
+model, such as that provided by more traditional Certificate Authority trust
+models. In the Verifiable Credentials Data Model, a <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-37">verifier</a> either
+directly trusts or does not trust an <a data-link-type="dfn|abstract-op" href="#dfn-issuers" class="internalDFN" id="ref-for-dfn-issuers-45">issuer</a>. While it is possible to
+build transitive trust models using the Verifiable Credentials Data Model,
+implementers are urged to
+<a href="https://datatracker.ietf.org/doc/draft-iab-web-pki-problems/">learn
+about the security weaknesses</a> introduced by
+<a href="https://www.usenix.org/conference/imc-05/perils-transitive-trust-domain-name-system">
+broadly delegating trust</a> in the manner adopted by Certificate Authority
+systems.
+        </p></div>
+      </section>
+
+      <section id="extensibility"><div class="header-wrapper"><h3 id="x5-2-extensibility"><bdi class="secno">5.2 </bdi>Extensibility</h3><a class="self-link" href="#extensibility" aria-label="Permalink for Section 5.2"></a></div>
+--
+One of the goals of the Verifiable Credentials Data Model is to enable
+permissionless innovation. To achieve this, the data model needs to be
+extensible in a number of different ways. The data model is required to:
+        </p>
+
+        <ul>
+          <li>
+Model complex multi-entity relationships through the use of a <a data-link-type="dfn|abstract-op" href="#dfn-graphs" class="internalDFN" id="ref-for-dfn-graphs-16">graph</a>-based
+data model.
+          </li>
+          <li>
+--
+<cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite>, <cite><a data-matched-text="[[[VC-DATA-INTEGRITY]]]" href="https://www.w3.org/TR/vc-data-integrity/">Verifiable Credential Data Integrity 1.0</a></cite>, and a variety of cryptographic
+suites listed in the <cite><a data-matched-text="[[[?VC-EXTENSIONS]]]" href="https://w3c.github.io/vc-extensions/">Verifiable Credential Extensions</a></cite> document.
+          </li>
+          <li>
+Provide all of the extensibility mechanisms outlined above in a data format that
+is popular with software developers and web page authors, and is enabled through
+the use of <cite><a data-matched-text="[[[JSON-LD11]]]" href="https://www.w3.org/TR/json-ld11/">JSON-LD 1.1</a></cite>.
+          </li>
+        </ul>
+
+        <p>
+--
+This example demonstrates extending the Verifiable Credentials Data Model in a
+permissionless and decentralized way. The mechanism shown also ensures that
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-138">verifiable credentials</a> created in this way provide a way to prevent
+namespace conflicts and semantic ambiguity.
+        </p>
+
+        <p>
+A dynamic extensibility model such as this does increase the implementation
+burden. Software written for such a system has to determine whether
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-139">verifiable credentials</a> with extensions are acceptable based on the risk
+profile of the application. Some applications might accept only certain
+--
+Credentials Implementation Guidelines [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-imp-guide" title="Verifiable Credentials Implementation Guidelines 1.0">VC-IMP-GUIDE</a></cite>] document.
+        </p>
+
+      </section>
+
+      <section id="evidence"><div class="header-wrapper"><h3 id="x5-6-evidence"><bdi class="secno">5.6 </bdi>Evidence</h3><a class="self-link" href="#evidence" aria-label="Permalink for Section 5.6"></a></div>
+        
+
+        <p>
+Evidence can be included by an <a data-link-type="dfn|abstract-op" href="#dfn-issuers" class="internalDFN" id="ref-for-dfn-issuers-60">issuer</a> to provide the <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-49">verifier</a> with
+additional supporting information in a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-163">verifiable credential</a>. This could be
+--
+are considered <em>"compatible with the <abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials
+ecosystem"</em>. Specification authors are advised to adhere to the following
+rules when documenting transformations that enable compatibility with the
+Verifiable Credentials ecosystem. The transformation specification —
+        </p>
+
+        <ul>
+          <li>
+<em class="rfc2119">MUST</em> identify whether the transformation to this data model is one-way-only or
+round-trippable.
+          </li>
+          <li>
+<em class="rfc2119">MUST</em> preserve the <code>@context</code> values when performing round-trippable
+transformation.
+--
+the <abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials ecosystem if it is a <a data-link-type="dfn|abstract-op" href="#dfn-conforming-document" class="internalDFN" id="ref-for-dfn-conforming-document-17">conforming document</a>
+and it uses at least one securing mechanism, as described by their
+respective requirements in this specification. While some communities might call
+some digital credential formats that are not <a data-link-type="dfn|abstract-op" href="#dfn-conforming-document" class="internalDFN" id="ref-for-dfn-conforming-document-18">conforming documents</a>
+"verifiable credentials", doing so does NOT make that digital credential
+compliant to this specification.
+        </p></div>
+
+      </section>
+
+      <section id="verifiable-credential-graphs"><div class="header-wrapper"><h3 id="x5-12-verifiable-credential-graphs"><bdi class="secno">5.12 </bdi>Verifiable Credential Graphs</h3><a class="self-link" href="#verifiable-credential-graphs" aria-label="Permalink for Section 5.12"></a></div>
+--
+<cite><a data-matched-text="[[[VC-DATA-INTEGRITY]]]" href="https://www.w3.org/TR/vc-data-integrity/">Verifiable Credential Data Integrity 1.0</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-data-integrity" title="Verifiable Credential Data Integrity 1.0">VC-DATA-INTEGRITY</a></cite>] and <cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite>
+[<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>]. Other securing mechanisms that are known to the community
+can be found in the
+<a href="https://w3c.github.io/vc-extensions/#securing-mechanisms">Securing Mechanisms</a>
+section of the <cite><a data-matched-text="[[[?VC-EXTENSIONS]]]" href="https://w3c.github.io/vc-extensions/">Verifiable Credential Extensions</a></cite> document.
+        </p></div>
+
+      </section>
+
+    </section>
+
+    <section id="syntaxes"><div class="header-wrapper"><h2 id="x6-syntaxes"><bdi class="secno">6. </bdi>Syntaxes</h2><a class="self-link" href="#syntaxes" aria-label="Permalink for Section 6."></a></div>
+--
+implications of deploying the Verifiable Credentials Data Model into production
+environments.
+      </p>
+
+      <section class="informative" id="spectrum-of-privacy"><div class="header-wrapper"><h3 id="x8-1-spectrum-of-privacy"><bdi class="secno">8.1 </bdi>Spectrum of Privacy</h3><a class="self-link" href="#spectrum-of-privacy" aria-label="Permalink for Section 8.1"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+        <p>
+It is important to recognize there is a spectrum of privacy ranging from
+pseudonymous to strongly identified. Depending on the use case, people have
+different comfort levels about the information they are willing to provide
+--
+The Verifiable Credentials Data Model strives to support the full privacy
+spectrum and does not take philosophical positions on the correct level of
+anonymity for any specific transaction. The following sections will guide
+implementers who want to avoid specific scenarios that are hostile to
+privacy.
+        </p>
+      </section>
+
+      <section class="informative" id="software-trust-boundaries"><div class="header-wrapper"><h3 id="x8-2-software-trust-boundaries"><bdi class="secno">8.2 </bdi>Software Trust Boundaries</h3><a class="self-link" href="#software-trust-boundaries" aria-label="Permalink for Section 8.2"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+--
+mechanisms</a>, like <cite><a data-matched-text="[[[VC-JOSE-COSE]]]" href="https://www.w3.org/TR/vc-jose-cose/">Securing Verifiable Credentials using JOSE and COSE</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>] and
+<cite><a data-matched-text="[[[VC-DATA-INTEGRITY]]]" href="https://www.w3.org/TR/vc-data-integrity/">Verifiable Credential Data Integrity 1.0</a></cite> [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-data-integrity" title="Verifiable Credential Data Integrity 1.0">VC-DATA-INTEGRITY</a></cite>], provide an
+option to specify a <a data-link-type="dfn|abstract-op" href="#dfn-presentation" class="internalDFN" id="ref-for-dfn-presentation-23">presentation</a>'s intended audience or domain, which can
+help reduce this risk.
+        </p>
+        <p>
+Other approaches, such as token binding [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8471" title="The Token Binding Protocol Version 1.0">RFC8471</a></cite>], which ties the request for
+a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-104">verifiable presentation</a> to the response, can help secure the protocol.
+Any unsecured protocol is susceptible to man-in-the-middle attacks.
+        </p>
+        </section><section id="replay-attack"><div class="header-wrapper"><h4 id="x9-5-2-replay-attack"><bdi class="secno">9.5.2 </bdi>Replay Attack</h4><a class="self-link" href="#replay-attack" aria-label="Permalink for Section 9.5.2"></a></div>
+--
+considerations, implementers are also urged to read the Verifiable Credentials
+Implementation Guidelines [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-imp-guide" title="Verifiable Credentials Implementation Guidelines 1.0">VC-IMP-GUIDE</a></cite>] document.
+      </p>
+
+      <p>
+This section outlines general internationalization considerations to take into
+account when using this data model and is intended to highlight specific
+parts of the <em>Strings on the Web: Language and Direction Metadata</em>
+document [<cite><a class="bibref" data-link-type="biblio" href="#bib-string-meta" title="Strings on the Web: Language and Direction Metadata">STRING-META</a></cite>] that implementers might be interested in reading.
+      </p>
+
+      <section id="language-and-base-direction"><div class="header-wrapper"><h3 id="x11-1-language-and-base-direction"><bdi class="secno">11.1 </bdi>Language and Base Direction</h3><a class="self-link" href="#language-and-base-direction" aria-label="Permalink for Section 11.1"></a></div>
+--
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-343">verifiable credentials</a>, see the <cite><a data-matched-text="[[[VC-IMP-GUIDE]]]" href="https://www.w3.org/TR/vc-imp-guide/">Verifiable Credentials Implementation Guidelines 1.0</a></cite> document.
+        </p></div>
+
+      </section>
+
+      <section class="informative" id="issuer-0"><div class="header-wrapper"><h3 id="a-3-issuer"><bdi class="secno">A.3 </bdi>Issuer</h3><a class="self-link" href="#issuer-0" aria-label="Permalink for Appendix A.3"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+        <p>
+The value associated with the <code>issuer</code> <a data-link-type="dfn|abstract-op" href="#dfn-property" class="internalDFN" id="ref-for-dfn-property-88">property</a> identifies an <a data-link-type="dfn|abstract-op" href="#dfn-issuers" class="internalDFN" id="ref-for-dfn-issuers-130">issuer</a>
+to the <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-141">verifier</a>.
+--
+See the <a href="https://www.w3.org/TR/vc-imp-guide/#subject-holder-relationships">Verifiable Credentials Implementation Guidelines 1.0</a> and
+<a href="https://www.w3.org/TR/vc-use-cases/#user-tasks">Verifiable Credentials Use Cases</a> for additional examples related to
+<a data-link-type="dfn|abstract-op" href="#dfn-subjects" class="internalDFN" id="ref-for-dfn-subjects-72">subject</a> and <a data-link-type="dfn|abstract-op" href="#dfn-holders" class="internalDFN" id="ref-for-dfn-holders-162">holder</a>.
+        </p>
+
+        <div class="note" role="note" id="issue-container-generatedID-32"><div role="heading" class="note-title marker" id="h-note-32" aria-level="4"><span>Note</span><span class="issue-label">: Validation is the process of applying business rules</span></div><p class="">
+Validation is the process by which verifiers apply business rules to
+evaluate the propriety of a particular use of a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-345">verifiable credential</a>.
+        </p></div>
+        <p>
+A <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-146">verifier</a> might need to validate a given <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-118">verifiable presentation</a>
+against complex business rules; for example, the verifier might need confidence
+--
+value is [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-json-schema" title="Verifiable Credentials JSON Schema Specification">VC-JSON-SCHEMA</a></cite>], then a <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-159">verifier</a> can ensure a credential's
+data is valid against the given JSON Schema.
+        </p>
+      </section>
+
+      <section class="informative" id="fitness-for-purpose"><div class="header-wrapper"><h3 id="a-10-fitness-for-purpose"><bdi class="secno">A.10 </bdi>Fitness for Purpose</h3><a class="self-link" href="#fitness-for-purpose" aria-label="Permalink for Appendix A.10"></a></div><p><em>This section is non-normative.</em></p>
+        
+
+        <p>
+Fitness for purpose is about whether the custom <a data-link-type="dfn|abstract-op" href="#dfn-property" class="internalDFN" id="ref-for-dfn-property-94">properties</a> in the
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-357">verifiable credential</a> are appropriate for the <a data-link-type="dfn|abstract-op" href="#dfn-verifier" class="internalDFN" id="ref-for-dfn-verifier-160">verifier's</a> purpose.
+--
+[<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-json-schema" title="Verifiable Credentials JSON Schema Specification">VC-JSON-SCHEMA</a></cite>]. This section will provide a comparison of the
+<code>@context</code>, <code>type</code>, and <code>credentialSchema</code>
+properties, and cover some of the more specific use cases where it is possible
+to use these features of the data model.
+        </p>
+
+        <p>
+The <code>type</code> property is used to uniquely identify the type of the
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-368">verifiable credential</a> in which it appears, that is, to indicate which set of
+claims the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-369">verifiable credential</a> contains. This property, and the value
+<code>VerifiableCredential</code> within the set of its values, are mandatory.
+--
+            <td>As defined in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite>.</td>
+          </tr>
+          <tr>
+            <td>Contact: </td>
+            <td>
+<abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials Working Group
+<a href="mailto:public-vc-wg@w3.org">public-vc-wg@w3.org</a>
+            </td>
+          </tr>
+        </tbody></table>
+
+        <p>
+Note that while the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-391">verifiable credentials</a> format uses JSON-LD conventions,
+there are a number of constraints and additional requirements for <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential" class="internalDFN" id="ref-for-dfn-verifiable-credential-392">verifiable credential</a> implementations that justify the use of a specific media type.
+        </p>
+
+--
+            <td>As defined in <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite>.</td>
+          </tr>
+          <tr>
+            <td>Contact: </td>
+            <td>
+<abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials Working Group
+<a href="mailto:public-vc-wg@w3.org">public-vc-wg@w3.org</a>
+            </td>
+          </tr>
+        </tbody></table>
+
+        <p>
+Note that while the <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-133">verifiable presentations</a> format uses JSON-LD
+conventions, there are a number of constraints and additional requirements for
+<a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-134">verifiable presentation</a> implementations that justify the use of a specific
+media type.
+--
+        using an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-10">enveloping proof</a> based on [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>].
+        Each <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-credential-graph" class="internalDFN" id="ref-for-dfn-verifiable-credential-graph-13">verifiable credential graph</a> contains a single
+        <a href="#defn-EnvelopedVerifiableCredential"><code>EnvelopedVerifiableCredential</code></a>
+        instance, referring, via a <code>data:</code> URL [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc2397" title="The &quot;data&quot; URL scheme">RFC2397</a></cite>], to a verifiable
+        credential secured via an <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-11">enveloping proof</a>.
+      </p>
+
+      <figure id="info-graph-vp-jwt-mult-creds">
+        <img style="margin: auto; display: block; width: 100%;" src="diagrams/vp-jwt-mult-creds.svg" alt="
+Diagram with, on the left, a box, labeled as 'JWT (Decoded)', and with
+three textual labels stacked vertically, namely 'Header', 'Payload', and
+--
+          A variant of <a href="#info-graph-vp-jwt" data-matched-text="[[[#info-graph-vp-jwt]]]" class="fig-ref" title="Information graphs associated with a basic verifiable presentation that is using an enveloping proof based on Securing Verifiable Credentials using JOSE and COSE. The data: URL refers to the verifiable credential shown in Figure 7.">Figure <bdi class="">10</bdi></a>: information <a data-link-type="dfn|abstract-op" href="#dfn-graphs" class="internalDFN" id="ref-for-dfn-graphs-20">graphs</a>
+          associated with a <a data-link-type="dfn|abstract-op" href="#dfn-verifiable-presentation" class="internalDFN" id="ref-for-dfn-verifiable-presentation-141">verifiable presentation</a> referring to two
+          verifiable credentials using <a data-link-type="dfn|abstract-op" href="#dfn-enveloping-proof" class="internalDFN" id="ref-for-dfn-enveloping-proof-12">enveloping proofs</a> based on JOSE
+          [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-jose-cose" title="Securing Verifiable Credentials using JOSE and COSE">VC-JOSE-COSE</a></cite>].
+        </span></figcaption>
+      </figure>
+
+
+    </section>
+
+    <section id="revision-history"><div class="header-wrapper"><h2 id="e-revision-history"><bdi class="secno">E. </bdi>Revision History</h2><a class="self-link" href="#revision-history" aria-label="Permalink for Section E."></a></div>
+      
+
+      <p>
+--
+      <a href="https://www.w3.org/TR/vc-jose-cose/"><cite>Securing Verifiable Credentials using JOSE and COSE</cite></a>. Michael Jones; Gabe Cohen; Michael Prorock.  W3C. 15 May 2025. W3C Recommendation. URL: <a href="https://www.w3.org/TR/vc-jose-cose/">https://www.w3.org/TR/vc-jose-cose/</a>
+    </dd><dt id="bib-xmlschema11-2">[XMLSCHEMA11-2]</dt><dd>
+      <a href="https://www.w3.org/TR/xmlschema11-2/"><cite>W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes</cite></a>. David Peterson; Sandy Gao; Ashok Malhotra; Michael Sperberg-McQueen; Henry Thompson; Paul V. Biron et al.  W3C. 5 April 2012. W3C Recommendation. URL: <a href="https://www.w3.org/TR/xmlschema11-2/">https://www.w3.org/TR/xmlschema11-2/</a>
+    </dd></dl>
+  </section><section id="informative-references"><div class="header-wrapper"><h3 id="g-2-informative-references"><bdi class="secno">G.2 </bdi>Informative references</h3><a class="self-link" href="#informative-references" aria-label="Permalink for Appendix G.2"></a></div>
+    
+    <dl class="bibliography"><dt id="bib-bcp47">[BCP47]</dt><dd>
+      <a href="https://www.rfc-editor.org/rfc/rfc5646"><cite>Tags for Identifying Languages</cite></a>. A. Phillips, Ed.; M. Davis, Ed. IETF. September 2009. Best Current Practice. URL: <a href="https://www.rfc-editor.org/rfc/rfc5646">https://www.rfc-editor.org/rfc/rfc5646</a>
+    </dd><dt id="bib-cid">[CID]</dt><dd>
+      <a href="https://www.w3.org/TR/cid-1.0/"><cite>Controlled Identifiers v1.0</cite></a>. Michael Jones; Manu Sporny.  W3C. 15 May 2025. W3C Recommendation. URL: <a href="https://www.w3.org/TR/cid-1.0/">https://www.w3.org/TR/cid-1.0/</a>
+    </dd><dt id="bib-demographics">[DEMOGRAPHICS]</dt><dd>
+--
+      <a href="https://www.w3.org/TR/vc-data-model-2.0/"><cite>Verifiable Credentials Data Model v2.0</cite></a>. Ivan Herman; Michael Jones; Manu Sporny; Ted Thibodeau Jr; Gabe Cohen.  W3C. 15 May 2025. W3C Recommendation. URL: <a href="https://www.w3.org/TR/vc-data-model-2.0/">https://www.w3.org/TR/vc-data-model-2.0/</a>
+    </dd><dt id="bib-vc-di-bbs">[VC-DI-BBS]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-di-bbs/"><cite>Data Integrity BBS Cryptosuites v1.0</cite></a>. Greg Bernstein; Manu Sporny.  W3C. 3 April 2025. CRD. URL: <a href="https://www.w3.org/TR/vc-di-bbs/">https://www.w3.org/TR/vc-di-bbs/</a>
+    </dd><dt id="bib-vc-extensions">[VC-EXTENSIONS]</dt><dd>
+      <a href="https://w3c.github.io/vc-extensions/"><cite>Verifiable Credential Extensions</cite></a>. Manu Sporny.  W3C Verifiable Credentials Working Group. W3C Editor's Draft. URL: <a href="https://w3c.github.io/vc-extensions/">https://w3c.github.io/vc-extensions/</a>
+    </dd><dt id="bib-vc-imp-guide">[VC-IMP-GUIDE]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-imp-guide/"><cite>Verifiable Credentials Implementation Guidelines 1.0</cite></a>. Andrei Sambra.  W3C. 24 September 2019. W3C Working Group Note. URL: <a href="https://www.w3.org/TR/vc-imp-guide/">https://www.w3.org/TR/vc-imp-guide/</a>
+    </dd><dt id="bib-vc-json-schema">[VC-JSON-SCHEMA]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-json-schema/"><cite>Verifiable Credentials JSON Schema Specification</cite></a>. Gabe Cohen; Orie Steele.  W3C Verifiable Credentials Working Group. FPWD. URL: <a href="https://www.w3.org/TR/vc-json-schema/">https://www.w3.org/TR/vc-json-schema/</a>
+    </dd><dt id="bib-vc-overview">[VC-OVERVIEW]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-overview/"><cite>Verifiable Credentials Overview</cite></a>. Ivan Herman.  W3C. 12 February 2025. W3C Working Group Note. URL: <a href="https://www.w3.org/TR/vc-overview/">https://www.w3.org/TR/vc-overview/</a>
+    </dd><dt id="bib-vc-use-cases">[VC-USE-CASES]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-use-cases/"><cite>Verifiable Credentials Use Cases</cite></a>. Shane McCarron; Joe Andrieu; Matt Stone; Tzviya Siegman; Gregg Kellogg; Ted Thibodeau Jr.  W3C. 24 September 2019. W3C Working Group Note. URL: <a href="https://www.w3.org/TR/vc-use-cases/">https://www.w3.org/TR/vc-use-cases/</a>
+    </dd><dt id="bib-wcag21">[WCAG21]</dt><dd>
+      <a href="https://www.w3.org/TR/WCAG21/"><cite>Web Content Accessibility Guidelines (WCAG) 2.1</cite></a>. Michael Cooper; Andrew Kirkpatrick; Joshue O'Connor; Alastair Campbell.  W3C. 12 December 2024. W3C Recommendation. URL: <a href="https://www.w3.org/TR/WCAG21/">https://www.w3.org/TR/WCAG21/</a>
+    </dd></dl>
+  </section></section><p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-conforming-document" aria-label="Links in this document to definition: conforming document">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-conforming-document" aria-label="Permalink for definition: conforming document. Activate to close this dialog.">Permalink</a>
+         
+--
+      <a href="#ref-for-dfn-credential-32" title="§ 4.2 Verifiable Credentials">§ 4.2 Verifiable Credentials</a> 
+    </li><li>
+      <a href="#ref-for-dfn-credential-33" title="§ 4.5 Types">§ 4.5 Types</a> <a href="#ref-for-dfn-credential-34" title="Reference 2">(2)</a> <a href="#ref-for-dfn-credential-35" title="Reference 3">(3)</a> <a href="#ref-for-dfn-credential-36" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-credential-37" title="§ 4.6 Names and Descriptions">§ 4.6 Names and Descriptions</a> <a href="#ref-for-dfn-credential-38" title="Reference 2">(2)</a> <a href="#ref-for-dfn-credential-39" title="Reference 3">(3)</a> <a href="#ref-for-dfn-credential-40" title="Reference 4">(4)</a> <a href="#ref-for-dfn-credential-41" title="Reference 5">(5)</a> <a href="#ref-for-dfn-credential-42" title="Reference 6">(6)</a> <a href="#ref-for-dfn-credential-43" title="Reference 7">(7)</a> <a href="#ref-for-dfn-credential-44" title="Reference 8">(8)</a> <a href="#ref-for-dfn-credential-45" title="Reference 9">(9)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-credential-46" title="§ 4.7 Issuer">§ 4.7 Issuer</a> 
+    </li><li>
+      <a href="#ref-for-dfn-credential-47" title="§ 4.9 Validity Period">§ 4.9 Validity Period</a> <a href="#ref-for-dfn-credential-48" title="Reference 2">(2)</a> <a href="#ref-for-dfn-credential-49" title="Reference 3">(3)</a> <a href="#ref-for-dfn-credential-50" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-credential-51" title="§ 4.10 Status">§ 4.10 Status</a> <a href="#ref-for-dfn-credential-52" title="Reference 2">(2)</a> <a href="#ref-for-dfn-credential-53" title="Reference 3">(3)</a> <a href="#ref-for-dfn-credential-54" title="Reference 4">(4)</a> <a href="#ref-for-dfn-credential-55" title="Reference 5">(5)</a> 
+--
+      <a href="#ref-for-dfn-subjects-23" title="§ 4.2 Verifiable Credentials">§ 4.2 Verifiable Credentials</a> 
+    </li><li>
+      <a href="#ref-for-dfn-subjects-24" title="§ 4.4 Identifiers">§ 4.4 Identifiers</a> <a href="#ref-for-dfn-subjects-25" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-subjects-26" title="§ 4.5 Types">§ 4.5 Types</a> 
+    </li><li>
+      <a href="#ref-for-dfn-subjects-27" title="§ 4.8 Credential Subject">§ 4.8 Credential Subject</a> <a href="#ref-for-dfn-subjects-28" title="Reference 2">(2)</a> <a href="#ref-for-dfn-subjects-29" title="Reference 3">(3)</a> <a href="#ref-for-dfn-subjects-30" title="Reference 4">(4)</a> <a href="#ref-for-dfn-subjects-31" title="Reference 5">(5)</a> <a href="#ref-for-dfn-subjects-32" title="Reference 6">(6)</a> <a href="#ref-for-dfn-subjects-33" title="Reference 7">(7)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-subjects-34" title="§ 4.10 Status">§ 4.10 Status</a> 
+    </li><li>
+      <a href="#ref-for-dfn-subjects-35" title="§ Presentations Including Holder Claims">§ Presentations Including Holder Claims</a> <a href="#ref-for-dfn-subjects-36" title="Reference 2">(2)</a> 
+--
+      <a href="#ref-for-dfn-verifiable-credential-66" title="§ 4.2 Verifiable Credentials">§ 4.2 Verifiable Credentials</a> <a href="#ref-for-dfn-verifiable-credential-67" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-68" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-69" title="§ 4.3 Contexts">§ 4.3 Contexts</a> <a href="#ref-for-dfn-verifiable-credential-70" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-71" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-72" title="§ 4.4 Identifiers">§ 4.4 Identifiers</a> <a href="#ref-for-dfn-verifiable-credential-73" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-74" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-75" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-76" title="Reference 5">(5)</a> <a href="#ref-for-dfn-verifiable-credential-77" title="Reference 6">(6)</a> <a href="#ref-for-dfn-verifiable-credential-78" title="Reference 7">(7)</a> <a href="#ref-for-dfn-verifiable-credential-79" title="Reference 8">(8)</a> <a href="#ref-for-dfn-verifiable-credential-80" title="Reference 9">(9)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-81" title="§ 4.5 Types">§ 4.5 Types</a> <a href="#ref-for-dfn-verifiable-credential-82" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-83" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-84" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-85" title="Reference 5">(5)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-86" title="§ 4.7 Issuer">§ 4.7 Issuer</a> <a href="#ref-for-dfn-verifiable-credential-87" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-88" title="§ 4.8 Credential Subject">§ 4.8 Credential Subject</a> <a href="#ref-for-dfn-verifiable-credential-89" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-90" title="Reference 3">(3)</a> 
+--
+      <a href="#ref-for-dfn-verifiable-credential-105" title="§ Enveloped Verifiable Credentials">§ Enveloped Verifiable Credentials</a> <a href="#ref-for-dfn-verifiable-credential-106" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-107" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-108" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-109" title="§ Presentations Using Derived Credentials">§ Presentations Using Derived Credentials</a> <a href="#ref-for-dfn-verifiable-credential-110" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-111" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-112" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-113" title="Reference 5">(5)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-114" title="§ Presentations Including Holder Claims">§ Presentations Including Holder Claims</a> <a href="#ref-for-dfn-verifiable-credential-115" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-116" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-117" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-118" title="Reference 5">(5)</a> <a href="#ref-for-dfn-verifiable-credential-119" title="Reference 6">(6)</a> <a href="#ref-for-dfn-verifiable-credential-120" title="Reference 7">(7)</a> <a href="#ref-for-dfn-verifiable-credential-121" title="Reference 8">(8)</a> <a href="#ref-for-dfn-verifiable-credential-122" title="Reference 9">(9)</a> <a href="#ref-for-dfn-verifiable-credential-123" title="Reference 10">(10)</a> <a href="#ref-for-dfn-verifiable-credential-124" title="Reference 11">(11)</a> <a href="#ref-for-dfn-verifiable-credential-125" title="Reference 12">(12)</a> <a href="#ref-for-dfn-verifiable-credential-126" title="Reference 13">(13)</a> <a href="#ref-for-dfn-verifiable-credential-127" title="Reference 14">(14)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-128" title="§ 5. Advanced Concepts">§ 5. Advanced Concepts</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-129" title="§ 5.1 Trust Model">§ 5.1 Trust Model</a> <a href="#ref-for-dfn-verifiable-credential-130" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-131" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-132" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-133" title="Reference 5">(5)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-credential-134" title="§ 5.2 Extensibility">§ 5.2 Extensibility</a> <a href="#ref-for-dfn-verifiable-credential-135" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-credential-136" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-credential-137" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-credential-138" title="Reference 5">(5)</a> <a href="#ref-for-dfn-verifiable-credential-139" title="Reference 6">(6)</a> 
+--
+      <a href="#ref-for-dfn-verifiable-presentation-49" title="§ Enveloped Verifiable Credentials">§ Enveloped Verifiable Credentials</a> <a href="#ref-for-dfn-verifiable-presentation-50" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-presentation-51" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-presentation-52" title="§ Enveloped Verifiable Presentations">§ Enveloped Verifiable Presentations</a> <a href="#ref-for-dfn-verifiable-presentation-53" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-presentation-54" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-presentation-55" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-presentation-56" title="§ Presentations Using Derived Credentials">§ Presentations Using Derived Credentials</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-presentation-57" title="§ Presentations Including Holder Claims">§ Presentations Including Holder Claims</a> <a href="#ref-for-dfn-verifiable-presentation-58" title="Reference 2">(2)</a> <a href="#ref-for-dfn-verifiable-presentation-59" title="Reference 3">(3)</a> <a href="#ref-for-dfn-verifiable-presentation-60" title="Reference 4">(4)</a> <a href="#ref-for-dfn-verifiable-presentation-61" title="Reference 5">(5)</a> <a href="#ref-for-dfn-verifiable-presentation-62" title="Reference 6">(6)</a> <a href="#ref-for-dfn-verifiable-presentation-63" title="Reference 7">(7)</a> <a href="#ref-for-dfn-verifiable-presentation-64" title="Reference 8">(8)</a> <a href="#ref-for-dfn-verifiable-presentation-65" title="Reference 9">(9)</a> <a href="#ref-for-dfn-verifiable-presentation-66" title="Reference 10">(10)</a> <a href="#ref-for-dfn-verifiable-presentation-67" title="Reference 11">(11)</a> <a href="#ref-for-dfn-verifiable-presentation-68" title="Reference 12">(12)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-presentation-69" title="§ 5.4 Refreshing">§ 5.4 Refreshing</a> <a href="#ref-for-dfn-verifiable-presentation-70" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-verifiable-presentation-71" title="§ 5.5 Terms of Use">§ 5.5 Terms of Use</a> <a href="#ref-for-dfn-verifiable-presentation-72" title="Reference 2">(2)</a> 
+--
+      <a href="#ref-for-dfn-enveloping-proof-6" title="§ Enveloped Verifiable Credentials">§ Enveloped Verifiable Credentials</a> 
+    </li><li>
+      <a href="#ref-for-dfn-enveloping-proof-7" title="§ Enveloped Verifiable Presentations">§ Enveloped Verifiable Presentations</a> 
+    </li><li>
+      <a href="#ref-for-dfn-enveloping-proof-8" title="§ C.1 application/vc">§ C.1 application/vc</a> 
+    </li><li>
+      <a href="#ref-for-dfn-enveloping-proof-9" title="§ C.2 application/vp">§ C.2 application/vp</a> 
+    </li><li>
+      <a href="#ref-for-dfn-enveloping-proof-10" title="§ D. Additional Diagrams for Verifiable Presentations">§ D. Additional Diagrams for Verifiable Presentations</a> <a href="#ref-for-dfn-enveloping-proof-11" title="Reference 2">(2)</a> <a href="#ref-for-dfn-enveloping-proof-12" title="Reference 3">(3)</a> 
+    </li>
+  </ul>
