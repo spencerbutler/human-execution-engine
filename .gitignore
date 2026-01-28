@@ -31,7 +31,7 @@ secrets/
 *private*
 
 # Development
-.vscode/
+#.vscode/ # Pretty is a function
 .idea/
 *.swp
 *.swo
