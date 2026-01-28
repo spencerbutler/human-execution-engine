@@ -442,23 +442,23 @@ task_unused_scripts() {
   run_task "unused_scripts" "
     set -euo pipefail
     cd '$GC_ROOT'
-    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > '$GC_REPORTS/_scripts_all.txt' || true
+    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > '"$GC_REPORTS"'/_scripts_all.txt || true
 
     # gather reference surfaces (best-effort)
-    touch '$GC_REPORTS/_refs.txt'
+    touch '"$GC_REPORTS"'/_refs.txt
     if command -v rg >/dev/null 2>&1; then
       rg -n --no-heading -S \"scripts/|\\./scripts/\" .github Makefile makefile docs prompts 2>/dev/null \
-        | awk -F: '{print \$0}' >> '$GC_REPORTS/_refs.txt' || true
+        | awk -F: '{print \$0}' >> '"$GC_REPORTS"'/_refs.txt || true
     else
       # fallback: grep (no PCRE)
-      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> '$GC_REPORTS/_refs.txt' || true
+      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> '"$GC_REPORTS"'/_refs.txt || true
     fi
 
     python3 - <<'PY' > '$report'
 import os, re, subprocess, datetime
 root=os.getcwd()
-scripts=open('$GC_REPORTS/_scripts_all.txt','r',encoding='utf-8',errors='replace').read().splitlines()
-refs=open('$GC_REPORTS/_refs.txt','r',encoding='utf-8',errors='replace').read()
+scripts=open(__import__("os").path.join(__import__("os").environ["GC_REPORTS"], "_scripts_all.txt"),'r',encoding='utf-8',errors='replace').read().splitlines()
+refs=open(__import__("os").path.join(__import__("os").environ["GC_REPORTS"], "_refs.txt"),'r',encoding='utf-8',errors='replace').read()
 cands=[]
 for s in scripts:
     if not s.strip(): continue
