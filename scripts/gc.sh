@@ -227,7 +227,8 @@ task_cruft() {
       -name '.DS_Store' -o -name 'Thumbs.db' -o -name '*.log' \
     \\) -print > '$report' || true
 
-    python3 - <<'PY' > '$report2'
+    # Fix: allow variable expansion in heredoc to resolve GC_REPORTS path
+    python3 - <<PY > '$report2'
 import os, json, re
 root = os.getcwd()
 paths = []
