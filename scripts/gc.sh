@@ -3,6 +3,8 @@ set -euo pipefail
 
 rb=""
 
+rb=""
+
 # ============================================================
 # GC Report Pack — repo hygiene monitoring (recommend-only)
 # Outputs per run:
