@@ -536,7 +536,7 @@ generate_metrics_and_reports() {
 
   cruft_kv="$(python3 - <<'PY'
 import json, re
-txt=open(""$GC_REPORTS/cruft_summary.txt"","r",encoding="utf-8",errors="replace").read().splitlines()
+txt=open("'$GC_REPORTS/cruft_summary.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
 for line in txt:
     if '=' in line:
