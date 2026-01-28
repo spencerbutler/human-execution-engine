@@ -1,0 +1,39 @@
+# docs/history/state_capsules/chat-gpt-hee-discover-branch.yml
+
+state:
+  name: chat-gpt/hee-discover
+  asof: 2026-01-28
+  status: STABLE
+  apply: TRUE
+
+evidence:
+  committed:
+    - blueprints/validator-contract-doctrine.yml
+    - docs/CONTRIBUTING.md
+    - docs/journalism/
+    - docs/specs/
+    - rfcs/
+  iter_only:
+    - blueprints/iter/hee-discover/
+
+ci:
+  status: GREEN
+  gc_fix: APPLIED
+  note: quoted var expansion bug resolved
+
+blockers:
+  - id: rruleset
+    status: BLOCKER-FROZEN
+    note: bp->domain rruleset not found; no conversions performed
+
+decisions:
+  - keep iter artifacts out of canonical commits
+  - volatility-first metrics blueprint staged (iter)
+
+next:
+  - wait for PR #67 merge
+  - post-merge: new branch for Phase 3 or demo scaffold
+
+health:
+  oper_confidence: LOW
+  guardrail: pause after merge
