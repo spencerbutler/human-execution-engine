@@ -13,6 +13,16 @@ jobs:
         with:
           fetch-depth: 0
       - name: Ensure local main exists
-        run: git fetch origin main:main --force
+        run: git fetch origin +refs/heads/main:refs/remotes/origin/main
+      - name: Ensure local main branch exists
+        run: git branch -f main origin/main
+      - name: Install required tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
+      - name: Install required tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
       - name: HEE preflight
-        run: ci/git/hee-preflight.sh
+        run: ci/git/hee-preflight.sh --ci

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rb=""
+b=""
+
+
 # ============================================================
 # GC Report Pack — repo hygiene monitoring (recommend-only)
 # Outputs per run:
@@ -70,7 +74,7 @@ PY
 
   if [[ "$GC_TIMEOUT_PER_TASK_SECONDS" -gt 0 ]] && have timeout; then
     # timeout returns 124 on timeout; do not fail the whole run
-    if ! $NICE_CMD $IONICE_CMD timeout "$GC_TIMEOUT_PER_TASK_SECONDS" bash -c "$*"; then
+    if ! $NICE_CMD $IONICE_CMD timeout "$GC_TIMEOUT_PER_TASK_SECONDS" bash -c "$1"; then
       local rc=$?
       if [[ "$rc" == "124" ]]; then
         echo "$name|timeout|$GC_TIMEOUT_PER_TASK_SECONDS" >> "$GC_REPORTS/_task_status.txt"
@@ -81,7 +85,7 @@ PY
       echo "$name|ok|0" >> "$GC_REPORTS/_task_status.txt"
     fi
   else
-    if ! $NICE_CMD $IONICE_CMD bash -c "$*"; then
+    if ! $NICE_CMD $IONICE_CMD bash -c "$1"; then
       echo "$name|error|$?" >> "$GC_REPORTS/_task_status.txt"
     else
       echo "$name|ok|0" >> "$GC_REPORTS/_task_status.txt"
@@ -367,20 +371,21 @@ for dt,b in rows:
 PY
 
     # Proposed deletion script (NEVER auto-run)
-    cat > '$propose' <<'SH'
-#!/usr/bin/env bash
-set -euo pipefail
-git fetch --prune
-# REVIEW BEFORE RUNNING.
-# Deletes ONLY merged remote branches (origin/*) excluding main/master/HEAD.
-git branch -r --merged origin/main | sed 's/^  //' | grep -vE 'origin/(main|master|HEAD)$' | while IFS= read -r rb; do
-  [[ -z "${rb:-}" ]] && continue
-  b="${rb#origin/}"
-  echo "Deleting remote branch: $b"
-  git push origin --delete "$b"
-done
-SH
-    chmod +x '$propose'
+    : > "$propose"
+    printf '%s\n' \
+      '#!/usr/bin/env bash' \
+      'set -euo pipefail' \
+      'git fetch --prune' \
+      '# REVIEW BEFORE RUNNING.' \
+      '# Deletes ONLY merged remote branches (origin/*) excluding main/master/HEAD.' \
+      'git branch -r --merged origin/main | sed '\''s/^  //'\'' | grep -vE '\''origin/(main|master|HEAD)$'\'' | while IFS= read -r rb; do' \
+      '  [[ -z ${rb:-} ]] && continue' \
+      '  b=${rb#origin/}' \
+      '  echo Deleting remote branch: $b' \
+      '  git push origin --delete $b' \
+      'done' \
+      > "$propose"
+    chmod +x "$propose"
   "
 }
 
