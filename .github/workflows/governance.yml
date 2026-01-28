@@ -15,6 +15,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+
+    - name: Enforce frozen governance operations guardrails
+      run: ./ci/governance/ops_guard.sh
     - name: Lint governance checker
       run: |
         echo "🔍 Running governance-aware linting..."
