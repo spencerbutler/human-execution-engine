@@ -1,0 +1,111 @@
+name: Build Smart Approval Dashboard
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/history/state_capsules/**'
+      - 'tooling/smart-approval/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/history/state_capsules/**'
+      - 'tooling/smart-approval/**'
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      data_path:
+        description: 'Path to data directory (relative to repo root)'
+        required: false
+        default: 'docs/history/state_capsules'
+      renderer:
+        description: 'Renderer to use'
+        required: false
+        default: 'plotly_static'
+        type: choice
+        options:
+          - plotly_static
+          - json_bundle
+          - markdown_report
+
+jobs:
+  build-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for git commit info
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+
+    - name: Validate smart-approval tool
+      run: |
+        cd tooling/smart-approval
+        python cli.py --list-renderers
+
+    - name: Build dashboard bundle
+      run: |
+        # Use workflow input or default data path
+        DATA_PATH="${{ github.event.inputs.data_path || 'docs/history/state_capsules' }}"
+        RENDERER="${{ github.event.inputs.renderer || 'plotly_static' }}"
+
+        echo "Building dashboard with:"
+        echo "  Data path: $DATA_PATH"
+        echo "  Renderer: $RENDERER"
+
+        # Create output directory
+        mkdir -p docs/ux/dashboard
+
+        # Run the dashboard build
+        cd tooling/smart-approval
+        python cli.py "$GITHUB_WORKSPACE/$DATA_PATH" "$GITHUB_WORKSPACE/docs/ux/dashboard" --renderer "$RENDERER"
+
+    - name: Validate generated artifacts
+      run: |
+        echo "Checking generated files..."
+        ls -la docs/ux/dashboard/
+
+        # Check for required files
+        if [ ! -f "docs/ux/dashboard/index.html" ]; then
+          echo "Error: index.html not found"
+          exit 1
+        fi
+
+        if [ ! -f "docs/ux/dashboard/data/metrics.json" ]; then
+          echo "Error: metrics.json not found"
+          exit 1
+        fi
+
+        if [ ! -f "docs/ux/dashboard/data/alerts.json" ]; then
+          echo "Error: alerts.json not found"
+          exit 1
+        fi
+
+        echo "✅ All required artifacts present"
+
+    - name: Upload dashboard artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: smart-approval-dashboard
+        path: docs/ux/dashboard/
+        retention-days: 30
+
+    - name: Deploy to GitHub Pages (on main branch only)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/ux/dashboard
+        destination_dir: dashboard
