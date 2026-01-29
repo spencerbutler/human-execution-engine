@@ -1,0 +1,7 @@
+reserved_keys:
+  obs:
+    canonical: true
+    semantics: [read_only, non_mutating, non_emissive]
+    allowed_phases: [post_M2, pre_M3]
+    forbidden: [artifact_change, signal_emission, milestone_advance]
+    rationale: "Observation is first-class; naming it prevents false idle and scope drift."
