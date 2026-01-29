@@ -2,7 +2,8 @@ artifact:
   kind: state_capsule
   path: docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
   ruleset: dev_flex
-  status: needs_verification
+  status: verified
+  promoted: true
 
 summary:
   claim:
