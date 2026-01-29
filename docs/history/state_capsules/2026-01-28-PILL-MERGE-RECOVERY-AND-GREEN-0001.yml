@@ -1,0 +1,60 @@
+pill:
+  artifact:
+    kind: state_capsule
+    path: docs/history/state_capsules/2026-01-28-PILL-MERGE-RECOVERY-AND-GREEN-0001.yml
+    schema:
+      name: HEE-Pill
+      version: 0.1.0
+      strict: true
+
+  summary:
+    outcome: complete_and_correct
+    repo_green: true
+    governance_compliant: true
+
+  what_happened:
+    - pr_merge_order_mattered_and_worked
+    - untracked_state_detected_and_routed_correctly
+    - false_green_prevented_then_true_green_achieved
+    - missing_validator_identified_as_real_blocker
+    - validator_restored_from_history_and_verified
+
+  what_we_learned:
+    - merge_order_is_a_control_surface_not_a_formality
+    - porcelain_clean_is_a_hard_gate_even_after_ci_green
+    - validators_are_critical_path_artifacts_and_must_be_versioned
+    - state_capsules_can_and_should_capture_recovery_paths
+    - stopping_and_blocking_is_success_when_it_preserves_truth
+
+  invariants_reinforced:
+    - pr_green_is_not_repo_green
+    - evidence_over_assertion
+    - correctness_over_completion
+    - untracked_state_must_be_governed
+    - recovery_is_part_of_execution_not_an_exception
+
+  evidence:
+    prs_merged:
+      - 68
+      - 67
+    validator_restored_from: e7d9e23
+    strict_validation: pass
+    porcelain_status: 0
+
+  classification: green
+  confidence: high
+
+jump:
+  ready: true
+  next_chat:
+    freshness_target: F3
+    purpose: r2_pre_planning
+    entry_state:
+      repo_green: true
+      lessons_captured: true
+      last_pill: 2026-01-28-PILL-MERGE-RECOVERY-AND-GREEN-0001.yml
+
+assistant_state:
+  hold_position: true
+  verbosity: minimal
+  mode: yaml_only

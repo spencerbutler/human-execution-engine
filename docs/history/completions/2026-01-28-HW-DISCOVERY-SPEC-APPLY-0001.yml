@@ -1,0 +1,24 @@
+completion:
+  kind: completion_marker
+  schema: HEE-Completion
+  version: 0.1.0
+  timestamp_utc: 2026-01-28T00:00:00Z
+  actor:
+    role: AGENT
+  task:
+    name: hw_discovery_spec_update
+    scope:
+      - regenerate_patch_from_disk
+      - apply_via_ci_git_apply_var_patch
+      - capture_var_update_evidence
+  artifacts:
+    - docs/specs/HEE_HARDWARE_DISCOVERY.md
+    - var/patches/0001-spec-hw-discovery-gnu-name-docs-gate.patch
+    - var/update/*
+  status:
+    complete: true
+    correct: true
+  blockers:
+    - gnu_name_unset
+  notes:
+    - "Completion recorded without release authority."
