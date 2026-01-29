@@ -1,0 +1,30 @@
+fin:
+  system: eye_candy
+  state: VISUAL_CONFIRMED
+  closure: terminal
+  artifacts: locked
+  doctrine: intact
+  readiness: M3_on_signal
+  evidence:
+    disk_verified: true
+    verification_mode: obs.read_only
+  timestamps:
+    recorded_by: "hee-gh/agent-or-human"
+    recorded_at: "2026-01-28T23:07:59-06:00"
+pointers:
+  contracts:
+    - contracts/events.schema.json
+    - contracts/metrics.schema.json
+  library:
+    - lib/ingest.py
+    - lib/transform.py
+    - lib/render/base.py
+  renderers:
+    - renderers/plotly_static.py
+    - renderers/json_bundle.py
+    - renderers/md_report.py
+  ops:
+    - cli.py
+    - .github/workflows/build-dashboard.yml
+  docs:
+    - docs/ux/smart-approval-workflow.md
