@@ -1,62 +1,30 @@
 artifact:
   kind: state_capsule_addendum
-  parent: docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
   path: docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT-ADDENDUM-0001.yml
-  ruleset: dev_flex
-  status: needs_verification
+  date: 2026-01-28
+  parent_capsule: 2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
+  status: verified
+  classification: blocked
 
-addendum:
-  purpose: address_risk_flags
-  scope: evidence_clarification
+truth:
+  green: false
+  blocked_by: untracked_on_main
+  main_clean:
+    expected_porcelain_lines: 0
+    observed_porcelain_lines: 2
+    note: green_requires_main_clean_true
 
-risk_flag_resolution:
-  - id: untracked_count_changed_without_attached_evidence
-    resolution: attached_evidence_provided
-    evidence:
-      - salvage_commit: cd508bc06f0fdfc4830743c8cde57ef19c4f4b61
-      - commit_scope: additions_only
-      - file_count: 34
-      - verification: git_show_command_attached
+verified_gates:
+  salvage_commit_scope: true
+  validate_strict: true
+  ci_green: true
+  evidence_integrity: true
 
-  - id: committed_file_count_exceeds_untracked_claim
-    resolution: explained_by_git_status_behavior
-    explanation: |
-      git status --porcelain counts directory entries separately from files.
-      Original untracked claim was based on line count, but commit shows
-      actual file/directory structure. Directory entries appear as separate
-      lines in porcelain output but contain multiple files when committed.
+corrections_applied:
+  - reclassified_result_from_green_to_blocked
+  - prevented_false_promotion
 
-additional_evidence:
-  salvage_commit_detail:
-    hash: cd508bc06f0fdfc4830743c8cde57ef19c4f4b61
-    branch: wip/untracked-salvage-20260128
-    message: "salvage: route untracked off main"
-    stats:
-      files_changed: 34
-      insertions: 2891
-      deletions: 0
-    file_types:
-      - yml: 25
-      - md: 8
-      - other: 1
-
-  main_branch_artifacts:
-    explanation: recreated_during_green_process
-    files:
-      - scripts/hee-validate (validator tool)
-      - docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml (result capsule)
-    justification: required_for_green_state_verification
-
-verification_commands:
-  - name: verify_salvage_commit_integrity
-    cmd: git show --stat cd508bc06f0fdfc4830743c8cde57ef19c4f4b61
-    expect: matches_documented_stats
-
-  - name: verify_no_modifications_in_salvage
-    cmd: git show --name-status cd508bc06f0fdfc4830743c8cde57ef19c4f4b61 | grep -v '^A'
-    expect: empty_output
-
-commit_addendum:
-  cmds:
-    - git add docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT-ADDENDUM-0001.yml
-    - git commit -m "state_capsule(dev): go-green-fast agent result addendum (risk flags resolved)"
+guardrails_reaffirmed:
+  - do_not_claim_green_when_main_clean_false
+  - correctness_over_completion
+  - evidence_over_assertion
