@@ -1,0 +1,660 @@
+# docs/specs/w3c-activitypub.md
+    <title>ActivityPub</title>
+    
+    
+    
+    <style type="text/css">
+      img {
+          max-width: 100%;
+      }
+    </style>
+  <style id="respec-mainstyle">/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* Override code highlighter background */
+.hljs {
+--
+  "errata": "https://www.w3.org/wiki/ActivityPub_errata",
+  "implementationReportURI": "https://activitypub.rocks/implementation-report",
+  "otherLinks": [
+    {
+      "key": "Repository",
+      "data": [
+        {
+          "value": "Git repository",
+          "href": "https://github.com/w3c/activitypub"
+        },
+        {
+          "value": "Issues",
+          "href": "https://github.com/w3c/activitypub/issues"
+        },
+        {
+          "value": "Commits",
+--
+}</script><meta name="description" content="The ActivityPub protocol is a decentralized social networking protocol
+        based upon the [ActivityStreams] 2.0 data format.
+        It provides a client to server API for creating, updating and deleting
+        content, as well as a federated server to server API for delivering
+        notifications and content."></head>
+  <!-- STYLISTIC NOTE: This document wraps on column 79 and at the end of every
+       sentence. -->
+  <body aria-busy="false" class="h-entry"><div class="head">
+    <p>
+      <a class="logo" href="https://www.w3.org/"><img src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" alt="W3C" width="72" height="48"></a>
+    </p>
+  <p><!--_hyper: 682859076;--></p>
+  <h1 class="title p-name" id="title">ActivityPub</h1>
+  <h2 id="w3c-recommendation-23-january-2018"><abbr title="World Wide Web Consortium">W3C</abbr> Recommendation <time class="dt-published" datetime="2018-01-23">23 January 2018</time></h2>
+  <dl>
+      <dt>This version:</dt>
+      <dd><a class="u-url" href="https://www.w3.org/TR/2018/REC-activitypub-20180123/">https://www.w3.org/TR/2018/REC-activitypub-20180123/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="https://www.w3.org/TR/activitypub/">https://www.w3.org/TR/activitypub/</a></dd>
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="https://w3c.github.io/activitypub/">https://w3c.github.io/activitypub/</a></dd>
+      <dt>Test suite:</dt>
+      <dd><a href="https://test.activitypub.rocks/">https://test.activitypub.rocks/</a></dd>
+      <dt>Implementation report:</dt>
+      <dd><a href="https://activitypub.rocks/implementation-report">https://activitypub.rocks/implementation-report</a></dd>
+      <dt>Previous version:</dt>
+      <dd><a href="https://www.w3.org/TR/2017/PR-activitypub-20171205/">https://www.w3.org/TR/2017/PR-activitypub-20171205/</a></dd>
+    <dt>Editors:</dt>
+--
+      Please check the <a href="https://www.w3.org/wiki/ActivityPub_errata"><strong>errata</strong></a> for any errors or issues
+      reported since publication.
+    </p>
+    <p>
+      See also <a href="https://www.w3.org/2003/03/Translations/byTechnology?technology=activitypub">
+      <strong>translations</strong></a>.
+    </p>
+      <p class="copyright">
+        <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+        2018
+        
+        <a href="https://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+        (<a href="https://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="https://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="https://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>).
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+--
+        The ActivityPub protocol is a decentralized social networking protocol
+        based upon the [<cite><a class="bibref" href="#bib-ActivityStreams">ActivityStreams</a></cite>] 2.0 data format.
+        It provides a client to server API for creating, updating and deleting
+        content, as well as a federated server to server API for delivering
+        notifications and content.
+      </p>
+    </section>
+
+    <section id="sotd" class="introductory"><h2 id="status-of-this-document">Status of This Document</h2>
+      <p>
+        <em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the latest revision of this technical report can be found in the <a href="https://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at https://www.w3.org/TR/.</em>
+      </p>
+        
+    
+        <p>
+          This document was published by the <a href="https://www.w3.org/Social/WG">Social Web Working Group</a> as a Recommendation.
+--
+      <p>ActivityPub provides two layers:</p>
+
+      <ul>
+        <li>
+          <b>A server to server federation protocol</b>
+          (so decentralized websites can share information)
+        </li>
+        <li>
+          <b>A client to server protocol</b>
+          (so users, including real-world users, bots, and other automated processes,
+          can communicate with ActivityPub using their accounts on servers,
+          from a phone or desktop or web application or whatever)
+        </li>
+      </ul>
+
+      <p>
+        ActivityPub implementations can implement just one of these things or
+        both of them.
+        However, once you've implemented one, it isn't too many steps to
+        implement the other, and there are a lot of benefits to both (making
+        your website part of the decentralized social web, and being able to
+        use clients and client libraries that work across a wide variety of
+        social websites).
+      </p>
+
+      <p>
+        In ActivityPub, a user is represented by "<a href="#actors">actors</a>"
+        via the user's accounts on servers.
+        User's accounts on different servers correspond to different actors.
+        Every Actor has:
+      </p>
+
+      <ul>
+        <li><b>An <code>inbox</code>:</b>  How they get messages from the world</li>
+        <li><b>An <code>outbox</code>:</b> How they send messages to others</li>
+      </ul>
+
+      <p>
+        <img src="illustration/tutorial-1.png" alt="Actor with inbox and outbox">
+      </p>
+
+      <p>
+--
+        ActivityPub actor's ActivityStreams description.
+        (More on ActivityStreams later).
+      </p>
+
+      <p>
+        Here's an example of the record of our friend Alyssa P. Hacker:
+      </p>
+
+      <div class="example"><div class="example-title marker"><span>Example 1</span></div><pre class="highlight json hljs" aria-busy="false" aria-live="polite">{<span class="hljs-attr">"@context"</span>: <span class="hljs-string">"https://www.w3.org/ns/activitystreams"</span>,
+ <span class="hljs-attr">"type"</span>: <span class="hljs-string">"Person"</span>,
+ <span class="hljs-attr">"id"</span>: <span class="hljs-string">"https://social.example/alyssa/"</span>,
+ <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Alyssa P. Hacker"</span>,
+ <span class="hljs-attr">"preferredUsername"</span>: <span class="hljs-string">"alyssa"</span>,
+ <span class="hljs-attr">"summary"</span>: <span class="hljs-string">"Lisp enthusiast hailing from MIT"</span>,
+ <span class="hljs-attr">"inbox"</span>: <span class="hljs-string">"https://social.example/alyssa/inbox/"</span>,
+ <span class="hljs-attr">"outbox"</span>: <span class="hljs-string">"https://social.example/alyssa/outbox/"</span>,
+--
+        ActivityPub uses [<cite><a class="bibref" href="#bib-ActivityStreams">ActivityStreams</a></cite>] for its vocabulary.
+        This is pretty great because ActivityStreams includes all the common
+        terms you need to represent all the activities and content flowing
+        around a social network.
+        It's likely that ActivityStreams already includes all the vocabulary
+        you need, but even if it doesn't, ActivityStreams can be extended
+        via [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>].
+        If you know what JSON-LD is, you can take advantage of the cool linked
+        data approaches provided by JSON-LD.
+        If you don't, don't worry, JSON-LD documents and ActivityStreams can be
+        understood as plain old simple JSON.
+        (If you're going to add extensions, that's the point at which JSON-LD
+        really helps you out).
+      </p>
+
+      <p>
+--
+        (Activities sent around in ActivityPub generally follow the pattern of
+        some activity by some actor being taken on some object.
+        In this case the activity is a Create of a Note object, posted by a
+        Person).
+      </p>
+
+
+      <div class="example"><div class="example-title marker"><span>Example 3</span></div><pre class="highlight json hljs" aria-busy="false" aria-live="polite">{<span class="hljs-attr">"@context"</span>: <span class="hljs-string">"https://www.w3.org/ns/activitystreams"</span>,
+ <span class="hljs-attr">"type"</span>: <span class="hljs-string">"Create"</span>,
+ <span class="hljs-attr">"id"</span>: <span class="hljs-string">"https://social.example/alyssa/posts/a29a6843-9feb-4c74-a7f7-081b9c9201d3"</span>,
+ <span class="hljs-attr">"to"</span>: [<span class="hljs-string">"https://chatty.example/ben/"</span>],
+ <span class="hljs-attr">"actor"</span>: <span class="hljs-string">"https://social.example/alyssa/"</span>,
+ <span class="hljs-attr">"object"</span>: {<span class="hljs-attr">"type"</span>: <span class="hljs-string">"Note"</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-string">"https://social.example/alyssa/posts/49e2d03d-b53a-4c4c-a95c-94a6abf45a19"</span>,
+            <span class="hljs-attr">"attributedTo"</span>: <span class="hljs-string">"https://social.example/alyssa/"</span>,
+            <span class="hljs-attr">"to"</span>: [<span class="hljs-string">"https://chatty.example/ben/"</span>],
+--
+            <a href="#Overview">ActivityPub</a> is one of several related
+            specifications being produced by the Social Web Working Group.
+            Implementers interested in alternative approaches and complementary
+            protocols should review [<cite><a class="bibref" href="#bib-Micropub">Micropub</a></cite>] and the overview document
+            [<cite><a class="bibref" href="#bib-Social-Web-Protocols">Social-Web-Protocols</a></cite>].
+          </p>
+        </div>
+      </section>
+    </section>
+
+    <section id="conformance"><!--OddPage--><h2 id="x2-conformance"><span class="secno">2. </span>Conformance</h2>
+<p>
+  As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+  and notes in this specification are non-normative. Everything else in this specification is
+  normative.
+</p>
+--
+          The ActivityPub specification is designed so that once either of
+          these protocols are implemented, supporting the other is of very
+          little additional effort.
+          However, servers may still implement one without the other.
+          This gives three conformance classes:
+        </p>
+        <dl>
+          <dt>ActivityPub conformant Client</dt>
+          <dd>
+            This designation applies to any implementation of the entirety of the
+            client portion of the client to server protocol.
+          </dd>
+          <dt>ActivityPub conformant Server</dt>
+          <dd>
+            This designation applies to any implementation of the entirety of the
+            server portion of the client to server protocol.
+          </dd>
+          <dt>ActivityPub conformant Federated Server</dt>
+          <dd>
+            This designation applies to any implementation of the entirety of
+            the federation protocols.
+          </dd>
+        </dl>
+        <p>
+          It is called out whenever a portion of the specification only applies
+          to implementation of the federation protocol.
+          In addition, whenever requirements are specified, it is called out
+          whether they apply to the client or server (for the client-to-server
+          protocol) or whether referring to a sending or receiving server in
+          the server-to-server protocol.
+        </p>
+      </section>
+    </section>
+--
+        ActivityPub are built.
+        Objects are often wrapped in Activities and are contained in streams of
+        Collections, which are themselves subclasses of Objects.
+        See the [<cite><a class="bibref" href="#bib-Activity-Vocabulary">Activity-Vocabulary</a></cite>] document, particularly the
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#types">Core Classes</a>;
+        ActivityPub follows the mapping of this vocabulary very closely.
+      </p>
+      <p>
+        ActivityPub defines some terms in addition to those provided by
+        ActivityStreams.
+        These terms are provided in the ActivityPub
+        <a href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a>
+        at
+        <code>https://www.w3.org/ns/activitystreams</code>.
+        Implementers <em class="rfc2119" title="SHOULD">SHOULD</em> include the ActivityPub context in their
+        object definitions.
+        Implementers <em class="rfc2119" title="MAY">MAY</em> include additional context as appropriate.
+      </p>
+      <p>
+        ActivityPub shares the same
+        <a href="https://www.w3.org/TR/activitystreams-core/#urls">
+          URI / IRI conventions as in ActivityStreams</a>.
+      </p>
+      <p>
+        Servers <em class="rfc2119" title="SHOULD">SHOULD</em> validate the content they receive to avoid content
+        spoofing attacks.
+        (A server should do something at least as robust as checking that
+        the object appears as received at its origin, but mechanisms
+        such as checking signatures would be better if available).
+        No particular mechanism for verification is authoritatively specified by
+        this document, but please see <a href="#security-considerations">Security 
+        Considerations</a> for some suggestions and good practices.
+      </p>
+      <div class="informative">
+        As an example, if example.com receives the activity
+--
+          ActivityPub extends this requirement; all objects distributed by the
+          ActivityPub protocol <em class="rfc2119" title="MUST">MUST</em> have unique global identifiers, unless they
+          are intentionally transient (short lived activities that are not
+          intended to be able to be looked up, such as some kinds of chat
+          messages or game notifications).
+          These identifiers must fall into one of the following groups:
+        </p>
+        <ol>
+          <li>
+            Publicly dereferencable URIs, such as HTTPS URIs, with their
+            authority belonging to that of their originating server.
+            (Publicly facing content <em class="rfc2119" title="SHOULD">SHOULD</em> use HTTPS URIs).
+          </li>
+          <li>
+            An ID explicitly specified as the JSON <code>null</code> object,
+            which implies an anonymous object (a part of its parent context)
+          </li>
+--
+	  [<cite><a class="bibref" href="#bib-Activity-Vocabulary">Activity-Vocabulary</a></cite>], ActivityPub extends the <code>Object</code> by
+	  supplying the <code>source</code> property.
+          The <code>source</code> property is intended to convey some
+          sort of source from which the <code>content</code> markup
+          was derived, as a form of provenance, or to support future
+          editing by clients.
+          In general, clients do the conversion from <code>source</code>
+          to <code>content</code>, not the other way around.
+        </p>
+        <p>
+          The value of <code>source</code> is itself an object
+          which uses its own <code>content</code> and <code>mediaType</code>
+          fields to supply source information.
+        </p>
+        <div class="example"><div class="example-title marker"><span>Example 8</span></div><pre class="hljs json" aria-busy="false" aria-live="polite">{
+  <span class="hljs-attr">"@context"</span>: [<span class="hljs-string">"https://www.w3.org/ns/activitystreams"</span>,
+--
+            For example, Alyssa P. Hacker likes to post to her ActivityPub
+            powered blog via an Emacs client she has written, leveraging
+            <a href="http://orgmode.org/">Org mode</a>.
+            Later she switches to editing on her phone's client, which
+            has no idea what <code>text/x-org</code> is or how to render
+            it to HTML, so it provides a text box to edit the original
+            <code>content</code> instead.
+            A helpful warning displays above the edit area saying,
+            "This was originally written in another markup language we don't
+            know how to handle.  If you edit, you'll lose your original
+            source!"
+            Alyssa decides the small typo fix isn't worth losing her nice
+            org-mode markup and decides to make the update when she gets
+            home.
+          </p>
+        </div></div>
+--
+        ActivityPub actors are generally one of the
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#actor-types">
+          ActivityStreams Actor Types</a>,
+        but they don't have to be. For example, a 
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile">
+          Profile</a> object
+        might be used as an actor, or a type from an ActivityStreams extension.
+        Actors are <a href="#retrieving-objects">retrieved</a> like any other
+        Object in ActivityPub.
+        Like other ActivityStreams objects, actors have an <code>id</code>,
+        which is a URI.
+        When entered directly into a user interface (for example on a login
+        form), it is desirable to support simplified naming.
+        For this purpose, ID normalization <em class="rfc2119" title="SHOULD">SHOULD</em> be performed as follows:
+      </p>
+      <ol>
+        <li>
+          If the entered ID is a valid URI, then it is to be used directly.
+        </li>
+        <li>
+          If it appears that the user neglected to add a scheme for a URI that
+          would otherwise be considered valid, such as
+          <code>example.org/alice/</code>, clients <em class="rfc2119" title="MAY">MAY</em> attempt to provide
+          a default scheme, preferably <code>https</code>.
+--
+        ActivityPub does not dictate a specific relationship between
+        "users" and Actors; many configurations are possible.
+        There may be multiple human users or organizations controlling an
+        Actor, or likewise one human or organization may control multiple
+        Actors. Similarly, an Actor may represent a piece of software,
+        like a bot, or an automated process.
+        More detailed "user" modelling, for example linking together of Actors which
+        are controlled by the same entity, or allowing one Actor to be presented
+        through multiple alternate profiles or aspects, are at the discretion
+        of the implementation.
+      </div></div>
+
+      <section id="actor-objects">
+        <h3 id="x4-1-actor-objects"><span class="secno">4.1 </span><i>Actor</i> objects</h3>
+        <p>
+          Actor objects <em class="rfc2119" title="MUST">MUST</em> have, in addition to the properties mandated by
+--
+            As the upstream vocabulary for ActivityPub, any applicable
+            [<cite><a class="bibref" href="#bib-ActivityStreams">ActivityStreams</a></cite>] property may be used on ActivityPub Actors.
+            Some ActivityStreams properties are particularly worth highlighting
+            to demonstrate how they are used in ActivityPub implementations.
+          </p>
+
+          <dl>
+            <dt id="url-property">url</dt>
+            <dd>
+              A link to the actor's "profile web page", if not equal to the
+              value of <code>id</code>.
+            </dd>
+            <dt id="name-property">name</dt>
+            <dd>
+              The preferred "nickname" or "display name" of the actor.
+            </dd>
+            <dt id="summary-property">summary</dt>
+            <dd>A quick summary or bio by the user about themselves.</dd>
+            <dt id="icon-property">icon</dt>
+--
+        [<cite><a class="bibref" href="#bib-ActivityStreams">ActivityStreams</a></cite>] defines the collection concept; ActivityPub
+        defines several collections with special behavior.
+        Note that ActivityPub makes use of
+        <a href="https://www.w3.org/TR/activitystreams-core/#paging">
+          ActivityStreams paging</a>
+        to traverse large sets of objects.
+      </p>
+
+      <p>
+        Note that some of these collections are specified to be of type
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
+          <code>OrderedCollection</code></a>
+        specifically, while others are permitted to be either a
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
+          <code>Collection</code></a>
+        or an
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
+          <code>OrderedCollection</code></a>.
+--
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Chris liked 'Minimal ActivityPub update client'"</span>,
+  <span class="hljs-attr">"object"</span>: <span class="hljs-string">"https://rhiaro.co.uk/2016/05/minimal-activitypub"</span>,
+  <span class="hljs-attr">"to"</span>: [<span class="hljs-string">"https://rhiaro.co.uk/#amy"</span>,
+         <span class="hljs-string">"https://dustycloud.org/followers"</span>,
+         <span class="hljs-string">"https://rhiaro.co.uk/followers/"</span>],
+  <span class="hljs-attr">"cc"</span>: <span class="hljs-string">"https://e14n.com/evan"</span>
+}</span></pre></div>
+
+      <p>
+        If an Activity is submitted with a value in the <code>id</code>
+        property, servers <em class="rfc2119" title="MUST">MUST</em> ignore this and generate a new <code>id</code>
+        for the Activity.
+        Servers <em class="rfc2119" title="MUST">MUST</em> return a <code>201 Created</code> HTTP code, and unless
+        the activity is transient, <em class="rfc2119" title="MUST">MUST</em> include the new <code>id</code> in the
+        <code>Location</code> header.
+      </p>
+--
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Minimal ActivityPub update client"</span>,
+  <span class="hljs-attr">"content"</span>: <span class="hljs-string">"Today I finished morph, a client for posting ActivityStreams2..."</span>,
+  <span class="hljs-attr">"attributedTo"</span>: <span class="hljs-string">"https://rhiaro.co.uk/#amy"</span>,
+  <span class="hljs-attr">"to"</span>: <span class="hljs-string">"https://rhiaro.co.uk/followers/"</span>,
+  <span class="hljs-attr">"cc"</span>: <span class="hljs-string">"https://e14n.com/evan"</span>
+}</pre></div>
+
+        <p>the like is generated by the client as:</p>
+
+        <div class="example"><div class="example-title marker"><span>Example 14</span><span style="text-transform: none">: A Like of the Article</span></div><pre class="hljs json" aria-busy="false" aria-live="polite">{
+  <span class="hljs-attr">"@context"</span>: [<span class="hljs-string">"https://www.w3.org/ns/activitystreams"</span>,
+               {<span class="hljs-attr">"@language"</span>: <span class="hljs-string">"en"</span>}],
+  <span class="hljs-attr">"type"</span>: <span class="hljs-string">"Like"</span>,
+  <span class="hljs-attr">"actor"</span>: <span class="hljs-string">"https://dustycloud.org/chris/"</span>,
+  <span class="hljs-attr">"summary"</span>: <span class="hljs-string">"Chris liked 'Minimal ActivityPub update client'"</span>,
+  <span class="hljs-attr">"object"</span>: <span class="hljs-string">"https://rhiaro.co.uk/2016/05/minimal-activitypub"</span>,
+  <span class="hljs-attr">"to"</span>: [<span class="hljs-string">"https://rhiaro.co.uk/#amy"</span>,
+         <span class="hljs-string">"https://dustycloud.org/followers"</span>,
+         <span class="hljs-string">"https://rhiaro.co.uk/followers/"</span>],
+  <span class="hljs-attr">"cc"</span>: <span class="hljs-string">"https://e14n.com/evan"</span>
+}</pre></div>
+
+        <p>The receiving outbox can then perform <a href="#delivery">delivery</a>
+        to not only the followers of Chris (the liker), but also to Amy, and Amy's
+        followers and Evan, both of whom received the original article.</p>
+
+        <p>
+          Clients submitting the following activities to an <code>outbox</code>
+          <em class="rfc2119" title="MUST">MUST</em> provide the <code>object</code> property in the activity:
+          <code>Create</code>, <code>Update</code>, <code>Delete</code>,
+--
+          precise mechanism is out of scope for this version of ActivityPub.
+          The Social Web Community Group is refining the protocol in the
+          <a href="https://www.w3.org/wiki/SocialCG/ActivityPub/MediaUpload">ActivityPub Media Upload report</a>.
+        </p>
+      </section>
+
+
+    </section>
+
+    <section id="server-to-server-interactions">
+      <!--OddPage--><h2 id="x7-server-to-server-interactions"><span class="secno">7. </span>Server to Server Interactions</h2>
+      <p>
+        Servers communicate with other servers and propagate information across
+        the social graph by posting activities to actors'
+        <a href="#inbox">inbox</a> endpoints.
+        An Activity sent over the network <em class="rfc2119" title="SHOULD">SHOULD</em> have an <code>id</code>,
+        unless it is intended to be transient (in which case it <em class="rfc2119" title="MAY">MAY</em> omit the
+        <code>id</code>).
+--
+          it is worth noting that ActivityPub's targeting and delivery
+          mechanism overlaps with the
+          <a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a>
+          specification, and the two specifications may interoperably
+          combined.
+          In particular, the <code>inbox</code> property is the same between
+          ActivityPub and Linked Data Notifications, and the targeting
+          and delivery systems described in this document are supported
+          by Linked Data Notifications.
+          In addition to JSON-LD compacted ActivityStreams documents, Linked
+          Data Notifications also supports a number of RDF serializations
+          which are not required for ActivityPub implementations.
+          However, ActivityPub implementations which wish to be more broadly
+          compatible with Linked Data Notifications implementations may wish to
+          support other RDF representations.
+        </p></div>
+
+        <section id="outbox-delivery">
+          <h4 id="x7-1-1-outbox-delivery-requirements-for-server-to-server"><span class="secno">7.1.1 </span>Outbox Delivery Requirements for Server to Server</h4>
+          <p>
+            When objects are received in the <a href="#outbox">outbox</a>
+            (for servers which support both
+            <a href="#client-to-server-interactions">Client to Server interactions</a>
+            and
+            <a href="#server-to-server-interactions">Server to Server Interactions</a>),
+            the server <em class="rfc2119" title="MUST">MUST</em> target and deliver to:
+          </p>
+          <ul>
+--
+            Thus ActivityPub provides an optional mechanism for serving these
+            two use cases.
+          </p>
+          <p>
+            When an object is being delivered to the originating actor's
+            followers, a server <em class="rfc2119" title="MAY">MAY</em> reduce the number of receiving actors
+            delivered to by identifying all followers which share the same
+            <a href="#sharedInbox">sharedInbox</a>
+            who would otherwise be individual recipients and instead deliver
+            objects to said <code>sharedInbox</code>.
+            Thus in this scenario, the remote/receiving server participates
+            in determining targeting and performing delivery to specific
+            inboxes.
+          </p>
+          <p>
+            Additionally, if an object is addressed to the
+--
+          server to a remote server, there is nothing in the ActivityPub
+          protocol that can <em>enforce</em> remote deletion of an object's
+          representation).
+        </p>
+      </section>
+
+      <section id="follow-activity-inbox">
+        <h3 id="x7-5-follow-activity"><span class="secno">7.5 </span>Follow Activity</h3>
+
+        <p>
+          The side effect of receiving this in an <strong>inbox</strong> is
+          that the server <em class="rfc2119" title="SHOULD">SHOULD</em> generate either an <code>Accept</code> or
+          <code>Reject</code> activity with the Follow as the
+          <code>object</code> and deliver it to the <code>actor</code> of the
+          Follow.
+          The <code>Accept</code> or <code>Reject</code> <em class="rfc2119" title="MAY">MAY</em> be generated
+--
+          ActivityPub uses authentication for two purposes; first, to
+          authenticate clients to servers, and secondly in federated
+          implementations to authenticate servers to each other.
+        </p>
+
+        <p>
+          Unfortunately at the time of standardization, there are no strongly
+          agreed upon mechanisms for authentication.
+          Some possible directions for authentication are laid out 
+          <a href="https://www.w3.org/wiki/SocialCG/ActivityPub/Authentication_Authorization">in 
+          the Social Web Community Group Authentication and 
+          Authorization best practices report</a>.
+        </p>
+
+      </section>
+
+      <section id="security-verification">
+        <h3 id="b-2-verification"><span class="secno">B.2 </span>Verification</h3>
+        <p>
+          Servers should not trust client submitted content, and
+          federated servers also should not trust content received from a server
+          other than the content's origin without some form of verification.
+        </p>
+        <p>
+          Servers should be careful to verify that new content is really posted
+--
+          If your ActivityPub server or client does permit making requests to
+          localhost URIs for development purposes, consider making it a
+          configuration option which defaults to off.
+        </p>
+      </section>
+
+      <section id="security-uri-schemes">
+        <h3 id="b-4-uri-schemes"><span class="secno">B.4 </span>URI Schemes</h3>
+        <p>
+          There are many types of URIs aside from just <code>http</code> and
+          <code>https</code>.
+          Some libraries which handle fetching requests at various URI schemes
+          may try to be smart and reference schemes which may be undesirable,
+          such as <code>file</code>.
+          Client and server authors should carefully check how their libraries
+          handle requests, and potentially whitelist only certain safe URI
+--
+          ActivityPub, it is recommended that servers filter incoming content
+          both by local untrusted users and any remote users through some
+          sort of spam filter.
+        </p>
+      </section>
+
+      <section id="security-federation-dos">
+        <h3 id="b-7-federation-denial-of-service"><span class="secno">B.7 </span>Federation denial-of-service</h3>
+          <p>
+            Servers should implement protections against denial-of-service
+            attacks from other, federated servers.
+            This can be done using, for example, some kind of ratelimiting
+            mechanism.
+            Servers should be especially careful to implement this protection
+            around activities that involve side effects.
+            Servers <em class="rfc2119" title="SHOULD">SHOULD</em> also take care not to overload servers with
+--
+        space, and it is unlikely that ActivityPub would exist in something
+        resembling its current state without his hard work.
+      </p>
+
+      <p>
+        Erin Shepherd built the initial version of this specification, borrowed
+        from the ideas in the
+        <a href="https://github.com/pump-io/pump.io/blob/master/API.md">Pump API</a>
+        document, mostly as a complete rewrite of text, but sharing most of
+        the primary ideas while switching from ActivityStreams 1 to
+        ActivityStreams 2.
+      </p>
+
+      <p>
+        Jessica Tallon and Christine Lemmer-Webber took over as editors when
+        the standard moved to the <abbr title="World Wide Web Consortium">W3C</abbr> Social Working Group and did the majority
+--
+        ActivityPub.
+        Much of the document was rewritten and reorganized under the long feedback
+        process of the Social Working Group.
+      </p>
+
+      <p>
+        ActivityPub has been shaped by the careful input of many members in the
+        <abbr title="World Wide Web Consortium">W3C</abbr> Social Working Group.
+        ActivityPub especially owes a great debt to Amy Guy, who has done more
+        than anyone to map the ideas across the different Social Working Group
+        documents through her work on [<cite><a class="bibref" href="#bib-Social-Web-Protocols">Social-Web-Protocols</a></cite>].
+        Amy also laid out the foundations for a significant refactoring of the
+        ActivityPub spec while sprinting for four days with Christopher Allan
+        Webber.
+        These revisions lead to cleaner separation between the client to server
+        and server components, along with clarity about ActivityPub's relationship
+        to [<cite><a class="bibref" href="#bib-LDN">LDN</a></cite>], among many other improvements.
+        Special thanks also goes to Benjamin Goering for putting together the
+        implementation report template.
+        We also thank mray for producing the spectacular tutorial illustrations
+        (which are licensed under the same license as the rest of this
+        document).
+      </p>
+
+      <p>
+        Many people also helped ActivityPub along through careful review.
+        In particular, thanks to:
+        Aaron Parecki,
+        AJ Jordan,
+        Benjamin Goering,
+        Caleb Langeslag,
+        Elsa Balderrama,
+        elf Pavlik,
+        Eugen Rochko,
+        Erik Wilde,
+        Jason Robinson,
+        Manu Sporny,
+        Michael Vogel,
+        Mike Macgirvin,
+        nightpool,
+        Puck Meerburg,
