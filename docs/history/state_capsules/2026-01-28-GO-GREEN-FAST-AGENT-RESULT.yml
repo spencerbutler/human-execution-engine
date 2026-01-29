@@ -1,0 +1,57 @@
+artifact:
+  kind: state_capsule
+  path: docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
+  ruleset: dev_flex
+  status: verified
+  promoted: true
+
+summary:
+  claim:
+    green: true
+    branch_salvage: wip/untracked-salvage-20260128
+    tty_log: not_captured
+  risk_flags:
+    - untracked_count_changed_without_attached_evidence
+    - committed_file_count_exceeds_untracked_claim
+
+verify_blocks:
+  - id: main_clean
+    cmds:
+      - git switch main
+      - git status --porcelain
+    expect:
+      porcelain_lines: 0
+  - id: salvage_commit_scope
+    cmds:
+      - git show --name-status --stat -1 wip/untracked-salvage-20260128
+    expect:
+      includes_only: [added_files]
+      excludes: [modified_files, deleted_files]
+  - id: strict_gate
+    cmds:
+      - hee-validate --strict; echo $?
+    expect:
+      exit_code: 0
+  - id: ci_gate
+    cmds:
+      - ./scripts/hee_ci_gitops_enforce.sh; echo $?
+    expect:
+      exit_code: 0
+  - id: evidence_integrity
+    cmds:
+      - ls -l /tmp/hee-green.metrics.yml /tmp/hee-green.hashes.txt
+      - sha256sum -c /tmp/hee-green.hashes.txt
+    expect:
+      hashes_ok: true
+
+commit_to_place:
+  cmds:
+    - git add docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
+    - git commit -m "state_capsule(dev): go-green-fast agent result (verify pending)"
+
+promote_to_correct:
+  when:
+    - all_verify_blocks_pass: true
+  update:
+    status: verified
+    promoted: true

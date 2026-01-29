@@ -1,0 +1,30 @@
+artifact:
+  kind: state_capsule_addendum
+  path: docs/history/state_capsules/2026-01-28-GO-GREEN-FAST-AGENT-RESULT-ADDENDUM-0001.yml
+  date: 2026-01-28
+  parent_capsule: 2026-01-28-GO-GREEN-FAST-AGENT-RESULT.yml
+  status: verified
+  classification: blocked
+
+truth:
+  green: false
+  blocked_by: untracked_on_main
+  main_clean:
+    expected_porcelain_lines: 0
+    observed_porcelain_lines: 2
+    note: green_requires_main_clean_true
+
+verified_gates:
+  salvage_commit_scope: true
+  validate_strict: true
+  ci_green: true
+  evidence_integrity: true
+
+corrections_applied:
+  - reclassified_result_from_green_to_blocked
+  - prevented_false_promotion
+
+guardrails_reaffirmed:
+  - do_not_claim_green_when_main_clean_false
+  - correctness_over_completion
+  - evidence_over_assertion
