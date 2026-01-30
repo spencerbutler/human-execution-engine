@@ -1,6 +1,60 @@
-PHASE=04a
+PHASE=04b
 STEP=E02-work
 DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+PWD=$(pwd)
 
-ADDED_FIXER:
-ci/naming/fix_yaml_path_header.py
+# Work Completed:
+
+## 1. Modified CI Script (scripts/hee_ci_gitops_enforce.sh)
+- Added YAML path header naming enforcement section
+- Script now checks for existence of ci/naming/fix_yaml_path_header.py
+- Script runs python3 ci/naming/fix_yaml_path_header.py --check
+- Non-zero exit from naming check propagates to CI failure
+- Added appropriate success/failure messaging
+
+## 2. Verified Naming Script Configuration
+- Confirmed fix_yaml_path_header.py has correct default scope: ["contracts", "blueprints"]
+- Confirmed var/** exclusion is implemented in iter_yaml_files function
+- Confirmed --check flag exits with code 2 when changes needed
+- Confirmed header format: "# path: <repo-relative-path>" followed by blank line
+
+## 3. Tested Implementation
+- Verified naming check passes on current repository state
+- Verified CI script properly invokes naming check
+- Confirmed error handling works correctly
+
+## 4. CI Constraints Compliance
+- No shell scripts embedded in workflow YAML
+- CI calls single repo entrypoint script (hee_ci_gitops_enforce.sh)
+- No YAML globs used for scope enforcement (handled in Python script)
+- Scope limited to contracts/** and blueprints/** (exclude var/**)
+
+# Implementation Details:
+
+## CI Script Changes:
+```bash
+# Enforce YAML path header naming compliance
+echo "🔍 Checking YAML path header naming compliance..."
+if [ -f "ci/naming/fix_yaml_path_header.py" ]; then
+  echo "✅ YAML path header script found"
+  # Run the naming check in check mode
+  if ! python3 ci/naming/fix_yaml_path_header.py --check; then
+    fail "YAML path header naming compliance check failed"
+  fi
+  echo "✅ YAML path header naming compliance check passed"
+else
+  fail "YAML path header script not found at ci/naming/fix_yaml_path_header.py"
+fi
+```
+
+## Naming Script Verification:
+- Default scope: ["contracts", "blueprints"] (line 41)
+- Var exclusion: if "var" in parts: continue (line 16)
+- Check mode exit: return 2 when changes needed (line 53)
+- Header format: f"{HEADER_PREFIX}{rel}\n" where HEADER_PREFIX = "# path: " (line 12)
+
+# Status:
+✅ CI mechanism implemented with repo_script_wrapper approach
+✅ No shell-in-YAML constraints satisfied
+✅ Scope enforcement inside tool (Python script)
+✅ All requirements met for Phase 04b

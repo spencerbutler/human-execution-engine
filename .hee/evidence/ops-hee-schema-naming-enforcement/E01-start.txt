@@ -1,4 +1,4 @@
-PHASE=04a
+PHASE=04b
 STEP=E01-start
 DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 PWD=$(pwd)
@@ -10,3 +10,12 @@ GIT_STATUS_PORCELAIN:
 
 GIT_STATUS_SHORT:
 ## main...origin/main
+
+# Current Implementation Status:
+- [x] fix_yaml_path_header.py exists with correct defaults (contracts/**, blueprints/** scope, var/** exclusion)
+- [x] fix_yaml_path_header.py --check exits non-zero on drift
+- [x] Header spec preserved: "# path: <repo-relative-path>" followed by blank line
+- [x] CI workflow exists at .github/workflows/ci.yml
+- [x] hee_ci_gitops_enforce.sh exists and calls naming check
+- [ ] Evidence files E01-E06 need to be created
+- [ ] Final commit and PR creation needed
