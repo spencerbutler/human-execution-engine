@@ -68,6 +68,19 @@ else
   fail "YAML path header script not found at ci/naming/fix_yaml_path_header.py"
 fi
 
+# Enforce authoritative YAML naming rules
+echo "🔍 Checking authoritative YAML naming rules..."
+if [ -f "ci/naming/check_authoritative_yaml_naming.py" ]; then
+  echo "✅ Authoritative YAML naming checker found"
+  # Run the naming check
+  if ! python3 ci/naming/check_authoritative_yaml_naming.py --repo-root . --scope contracts --scope blueprints; then
+    fail "Authoritative YAML naming rules check failed"
+  fi
+  echo "✅ Authoritative YAML naming rules check passed"
+else
+  fail "Authoritative YAML naming checker not found at ci/naming/check_authoritative_yaml_naming.py"
+fi
+
 # Optional: doc-path alignment guardrail (presence check, not correctness of content)
 # We only enforce that the workflow is no longer hard-coded to legacy docs/*.md.
 if grep -qE "(^|[^/])docs/\*\.md" .github/workflows/ci.yml; then
