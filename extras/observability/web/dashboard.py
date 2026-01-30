@@ -12,7 +12,7 @@ from flask import Flask, render_template, jsonify, request
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.branch_health_monitor import BranchHealthMonitor
+from extras.observability.branch_health.branch_health_monitor import BranchHealthMonitor
 
 
 app = Flask(__name__)

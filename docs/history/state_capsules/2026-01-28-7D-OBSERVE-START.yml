@@ -1,0 +1,29 @@
+capsule:
+  kind: observation_marker
+  name: 7d-observe-start
+  scope: ops
+  mutable: true
+  observation_period:
+    start_date: 2026-01-28
+    duration_days: 7
+    end_date: 2026-02-04
+  system_state:
+    phase: read_only_live
+    contract_version: v1.0
+    rollout_config: initial_read_only_only
+  monitoring:
+    metrics_collection: active
+    alert_thresholds:
+      prompt_rate_max: 0.80
+      override_rate_max: 0.10
+    daily_reporting: enabled
+  decision_gate:
+    at_day: 7
+    outcomes:
+      - approve: enable_low_risk_auto_approve
+      - hold: extend_observation_period
+      - rollback: disable_read_only_auto_approve
+  invariants:
+    - fail_closed_on_unknown_commands
+    - contract_frozen_require_review_for_changes
+    - transcripts_preserved_complete_audit_trail
