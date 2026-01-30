@@ -1,21 +1,38 @@
-PHASE=04b
-STEP=E01-start
-DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-PWD=$(pwd)
+## Phase 05: HEE Schema Naming Enforcement - Starting State
 
-# git
-GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-GIT_HEAD=$(git rev-parse HEAD)
-GIT_STATUS_PORCELAIN:
+**Branch:** `phase/05-naming-enforcement`
+**Commit:** `3cbbb75` (initial commit with file renames)
+**Date:** 2026-01-30
 
-GIT_STATUS_SHORT:
-## main...origin/main
+### Initial State Summary
 
-# Current Implementation Status:
-- [x] fix_yaml_path_header.py exists with correct defaults (contracts/**, blueprints/** scope, var/** exclusion)
-- [x] fix_yaml_path_header.py --check exits non-zero on drift
-- [x] Header spec preserved: "# path: <repo-relative-path>" followed by blank line
-- [x] CI workflow exists at .github/workflows/ci.yml
-- [x] hee_ci_gitops_enforce.sh exists and calls naming check
-- [ ] Evidence files E01-E06 need to be created
-- [ ] Final commit and PR creation needed
+- **Files to rename:** 10 files with non-compliant naming
+- **Naming violations found:**
+  - 10 files using `blueprint.yaml` suffix instead of kebab-case
+  - 1 file using `v1.yaml` suffix instead of kebab-case
+  - All files had incorrect path headers pointing to old filenames
+
+### Files Requiring Renames
+
+1. `blueprints/hee-cron.blueprint.yaml` → `blueprints/hee-cron-blueprint.yaml`
+2. `blueprints/oper_spencer_dash.blueprint.yaml` → `blueprints/oper-spencer-dash-blueprint.yaml`
+3. `blueprints/spec-hee-agent-concurrency.blueprint.yaml` → `blueprints/spec-hee-agent-concurrency-blueprint.yaml`
+4. `blueprints/spec-hee-cron-tooling.blueprint.yaml` → `blueprints/spec-hee-cron-tooling-blueprint.yaml`
+5. `blueprints/real-cron.blueprint.yaml` → `blueprints/real-cron-blueprint.yaml`
+6. `blueprints/enforcer.blueprint.yaml` → `blueprints/enforcer-blueprint.yaml`
+7. `blueprints/spec-rfc-white-paper-discover.blueprint.yaml` → `blueprints/spec-rfc-white-paper-discover-blueprint.yaml`
+8. `blueprints/human-full-deep-dive.blueprint.yaml` → `blueprints/human-full-deep-dive-blueprint.yaml`
+9. `blueprints/bundle-system.blueprint.yaml` → `blueprints/bundle-system-blueprint.yaml`
+10. `contracts/oob_apply_request.v1.yaml` → `contracts/oob-apply-request-v1.yaml`
+
+### Tools Created
+
+- `ci/naming/check_authoritative_yaml_naming.py` - New naming validation script
+- Updated `ci/naming/strict_validator.py` - Integrated naming checks
+- Updated `scripts/hee_ci_gitops_enforce.sh` - Added naming enforcement
+
+### Validation Status
+
+- **Naming check:** 20 violations found (all files non-compliant)
+- **Path headers:** All files had incorrect headers pointing to old filenames
+- **Scope compliance:** All violations within required scope (contracts/**, blueprints/**)

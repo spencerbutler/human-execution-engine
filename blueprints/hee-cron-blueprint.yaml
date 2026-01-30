@@ -1,4 +1,4 @@
-# path: blueprints/hee-cron.blueprint.yaml
+# path: blueprints/hee-cron-blueprint.yaml
 # HEE Cron Blueprint
 # Hardware-aware cron system for recurring jobs
 

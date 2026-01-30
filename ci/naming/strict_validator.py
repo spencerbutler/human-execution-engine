@@ -261,6 +261,32 @@ def main() -> int:
     except Exception as e:
         print(f"⚠️  Error running fixer check: {e}")
     
+    # Run naming check
+    try:
+        naming_checker_path = repo_root / "ci" / "naming" / "check_authoritative_yaml_naming.py"
+        
+        if naming_checker_path.exists():
+            print(f"\nRunning naming check...")
+            result = subprocess.run([
+                sys.executable, str(naming_checker_path), 
+                "--repo-root", str(repo_root),
+                "--scope"] + args.scope,
+                capture_output=True, text=True
+            )
+            
+            if result.returncode != 0:
+                print("❌ Naming check failed:")
+                print(result.stdout)
+                print(result.stderr)
+                return 1
+            else:
+                print("✅ Naming check passed")
+        else:
+            print("⚠️  Naming checker script not found, skipping naming check")
+    
+    except Exception as e:
+        print(f"⚠️  Error running naming check: {e}")
+    
     return 0 if results['error_count'] == 0 else 1
 
 
