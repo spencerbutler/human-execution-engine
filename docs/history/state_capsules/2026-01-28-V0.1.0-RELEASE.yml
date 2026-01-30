@@ -1,0 +1,32 @@
+capsule:
+  kind: release_baseline
+  version: v0.1.0
+  tag: hee-r2-pre-2026-01-28.001-gnu-barrow
+  timestamp_utc: 2026-01-28T00:00:00Z
+  authority: COG
+  permanence: locked
+  
+baseline_artifacts:
+  - docs/specs/HEE_HARDWARE_DISCOVERY.md
+  - var/patches/0001-spec-hw-discovery-gnu-name-docs-gate.patch
+  - docs/history/completions/2026-01-28-HW-DISCOVERY-SPEC-APPLY-0001.yml
+  - docs/history/state_capsules/2026-01-28-GNU-BARROW-LOCK.yml
+  - docs/history/metrics/github_traffic/
+  - docs/releases/hee-r2-pre-2026-01-28.001-gnu-barrow.md
+  - docs/ops/OPS_INDEX.md
+  - docs/ops/OPS_HEE_STATUS.md
+
+validation_status:
+  pre_commit: passed
+  hee_checks: completed
+  doctrine: compliant
+  integration_tests: green
+  release_gates: satisfied
+
+gnu_name:
+  selected: gnu-barrow
+  authority: COG
+  permanence: locked
+  timestamp_utc: 2026-01-28T00:00:00Z
+
+release_notes: docs/releases/hee-r2-pre-2026-01-28.001-gnu-barrow.md

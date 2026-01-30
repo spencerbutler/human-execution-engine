@@ -1,0 +1,5 @@
+index:
+  - kind: fin_marker
+    id: FIN_EYE_CANDY
+    path: docs/status/FIN_EYE_CANDY.yaml
+    tags: [eye_candy, fin, terminal, obs]
