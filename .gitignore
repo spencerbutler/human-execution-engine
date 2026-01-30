@@ -59,3 +59,6 @@ docs/AUTOMATION_CONFIG.json
 
 # GC Report Pack outputs (generated)
 /var/gc/
+
+# HEE local state
+.hee

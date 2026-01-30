@@ -1,0 +1,32 @@
+capsule:
+  kind: observation_marker
+  name: 7d-observe-end
+  scope: ops
+  mutable: false
+  observation_period:
+    start_date: 2026-01-28
+    end_date: 2026-02-04
+    duration_days: 7
+    actual_duration_days: TBD
+  final_system_state:
+    phase: TBD
+    contract_version: v1.0
+    final_rollout_config: TBD
+  final_metrics:
+    total_decisions: TBD
+    final_approval_rate: TBD
+    final_prompt_rate: TBD
+    final_override_rate: TBD
+    alerts_triggered: TBD
+  decision_outcome:
+    gate_result: TBD
+    action_taken: TBD
+    rationale: TBD
+  lessons_learned:
+    - TBD
+  next_steps:
+    - TBD
+  invariants_maintained:
+    - fail_closed_on_unknown_commands: true
+    - contract_frozen_require_review_for_changes: true
+    - transcripts_preserved_complete_audit_trail: true
