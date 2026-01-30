@@ -1,0 +1,299 @@
+schema: contracts/oob_apply_request.v1.yaml
+id: oob-apply-hee-cli-dash-0001
+title: "Add repo-local hee CLI with dash + ignore local state"
+intent:
+  goal: "Provide a real `hee` executable (repo-local) so `hee dash` works"
+  constraints:
+    - "oob apply request (no inline instructions, no shell-in-yaml beyond patch payload)"
+    - "minimal diff"
+    - "no refactors"
+
+changes:
+  - op: add
+    path: tooling/bin/hee
+    mode: "100755"
+    content_type: "text/x-unified-diff"
+    content: |
+      diff --git a/tooling/bin/hee b/tooling/bin/hee
+      new file mode 100755
+      index 0000000..d7f2a3a
+      --- /dev/null
+      +++ b/tooling/bin/hee
+      @@ -0,0 +1,216 @@
+      +#!/usr/bin/env bash
+      +set -euo pipefail
+      +
+      +die() { echo "hee: $*" >&2; exit 2; }
+      +
+      +repo_root() {
+      +  git rev-parse --show-toplevel 2>/dev/null || pwd
+      +}
+      +
+      +ROOT="$(repo_root)"
+      +HEE_HOME="${HEE_HOME:-$ROOT/.hee}"
+      +SPOOL="${HEE_SPOOL_DIR:-$HEE_HOME/spool}"
+      +
+      +usage() {
+      +  cat <<'EOF'
+      +hee - Human Execution Engine operator CLI (repo-local)
+      +
+      +Usage:
+      +  hee dash [--watch] [--home PATH] [--spool PATH]
+      +  hee q <ready|running|done|failed> [--tail N]
+      +  hee help
+      +
+      +Environment:
+      +  HEE_HOME      default: <repo>/.hee
+      +  HEE_SPOOL_DIR default: $HEE_HOME/spool
+      +EOF
+      +}
+      +
+      +ensure_dirs() {
+      +  mkdir -p "$SPOOL"/{ready,running,done,failed}
+      +}
+      +
+      +count_dir() {
+      +  local d="$1"
+      +  [ -d "$d" ] || { echo 0; return; }
+      +  find "$d" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' '
+      +}
+      +
+      +tail_dir() {
+      +  local d="$1" n="$2"
+      +  [ -d "$d" ] || die "missing dir: $d"
+      +  ls -1t "$d" 2>/dev/null | head -n "$n"
+      +}
+      +
+      +dash_once() {
+      +  ensure_dirs
+      +  local ready running done failed
+      +  ready="$(count_dir "$SPOOL/ready")"
+      +  running="$(count_dir "$SPOOL/running")"
+      +  done="$(count_dir "$SPOOL/done")"
+      +  failed="$(count_dir "$SPOOL/failed")"
+      +
+      +  printf "\n"
+      +  printf "HEE DASH  (home=%s)\n" "$HEE_HOME"
+      +  printf "──────────────────────────────────────────────\n"
+      +  printf "  Queue:  ready=%s  running=%s  failed=%s  done=%s\n" "$ready" "$running" "$failed" "$done"
+      +  printf "──────────────────────────────────────────────\n"
+      +
+      +  if [ "$running" != "0" ]; then
+      +    printf "  Running (latest 8):\n"
+      +    tail_dir "$SPOOL/running" 8 | sed 's/^/    - /'
+      +  else
+      +    printf "  Running: (none)\n"
+      +  fi
+      +
+      +  if [ "$failed" != "0" ]; then
+      +    printf "\n  Failed (latest 8):\n"
+      +    tail_dir "$SPOOL/failed" 8 | sed 's/^/    - /'
+      +  fi
+      +
+      +  if [ "$ready" != "0" ]; then
+      +    printf "\n  Ready (latest 8):\n"
+      +    tail_dir "$SPOOL/ready" 8 | sed 's/^/    - /'
+      +  fi
+      +
+      +  printf "\n"
+      +}
+      +
+      +dash_watch() {
+      +  while true; do
+      +    printf "\033[H\033[2J"
+      +    dash_once
+      +    sleep 2
+      +  done
+      +}
+      +
+      +cmd_q() {
+      +  ensure_dirs
+      +  local which="$1"; shift
+      +  local n=50
+      +  while [ $# -gt 0 ]; do
+      +    case "$1" in
+      +      --tail) n="${2:-}"; shift 2 ;;
+      +      *) die "unknown arg: $1" ;;
+      +    esac
+      +  done
+      +  case "$which" in
+      +    ready|running|done|failed) ;;
+      +    *) die "q expects one of: ready running done failed" ;;
+      +  esac
+      +  tail_dir "$SPOOL/$which" "$n"
+      +}
+      +
+      +main() {
+      +  if [ $# -eq 0 ]; then usage; exit 2; fi
+      +
+      +  while [ $# -gt 0 ]; do
+      +    case "$1" in
+      +      --home) HEE_HOME="${2:-}"; SPOOL="${HEE_SPOOL_DIR:-$HEE_HOME/spool}"; shift 2 ;;
+      +      --spool) SPOOL="${2:-}"; shift 2 ;;
+      +      *) break ;;
+      +    esac
+      +  done
+      +
+      +  local sub="${1:-}"; shift || true
+      +  case "$sub" in
+      +    dash)
+      +      if [ "${1:-}" = "--watch" ]; then shift; dash_watch; else dash_once; fi
+      +      ;;
+      +    q)
+      +      [ $# -ge 1 ] || die "q requires a queue name"
+      +      cmd_q "$@"
+      +      ;;
+      +    help|-h|--help)
+      +      usage
+      +      ;;
+      +    *)
+      +      die "unknown subcommand: $sub (try: hee help)"
+      +      ;;
+      +  esac
+      +}
+      +
+      +main "$@"
+
+  - op: upsert
+    path: .gitignore
+    content_type: "text/x-unified-diff"
+    content: |
+      diff --git a/.gitignore b/.gitignore
+      index e69de29..c96a7b3 100644
+      --- a/.gitignore
+      +++ b/.gitignore
+      @@ -0,0 +1,6 @@
+      +# HEE local state
+      +.hee/
+      +
+      +# Accidental junk files (observed)
+      +:
+
+facts:
+  - "This creates a real executable at tooling/bin/hee (repo-local CLI)."
+  - "This does not alter any existing CLI/system install; no global PATH changes."
+  - "Default state directory is <repo>/.hee (ignored via .gitignore)."
+
+verify:
+  commands_expected_to_pass:
+    - "./tooling/bin/hee dash"
+    - "./tooling/bin/hee q ready --tail 5"
+
+notes:
+  - "Repo currently contains suspicious untracked filenames (e.g., ':'). This patch only ignores ':'; cleanup policy is separate."
+# HEE White Paper: Discovery, Evidence, and Concurrency RFC
+# Public-facing narrative + technical spec appendix
+
+type: hee.blueprint
+blueprint_id: spec-rfc-white-paper-discover.v1
+version: v1
+description: "HEE White Paper: Discovery, Evidence, and Concurrency"
+created_at: "2026-01-29T00:00:00-06:00"
+author: "HEE System"
+
+metadata:
+  name: spec-rfc-white-paper-discover
+  intent: "public-facing narrative + technical spec appendix; explains why/what/how with disk evidence"
+  priority: P0
+
+# Purpose
+purpose: "public-facing narrative + technical spec appendix; explains why/what/how with disk evidence"
+
+# Sections
+sections:
+  - "Problem: execution correctness under noise (why HEE)"
+  - "Core primitives: signals, SVL, doctrine strictness"
+  - "Operational model: CRON facts → QUEUE → AGENTS → PRs"
+  - "Bundles: firmware (non-mux) vs initramfs mux vs BMC"
+  - "Evidence: artifact contracts, checksums, reproducibility"
+  - "Concurrency: bounded fanout, isolation, leases, dedupe"
+  - "Safety: guardrails, blast-radius containment"
+  - "Appendix: reference specs + minimal examples"
+
+# Exit Criteria
+exit_criteria:
+  - "defines non-goals clearly (no firmware mux fantasy)"
+  - "includes at least one end-to-end flow with artifact paths"
+  - "includes acceptance tests + failure semantics"
+
+# Problem Statement
+problem_statement:
+  execution_correctness: "Ensuring reliable execution in noisy environments"
+  noise_sources:
+    - "Hardware variability"
+    - "Network instability"
+    - "Resource contention"
+    - "Concurrent operations"
+  goals:
+    - "Deterministic outcomes"
+    - "Observable execution"
+    - "Reproducible results"
+    - "Safe concurrency"
+
+# Core Primitives
+core_primitives:
+  signals: "Structured events that trigger actions"
+  svl: "Structured validation language for contracts"
+  doctrine: "Strict rules that prevent common pitfalls"
+  evidence: "Disk-based artifacts proving execution correctness"
+
+# Operational Model
+operational_model:
+  flow: "CRON facts → QUEUE → AGENTS → PRs"
+  cron_facts: "Scheduled jobs produce structured evidence"
+  queue: "Work items with deterministic contracts"
+  agents: "Concurrent executors with isolation"
+  prs: "Human review of agent outputs"
+
+# Bundles
+bundles:
+  firmware_non_mux:
+    purpose: "Pre-boot selection and diagnostics"
+    constraints: "No processes/PTYs/detach; only UI + handoff"
+    artifacts: "Boot choices, hardware status"
+  initramfs_mux:
+    purpose: "Earliest real multiplexing environment"
+    capabilities: "PTYs, processes, network, detach/attach"
+    artifacts: "Session logs, execution evidence"
+  bmc:
+    purpose: "Out-of-band management and monitoring"
+    capabilities: "Remote access, hardware control"
+    artifacts: "Hardware telemetry, remote session logs"
+
+# Evidence System
+evidence_system:
+  artifact_contracts: "Structured files proving execution"
+  checksums: "SHA256 verification of all outputs"
+  reproducibility: "Ability to recreate exact results"
+  retention: "Configurable storage duration"
+
+# Concurrency Model
+concurrency_model:
+  bounded_fanout: "Limited number of concurrent agents"
+  isolation: "Per-work-item workspace separation"
+  leases: "Time-bounded execution locks"
+  dedupe: "Prevention of duplicate work"
+
+# Safety Measures
+safety_measures:
+  guardrails: "Rules preventing dangerous operations"
+  blast_radius: "Containment of failures"
+  rollback: "Ability to revert changes"
+  monitoring: "Continuous health checking"
+
+# Implementation Examples
+implementation_examples:
+  minimal_cron_job:
+    description: "Simple evidence-generating cron job"
+    structure:
+      - "env -i with explicit PATH"
+      - "timeout wrapper"
+      - "flock for singleton execution"
+      - "structured output to disk"
+  agent_worker:
+    description: "Basic agent implementation"
+    features:
+      - "Queue polling"
+      - "Workspace isolation"
+      - "Lease management"
+      - "Result reporting"

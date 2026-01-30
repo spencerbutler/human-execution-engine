@@ -1,0 +1,45 @@
+# CI Doctrine Validation - Strict Mode
+
+name: Doctrine Validation
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  doctrine-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml jsonschema
+    
+    - name: Run HEE Doctrine Validation
+      run: python ci/doctrine/validate_doctrine.py
+    
+    - name: HEE Policy Check
+      run: |
+        if [ ! -f "docs/hee/VERSION.md" ]; then
+          echo "ERROR: HEE VERSION.md not found - policy may not be vendored correctly"
+          exit 1
+        fi
+        echo "✅ HEE policy files present"
+    
+    - name: State Capsule Integrity Check
+      run: |
+        capsule_count=$(find docs/history/state_capsules/ -name "*.yml" | wc -l)
+        if [ "$capsule_count" -lt 1 ]; then
+          echo "ERROR: No state capsules found"
+          exit 1
+        fi
+        echo "✅ $capsule_count state capsules present"
