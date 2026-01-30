@@ -1,0 +1,55 @@
+# blueprints/plan/plan-create.blueprint.yaml
+
+apiVersion: hee/v1
+kind: Blueprint
+metadata:
+  name: plan-create
+  description: Blueprint for creating new plans in the Human Execution Engine
+  labels:
+    category: plan
+    type: creation
+spec:
+  # Blueprint specification for plan creation
+  # This defines the structure and requirements for creating new plans
+  requirements:
+    - name: plan-name
+      type: string
+      description: "Name of the plan to create"
+      pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
+    - name: plan-description
+      type: string
+      description: "Description of the plan"
+      minLength: 10
+    - name: plan-steps
+      type: array
+      description: "List of steps in the plan"
+      minItems: 1
+      items:
+        type: object
+        required: ["step", "description"]
+        properties:
+          step:
+            type: string
+            description: "Step identifier"
+          description:
+            type: string
+            description: "Description of the step"
+          dependencies:
+            type: array
+            description: "List of dependencies for this step"
+            items:
+              type: string
+  validation:
+    - rule: "steps must be ordered sequentially"
+      description: "Plan steps must be numbered sequentially starting from 1"
+    - rule: "no circular dependencies"
+      description: "Plan steps must not have circular dependencies"
+  examples:
+    - name: "simple-plan"
+      description: "A simple two-step plan"
+      steps:
+        - step: "1"
+          description: "First step"
+        - step: "2"
+          description: "Second step"
+          dependencies: ["1"]
