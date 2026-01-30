@@ -1,0 +1,127 @@
+# path: docs/history/plans/20260130T172525Z-OPS-HEE-Schema-Naming-Enforcement.pill.yaml
+pill:
+  id: OPS-HEE-Schema-Naming-Enforcement
+  date: 2026-01-29
+  fin_marker: handoff_ready
+  goal:
+    - Introduce schema/hee/v1 as Layer-1 type system (structural).
+    - Enforce schema resolution by (apiVersion, kind); $schema optional/informational; if present must match resolved schema.
+    - Enforce authoritative YAML rules (headers + naming) via fixer-first workflow.
+    - Enforce HEE spool liveness so hee dash --watch reflects agent work.
+    - Enforce broad branch naming policy and PR base=main.
+    - Move apply-var-patch to tools/git/apply-var-patch (operator tool).
+
+  doctrine_locks:
+    schema_layers:
+      layer1:
+        location: schemas/hee/v1/
+        authority: absolute
+      layer2:
+        location: contracts/
+        authority: hard_error_only
+      layer3:
+        location: blueprints/
+        authority: normative_may_warn
+    schema_resolution:
+      authority: apiVersion_kind
+      dollar_schema:
+        status: optional_informational
+        rule: if_present_must_match_resolved_schema
+    authoritative_yaml:
+      scope:
+        include: [contracts/**/*.yaml, blueprints/**/*.yaml]
+        exclude: [var/**]
+      naming:
+        ext: .yaml
+        yml_disallowed: true
+        kebab_case: true
+        max_dots: 1
+      path_header:
+        required: true
+        format:
+          line1: "# <repo-relative-path>"
+          line2: ""
+    schema_dir_exception:
+      applies_to: schemas/**
+      convention: "*.schema.json"
+      exempt_from_yaml_one_dot_rule: true
+
+  spool_contract:
+    root: .hee/spool
+    ready_optional: true
+    required_lifecycle: [running, done_or_failed]
+    item_name: "<phase-id>.yaml"
+    required_fields: [phase_id, branch, pr_url, timestamps, status]
+    pr_url_sentinel: not_created
+    rules:
+      - "pr_url MUST be 'not_created' until PR exists"
+      - "pr_url MUST be a valid URL before status=done|failed"
+
+  branch_policy:
+    broad_regex: "^(phase|feature|docs|fix|chore|refactor|hotfix|release)/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    pr_base_branch_required: main
+
+  workflow:
+    per_phase:
+      - start_clean_main_required: true
+      - end_clean_main_required: true
+      - one_branch_one_pr: true
+      - disk_evidence_required: true
+
+  phases:
+    - phase_id: 01-schema-readme
+      branch: phase/ops-hee-schema-naming-01-schema-readme
+      touches: [schemas/README.md, schemas/hee/v1/]
+      forced_tooling: [git]
+    - phase_id: 02-envelope-schema
+      branch: phase/ops-hee-schema-naming-02-envelope-schema
+      touches: [schemas/hee/v1/hee-object.schema.json]
+      forced_tooling: [git]
+    - phase_id: 03-blueprint-doctrine-migrate
+      branch: phase/ops-hee-schema-naming-03-blueprint-doctrine-migrate
+      touches:
+        - schemas/hee/v1/blueprint-doctrine.schema.json
+        - "git mv blueprints/blueprint-doctrine.yml -> blueprints/doctrine/blueprint-doctrine.yaml"
+        - blueprints/doctrine/blueprint-doctrine.yaml (envelope + path header)
+        - references updated (rg-driven)
+      forced_tooling: [git, rg]
+    - phase_id: 04a-add-header-fixer
+      branch: phase/ops-hee-schema-naming-04a-add-header-fixer
+      touches:
+        - ci/naming/fix_yaml_path_header.py
+        - headers applied across contracts/**/*.yaml + blueprints/**/*.yaml (exclude var/**)
+      forced_tooling: [git, python3, "ci/naming/fix_yaml_path_header.py"]
+    - phase_id: 04b-strict-headers-and-schema
+      branch: phase/ops-hee-schema-naming-04b-strict-headers-and-schema
+      touches:
+        - strict validator updated (header + $schema match rule)
+        - CI updated to run fixer --check
+        - spool enforcement introduced
+      forced_tooling: [git, python3, "ci/naming/fix_yaml_path_header.py --check", validator_strict]
+    - phase_id: 05-naming-enforcement
+      branch: phase/ops-hee-schema-naming-05-naming-enforcement
+      touches:
+        - ci/naming/check_authoritative_yaml_naming.py
+        - branch policy checker + CI base=main enforcement
+        - validator/CI strict naming enforcement
+      forced_tooling: [git, python3, naming_checker, validator_strict]
+    - phase_id: 06-docs-and-apply-var-patch-move
+      branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
+      touches:
+        - "git mv ci/git/apply_var_patch.sh -> tools/git/apply-var-patch"
+        - README.md, CHANGELOG.md updated
+      forced_tooling: [git, rg]
+    - phase_id: 07-plan-create-blueprint
+      branch: phase/ops-hee-schema-naming-07-plan-create-blueprint
+      touches: [blueprints/plan/plan-create.blueprint.yaml]
+      forced_tooling: [git]
+
+  disk_evidence:
+    root: .hee/evidence/ops-hee-schema-naming-enforcement/
+    required_files:
+      - E01-start.txt
+      - E02-work.txt
+      - E03-checks.txt
+      - E04-pr.txt
+      - E05-end.txt
+      - E06-spool.txt
