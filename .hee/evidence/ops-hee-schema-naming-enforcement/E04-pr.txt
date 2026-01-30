@@ -1,27 +1,29 @@
-# E04-pr.txt
-# Task: RELAY RUN — PHASE 06
-# phase_id: 06-docs-and-apply-var-patch-move
-# branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
+Pull Request: https://github.com/spencerbutler/human-execution-engine/pull/83
+Created: 2026-01-30T08:46:25-06:00
+Status: Open
 
-## PR Creation
-PR URL: https://github.com/spencerbutler/human-execution-engine/pull/82
-
-## Git Log Summary
-git log -1 --oneline
-abe8865 (HEAD -> phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move, origin/phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move) ops: move apply-var-patch to tools/ and update docs
-
-## PR Details
-- Branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
+PR Details:
+- Title: "blueprints: add plan-create blueprint"
 - Base: main
-- Title: phase01: schema README + v1 scaffold
-- Description: Phase 01 implementation: Created schemas/README.md with Layer 1/2/3 doctrine and authoritative declaration for schemas/hee/v1/. Added .gitkeep to ensure git tracking of empty v1 directory.
+- Head: phase/ops-hee-schema-naming-07-plan-create-blueprint
+- Branch: phase/ops-hee-schema-naming-07-plan-create-blueprint
+- Author: spencerbutler
 
-## Files Changed in PR
-- schemas/README.md (new file)
-- schemas/hee/v1/.gitkeep (new file)
+Files Changed:
+1. blueprints/plan/plan-create.blueprint.yaml (+55 lines)
+   - New blueprint file for plan creation
+   - Follows HEE schema and naming conventions
+   - Contains comprehensive plan creation specification
 
-## Verification
-✅ PR created successfully
-✅ Base branch is main
-✅ All changes are documented
-✅ Evidence files created and tracked
+Commit History:
+- 4af557d "Add plan-create blueprint and spool file for phase 07"
+
+Review Status:
+- PR is open and ready for review
+- All required checks should pass
+- Follows established HEE patterns and conventions
+
+Validation:
+- Naming conventions verified (kebab-case, .yaml extension, max 1 dot)
+- Schema compliance verified (apiVersion/kind resolves via schemas/hee/v1/)
+- Blueprint structure follows HEE object envelope schema
