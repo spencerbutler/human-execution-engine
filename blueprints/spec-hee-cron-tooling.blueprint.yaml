@@ -1,0 +1,215 @@
+# HEE Cron Tooling Specification
+# Comprehensive specification for tools usable under real cron with contracts
+
+type: hee.blueprint
+blueprint_id: spec-hee-cron-tooling.v1
+version: v1
+description: "Tools usable under real cron + wrapper requirements + output contracts"
+created_at: "2026-01-29T00:00:00-06:00"
+author: "HEE System"
+
+metadata:
+  name: spec-hee-cron-tooling
+  intent: "Define comprehensive tool surface for real cron execution with contracts"
+  priority: P0
+
+# Guardrails
+guardrails:
+  - id: CRON-REAL-1
+    rule: "cron jobs must be non-interactive (no TTY), bounded (timeout), singleton (flock), and write disk evidence"
+  - id: CRON-REAL-2
+    rule: "cron jobs produce facts; humans/agents decide in mux/PR, not in cron"
+  - id: CRON-REAL-3
+    rule: "environment is explicit: PATH, HOME, SHELL, locale, tokens; no implicit shell profiles"
+  - id: CRON-REAL-4
+    rule: "output contract is append-only logs + structured artifacts; failures are edge-triggered alerts"
+
+# Cron Wrappers Required
+cron_wrappers_required:
+  flock:
+    purpose: "singleton execution"
+    example: "flock -n /var/lock/<job>.lock <cmd>"
+  timeout:
+    purpose: "upper bound runtime"
+    example: "timeout 15m <cmd>"
+  env_explicit:
+    purpose: "deterministic environment"
+    example: "env -i HOME=... PATH=... SHELL=/bin/sh <cmd>"
+
+# Tool Matrix
+tool_matrix:
+  vcs_and_net:
+    safe:
+      - tool: git
+        notes: ["fetch/ls-remote/gc/fsck ok"]
+        requires: ["env_explicit"]
+        risks: ["credentials"]
+      - tool: gh
+        notes: ["api/pr/release ok"]
+        requires: ["env_explicit"]
+        risks: ["token+rate-limit"]
+      - tool: curl
+        notes: ["health checks/webhooks/raw fetch"]
+        requires: ["timeout"]
+        risks: ["network flake"]
+      - tool: wget
+        notes: ["fetch"]
+        requires: ["timeout"]
+        risks: ["network flake"]
+  build_and_validation:
+    safe:
+      - tool: make
+        requires: ["timeout"]
+        risks: ["toolchain drift"]
+      - tool: go
+        requires: ["timeout"]
+        risks: ["module download; pin deps"]
+      - tool: cargo
+        requires: ["timeout"]
+        risks: ["network; cache"]
+      - tool: nix
+        requires: ["timeout"]
+        notes: ["best-in-class determinism"]
+        risks: ["store size"]
+      - tool: bazel
+        requires: ["timeout"]
+        risks: ["cache bloat"]
+      - tool: shellcheck
+        requires: []
+        risks: []
+  observation_and_diff:
+    safe:
+      - tool: diff
+        requires: []
+        risks: []
+      - tool: jq
+        requires: []
+        risks: []
+      - tool: yq
+        requires: []
+        risks: ["pin version"]
+      - tool: sha256sum
+        requires: []
+        risks: []
+      - tool: git_diff
+        requires: []
+        risks: []
+  system_introspection:
+    safe:
+      - tool: df
+        requires: []
+        risks: []
+      - tool: du
+        requires: ["timeout"]
+        risks: ["huge trees"]
+      - tool: uptime
+        requires: []
+        risks: []
+      - tool: ps
+        requires: []
+        risks: []
+      - tool: vmstat
+        requires: []
+        risks: []
+      - tool: iostat
+        requires: []
+        risks: ["needs sysstat"]
+  logging_and_archival:
+    safe:
+      - tool: logger
+        requires: []
+        risks: []
+      - tool: logrotate
+        requires: []
+        risks: ["config correctness"]
+      - tool: tar
+        requires: ["timeout"]
+        risks: ["path traversal; sanitize"]
+      - tool: gzip
+        requires: ["timeout"]
+        risks: []
+      - tool: zstd
+        requires: ["timeout"]
+        risks: []
+  notification:
+    safe:
+      - tool: mailx
+        requires: ["env_explicit"]
+        risks: ["mail setup"]
+      - tool: sendmail
+        requires: ["env_explicit"]
+        risks: ["mail setup"]
+      - tool: webhook_via_curl
+        requires: ["timeout"]
+        risks: ["secrets"]
+  security_and_attestation:
+    safe:
+      - tool: gpg
+        requires: ["env_explicit"]
+        risks: ["key custody"]
+      - tool: age
+        requires: ["env_explicit"]
+        risks: ["key custody"]
+      - tool: cosign
+        requires: ["env_explicit"]
+        risks: ["oidc/token flow"]
+      - tool: sbom_tools
+        requires: ["timeout"]
+        risks: ["tool sprawl"]
+
+# Output Contract
+output_contract:
+  base_dir: "/var/lib/hee/cron"
+  per_job:
+    run_dir: "<base>/<job>/<yyyymmdd>/<hhmmss>-<runid>/"
+    artifacts:
+      - "stdout.log"
+      - "stderr.log"
+      - "result.json  (machine-readable summary)"
+      - "checksums.txt (sha256 of all artifacts)"
+    status:
+      success: "exit 0 + result.json.status=ok"
+      fail: "nonzero exit OR result.json.status=fail (must include reason + next_action)"
+  retention:
+    local_days: 14
+    compress_after_days: 2
+
+# Failure Semantics
+failure_semantics:
+  classify:
+    - type: transient
+      action: "retry with backoff (max N)"
+      notify: "only after N fails"
+    - type: persistent
+      action: "stop + notify immediately"
+      notify: "edge-triggered"
+  anti_spam:
+    rule: "notify on state change (ok->fail, fail->ok), not every run"
+
+# Acceptance Tests
+acceptance_tests:
+  - id: AT-CRON-1
+    test: "job runs with env -i and succeeds"
+    pass: "artifacts present + checksums + structured result.json"
+  - id: AT-CRON-2
+    test: "wheel-scroll/copy-mode irrelevant; no TTY needed"
+    pass: "no hangs; no prompts"
+
+# Implementation Guidelines
+implementation_guidelines:
+  environment_isolation:
+    - "Use env -i with explicit PATH, HOME, SHELL"
+    - "Set LC_ALL=C for deterministic output"
+    - "Pin tool versions where possible"
+  error_handling:
+    - "Always capture stdout/stderr"
+    - "Write structured result.json"
+    - "Include timestamps and run IDs"
+  resource_management:
+    - "Use timeout for all network operations"
+    - "Limit memory usage with ulimit where possible"
+    - "Clean up temporary files on exit"
+  security:
+    - "Never log secrets or tokens"
+    - "Use secure file permissions (600 for sensitive files)"
+    - "Validate all inputs before processing"

@@ -1,0 +1,97 @@
+# HEE Agent Concurrency Specification
+# Specification for more concurrent hee-agents safely
+
+type: hee.blueprint
+blueprint_id: spec-hee-agent-concurrency.v1
+version: v1
+description: "More concurrent hee-agents safely with bounded fanout and isolation"
+created_at: "2026-01-29T00:00:00-06:00"
+author: "HEE System"
+
+metadata:
+  name: spec-hee-agent-concurrency
+  intent: "Define safe concurrency model for hee-agents with isolation and bounded fanout"
+  priority: P0
+
+# Goal
+goal: "more concurrent hee-agents without chaos"
+
+# Concurrency Model
+concurrency_model:
+  fanout: "COG issues independent tasks; each task is a work-item with a deterministic contract"
+  isolation:
+    workspace: "per-work-item checkout or git worktree; never shared working dir"
+    locks: "only for shared caches; never for source trees"
+  routing:
+    spool_dir: "/var/lib/hee/spool"
+    queues:
+      - name: "ready"
+        contract: "work-items awaiting execution"
+      - name: "running"
+        contract: "leased by an executor (ttl heartbeat)"
+      - name: "done"
+        contract: "artifact pointer + exit status"
+      - name: "failed"
+        contract: "retry metadata + last error"
+  dedupe:
+    key: "sha256(normalized task spec)"
+    rule: "if key exists in running|done (recent), skip or coalesce"
+  bounds:
+    max_concurrent_agents: 8
+    per_host_cpu_cap: "min(cores-1, max_concurrent_agents)"
+    per_agent_timeout: "30m (configurable per work-item)"
+
+# Executor Options
+executor_options:
+  A_cron_driven:
+    summary: "cron launches N executors every minute; each grabs one work-item"
+    pros: ["simple", "uses real cron", "no long-lived daemon"]
+    cons: ["minute granularity", "needs careful locking/leases"]
+  B_systemd_service_pool:
+    summary: "worker service + systemd units; cron only enqueues"
+    pros: ["better scheduling", "restarts", "resource controls"]
+    cons: ["not pure cron"]
+  C_tmux_orchestrated:
+    summary: "tmux spawns N panes each running a worker loop (NOT cron)"
+    pros: ["operator-visible", "fast feedback"]
+    cons: ["not cron; interactive environment dependency"]
+
+# Recommended Path
+recommended_path:
+  now: "A_cron_driven + tmux cockpit for visibility"
+  later: "B_systemd_service_pool when stable"
+
+# Acceptance Tests
+acceptance_tests:
+  - id: AT-AGENT-1
+    test: "enqueue 50 work-items; run 8-way concurrency; no collisions"
+    pass: "no shared-dir mutation; done/failed counts match"
+  - id: AT-AGENT-2
+    test: "kill a worker mid-run"
+    pass: "lease expires; item re-queued; no duplicate commits"
+  - id: AT-AGENT-3
+    test: "dedupe same spec enqueued 10x"
+    pass: "coalesced to 1 execution (or bounded to policy)"
+
+# Implementation Guidelines
+implementation_guidelines:
+  workspace_isolation:
+    - "Use per-work-item git worktrees or checkouts"
+    - "Never share working directories between agents"
+    - "Clean up workspaces on completion or failure"
+  locking_strategy:
+    - "Only lock shared caches, never source trees"
+    - "Use file-based locks with timeout"
+    - "Implement lease-based locking for running items"
+  resource_management:
+    - "Limit concurrent agents to max_concurrent_agents"
+    - "Use cgroups for resource isolation where possible"
+    - "Monitor memory and CPU usage per agent"
+  error_handling:
+    - "Handle worker crashes gracefully"
+    - "Implement exponential backoff for failed items"
+    - "Log all state transitions for debugging"
+  security:
+    - "Isolate agent processes from each other"
+    - "Use minimal privileges for agent execution"
+    - "Validate all work-item specifications"
