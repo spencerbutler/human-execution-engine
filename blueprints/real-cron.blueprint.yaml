@@ -1,0 +1,194 @@
+# Real Cron Blueprint
+# System cron-based execution for HEE jobs without resident processes
+
+type: hee.blueprint
+blueprint_id: real-cron.v1
+version: v1
+description: "System cron-based execution for HEE jobs without resident processes"
+created_at: "2026-01-29T00:00:00-06:00"
+author: "HEE System"
+
+metadata:
+  name: real-cron
+  intent: "Execute HEE jobs via system cron daemon; no resident process required"
+  priority: P0
+
+# Cron execution definition
+cron_definition:
+  real_cron: "invoked by cron daemon; no resident process required"
+  exclusions: ["inotify-only", "systemd timers (unless bridged)", "agent loops"]
+
+# Tool classes for cron execution
+tool_classes:
+  vcs_and_net:
+    description: "pull, check, publish, verify"
+    tools:
+      - git: ["fetch", "pull", "ls-remote", "gc", "fsck"]
+      - gh: ["api", "repo view", "pr list", "release view"]
+      - curl: ["health checks", "raw fetch", "webhooks"]
+      - wget: []
+  build_and_validation:
+    description: "deterministic checks, compilation, linting"
+    tools:
+      - make: []
+      - nix: ["build", "eval", "flake check"]
+      - bazel: []
+      - go: ["test", "build", "vet"]
+      - cargo: ["build", "test", "clippy"]
+      - shellcheck: []
+  observation_and_diff:
+    description: "state changed? prove it."
+    tools:
+      - diff: []
+      - git_diff: []
+      - jq: []
+      - yq: []
+      - sha256sum: []
+  system_introspection:
+    description: "host facts, signals, drift"
+    tools:
+      - df: []
+      - du: []
+      - free: []
+      - uptime: []
+      - ps: []
+      - vmstat: []
+      - iostat: []
+  logging_and_archival:
+    description: "write once, rotate, compress"
+    tools:
+      - logger: []
+      - logrotate: []
+      - tar: []
+      - gzip: []
+      - zstd: []
+  notification:
+    description: "edge-triggered alerts only"
+    tools:
+      - mailx: []
+      - sendmail: []
+      - curl_webhook: ["slack", "discord", "custom http endpoint"]
+  security_and_attestation:
+    description: "prove integrity"
+    tools:
+      - gpg: []
+      - age: []
+      - cosign: []
+      - sbom_tools: []
+
+# Cron native wrappers
+cron_wrappers:
+  flock:
+    purpose: "singleton execution"
+    required_for: ["pollers", "state checks"]
+  timeout:
+    purpose: "upper bound execution"
+  env:
+    purpose: "explicit environment control"
+
+# Anti-patterns to avoid
+anti_patterns:
+  - "interactive prompts"
+  - "expects TTY"
+  - "long-running daemons"
+  - "sleep loops"
+  - "stateful background agents"
+
+# Tools that can run in cron if wrapped
+cron_compatible_wrappers:
+  systemd_timers:
+    note: "bridge via systemd-run --on-active or cron -> systemctl start"
+  tmux:
+    note: "only as batch command (new-session -d …), never interactive"
+  zellij:
+    note: "same as tmux; cron can spawn, not attach"
+
+# HEE alignment
+hee_alignment:
+  good_fits:
+    - "state polling"
+    - "drift detection"
+    - "attestation"
+    - "nightly validation"
+  bad_fits:
+    - "decision making"
+    - "interactive repair"
+    - "long-lived control loops"
+
+# Next iteration tasks
+next_iteration:
+  define:
+    - "cron bundles (poller, validator, attestor)"
+    - "output contract (disk paths + checksums)"
+    - "failure semantics (retry vs alert vs stop)"
+
+# Implementation phases
+implementation_phases:
+  phase_1:
+    name: "Cron Infrastructure"
+    priority: P0
+    deliverables:
+      - "Cron job definitions"
+      - "Environment isolation"
+      - "Singleton execution patterns"
+    timeline: "2-3 weeks"
+  phase_2:
+    name: "Tool Integration"
+    priority: P0
+    deliverables:
+      - "VCS and network tools integration"
+      - "Build and validation tooling"
+      - "Observation and diff utilities"
+    timeline: "3-4 weeks"
+  phase_3:
+    name: "Monitoring and Alerting"
+    priority: P1
+    deliverables:
+      - "Logging and archival systems"
+      - "Notification mechanisms"
+      - "Security and attestation workflows"
+    timeline: "2-3 weeks"
+  phase_4:
+    name: "Optimization and Hardening"
+    priority: P2
+    deliverables:
+      - "Performance optimization"
+      - "Security hardening"
+      - "Documentation and runbooks"
+    timeline: "1-2 weeks"
+
+# Quality assurance requirements
+quality_assurance:
+  deterministic_execution: true
+  security_review_required: true
+  performance_benchmarks:
+    - "Job startup time < 30s"
+    - "Memory usage < 100MB per job"
+    - "Disk I/O < 1GB per execution"
+  compliance:
+    - "No interactive dependencies"
+    - "Explicit environment variables"
+    - "Proper error handling and logging"
+
+# Risk mitigation strategies
+risk_mitigation:
+  execution_failures:
+    - "Retry mechanisms with backoff"
+    - "Alerting on persistent failures"
+    - "Graceful degradation paths"
+  resource_usage:
+    - "Resource limits enforcement"
+    - "Monitoring and alerting"
+    - "Cleanup procedures"
+
+# Deployment strategy
+deployment_strategy:
+  canary_deployment: true
+  rollback_procedures:
+    - "Cron job rollback mechanisms"
+    - "Environment restoration"
+    - "State recovery procedures"
+  validation_gates:
+    - "Cron job syntax validation"
+    - "Environment isolation verification"
+    - "Security compliance checks"

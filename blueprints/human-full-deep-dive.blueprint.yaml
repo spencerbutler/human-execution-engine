@@ -1,0 +1,35 @@
+# Human Full Deep Dive Blueprint
+# Human-led full deep dive; 100x iteration loop
+
+spec_version: 2
+name: human-full-deep-dive
+description: "Human-led full deep dive; 100x iteration loop"
+author: "HEE System"
+created_at: "2026-01-29T00:00:00-06:00"
+
+# Blueprint Resources
+resources:
+  # Discovery & Mapping Phase
+  discovery_mapping:
+    selector:
+      type: "analysis.phase"
+  
+  # Assumption Audit Phase
+  assumption_audit:
+    selector:
+      type: "analysis.phase"
+  
+  # Edge Case Exploration Phase
+  edge_case_exploration:
+    selector:
+      type: "analysis.phase"
+  
+  # Guardrail Validation Phase
+  guardrail_validation:
+    selector:
+      type: "analysis.phase"
+  
+  # Evidence Verification Phase
+  evidence_verification:
+    selector:
+      type: "analysis.phase"
