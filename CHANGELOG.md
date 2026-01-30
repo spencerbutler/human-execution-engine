@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Completion markers for workflow documentation
 - Release notes generation and tagging system
 - Operations index and status documentation
+- `tools/` directory for operator utilities
+- `apply-var-patch` tool relocated from `ci/git/` to `tools/git/`
 
 ### Changed
 - Applied hardware discovery spec updates via standard patch workflow
