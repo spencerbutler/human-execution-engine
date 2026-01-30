@@ -1,0 +1,12 @@
+PHASE=04a
+STEP=E01-start
+DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+PWD=$(pwd)
+
+# git
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+GIT_HEAD=$(git rev-parse HEAD)
+GIT_STATUS_PORCELAIN:
+
+GIT_STATUS_SHORT:
+## main...origin/main
