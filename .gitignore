@@ -60,5 +60,7 @@ docs/AUTOMATION_CONFIG.json
 # GC Report Pack outputs (generated)
 /var/gc/
 
-# HEE local state
+# HEE local state - allow specific tracked files
+!.hee/spool/**
+!.hee/evidence/**
 .hee
