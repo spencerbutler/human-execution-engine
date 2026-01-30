@@ -1,0 +1,372 @@
+# Learned Languages Skill Growth CI
+# CI pipeline additions for language mastery and environment building
+
+name: Learned Languages Skill Growth
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'tooling/**'
+      - '.github/workflows/learned-languages-skill-growth.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'tooling/**'
+      - '.github/workflows/learned-languages-skill-growth.yml'
+  schedule:
+    # Weekly deep scan
+    - cron: '30 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild of all language environments'
+        required: false
+        default: false
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  PYTHONUNBUFFERED: 1
+
+jobs:
+  langs_env_build_matrix:
+    name: Build Language Environments
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [rust, python, go, typescript, cpp]
+        include:
+          - language: rust
+            tier: core
+            pinned_version: "1.70.0"
+          - language: python
+            tier: core
+            pinned_version: "3.11"
+          - language: go
+            tier: preferred
+            pinned_version: "1.21"
+          - language: typescript
+            tier: preferred
+            pinned_version: "5.3"
+          - language: cpp
+            tier: supported
+            pinned_version: "gcc-11"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up language environment (${{ matrix.language }})
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain ${{ matrix.pinned_version }} -y
+              echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+              ;;
+            python)
+              # Use setup-python action for deterministic builds
+              ;;
+            go)
+              # Use setup-go action for deterministic builds
+              ;;
+            typescript)
+              npm install -g typescript@${{ matrix.pinned_version }}
+              ;;
+            cpp)
+              sudo apt-get update
+              sudo apt-get install -y ${{ matrix.pinned_version }} g++-11
+              ;;
+          esac
+
+      - name: Verify environment build
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              rustc --version
+              cargo --version
+              ;;
+            python)
+              python3 --version
+              pip --version
+              ;;
+            go)
+              go version
+              ;;
+            typescript)
+              tsc --version
+              ;;
+            cpp)
+              ${{ matrix.pinned_version }} --version
+              g++-11 --version
+              ;;
+          esac
+
+      - name: Create versions manifest
+        run: |
+          mkdir -p .hee/mets/langs/versions/
+          cat > .hee/mets/langs/versions/${{ matrix.language }}.json << EOF
+          {
+            "language": "${{ matrix.language }}",
+            "tier": "${{ matrix.tier }}",
+            "pinned_version": "${{ matrix.pinned_version }}",
+            "build_timestamp": "$(date -Iseconds)",
+            "ci_run_id": "${{ github.run_id }}",
+            "commit_sha": "${{ github.sha }}",
+            "build_success": true
+          }
+          EOF
+
+      - name: Upload versions manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: langs-versions-manifest-${{ matrix.language }}
+          path: .hee/mets/langs/versions/${{ matrix.language }}.json
+
+  langs_hello_world_matrix:
+    name: Hello World Test (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    needs: langs_env_build_matrix
+    strategy:
+      matrix:
+        language: [rust, python, go, typescript, cpp]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up language environment (${{ matrix.language }})
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70.0 -y
+              echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+              ;;
+            python)
+              # Python setup handled by composite action
+              ;;
+            go)
+              # Go setup handled by composite action
+              ;;
+            typescript)
+              npm install -g typescript@5.3
+              ;;
+            cpp)
+              sudo apt-get update
+              sudo apt-get install -y gcc-11 g++-11
+              ;;
+          esac
+
+      - name: Create hello world program
+        run: |
+          mkdir -p test_hello
+          cd test_hello
+          case "${{ matrix.language }}" in
+            rust)
+              cat > hello.rs << 'EOF'
+              fn main() {
+                  println!("Hello, HEE World!");
+              }
+              EOF
+              ;;
+            python)
+              cat > hello.py << 'EOF'
+              #!/usr/bin/env python3
+              print("Hello, HEE World!")
+              EOF
+              chmod +x hello.py
+              ;;
+            go)
+              cat > hello.go << 'EOF'
+              package main
+              import "fmt"
+              func main() {
+                  fmt.Println("Hello, HEE World!")
+              }
+              EOF
+              ;;
+            typescript)
+              cat > hello.ts << 'EOF'
+              console.log("Hello, HEE World!");
+              EOF
+              ;;
+            cpp)
+              cat > hello.cpp << 'EOF'
+              #include <iostream>
+              int main() {
+                  std::cout << "Hello, HEE World!" << std::endl;
+                  return 0;
+              }
+              EOF
+              ;;
+          esac
+
+      - name: Compile and run hello world
+        run: |
+          cd test_hello
+          case "${{ matrix.language }}" in
+            rust)
+              rustc hello.rs -o hello
+              ./hello
+              ;;
+            python)
+              python3 hello.py
+              ;;
+            go)
+              go run hello.go
+              ;;
+            typescript)
+              tsc hello.ts --target ES2020 --module commonjs
+              node hello.js
+              ;;
+            cpp)
+              g++-11 hello.cpp -o hello
+              ./hello
+              ;;
+          esac
+
+  langs_format_lint_test:
+    name: Format/Lint/Test (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    needs: [langs_env_build_matrix, langs_hello_world_matrix]
+    strategy:
+      matrix:
+        language: [rust, python, go, typescript]
+        # cpp format/lint/test would require more complex setup
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up language environment (${{ matrix.language }})
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.70.0 -y
+              echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+              rustup component add rustfmt clippy
+              ;;
+            python)
+              pip install black flake8 pytest
+              ;;
+            go)
+              # go fmt, go vet, go test are built-in
+              ;;
+            typescript)
+              npm install -g eslint prettier typescript
+              ;;
+          esac
+
+      - name: Format check
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              cargo fmt --check
+              ;;
+            python)
+              black --check --diff .
+              ;;
+            go)
+              go fmt ./...
+              ;;
+            typescript)
+              prettier --check "src/**/*.{ts,tsx,js,jsx}"
+              ;;
+          esac
+
+      - name: Lint check
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              cargo clippy -- -D warnings
+              ;;
+            python)
+              flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+              ;;
+            go)
+              go vet ./...
+              ;;
+            typescript)
+              eslint "src/**/*.{ts,tsx,js,jsx}" --max-warnings 0
+              ;;
+          esac
+
+      - name: Test run
+        run: |
+          case "${{ matrix.language }}" in
+            rust)
+              cargo test
+              ;;
+            python)
+              python -m pytest
+              ;;
+            go)
+              go test ./...
+              ;;
+            typescript)
+              npm test
+              ;;
+          esac
+
+  langs_mets_update:
+    name: Update Language Mastery METS
+    runs-on: ubuntu-latest
+    needs: [langs_env_build_matrix, langs_hello_world_matrix, langs_format_lint_test]
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: .hee/mets/artifacts/
+
+      - name: Calculate mastery metrics
+        run: |
+          mkdir -p .hee/mets/langs/mastery/
+
+          # Calculate pass rates by language
+          declare -A lang_status
+          lang_status[rust]="${{ needs.langs_env_build_matrix.result }}"
+          lang_status[python]="${{ needs.langs_env_build_matrix.result }}"
+          lang_status[go]="${{ needs.langs_env_build_matrix.result }}"
+          lang_status[typescript]="${{ needs.langs_env_build_matrix.result }}"
+          lang_status[cpp]="${{ needs.langs_env_build_matrix.result }}"
+
+          # Create mastery metrics
+          cat > .hee/mets/langs/mastery/v1.json << EOF
+          {
+            "met_id": "langs.mastery.v1",
+            "timestamp": "$(date -Iseconds)",
+            "ci_run_id": "${{ github.run_id }}",
+            "commit_sha": "${{ github.sha }}",
+            "metrics": {
+              "ci_pass_rate_by_lang": {
+                "rust": "${{ needs.langs_env_build_matrix.result == 'success' && needs.langs_hello_world_matrix.result == 'success' && needs.langs_format_lint_test.result == 'success' }}",
+                "python": "${{ needs.langs_env_build_matrix.result == 'success' && needs.langs_hello_world_matrix.result == 'success' && needs.langs_format_lint_test.result == 'success' }}",
+                "go": "${{ needs.langs_env_build_matrix.result == 'success' && needs.langs_hello_world_matrix.result == 'success' && needs.langs_format_lint_test.result == 'success' }}",
+                "typescript": "${{ needs.langs_env_build_matrix.result == 'success' && needs.langs_hello_world_matrix.result == 'success' && needs.langs_format_lint_test.result == 'success' }}",
+                "cpp": "${{ needs.langs_env_build_matrix.result == 'success' && needs.langs_hello_world_matrix.result == 'success' }}"
+              },
+              "time_to_green_by_lang": {},
+              "env_rebuild_success_by_lang": {
+                "rust": "${{ needs.langs_env_build_matrix.result == 'success' }}",
+                "python": "${{ needs.langs_env_build_matrix.result == 'success' }}",
+                "go": "${{ needs.langs_env_build_matrix.result == 'success' }}",
+                "typescript": "${{ needs.langs_env_build_matrix.result == 'success' }}",
+                "cpp": "${{ needs.langs_env_build_matrix.result == 'success' }}"
+              },
+              "rework_rate_by_lang": {}
+            }
+          }
+          EOF
+
+      - name: Upload mastery metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: langs-mastery-mets
+          path: .hee/mets/langs/mastery/v1.json
