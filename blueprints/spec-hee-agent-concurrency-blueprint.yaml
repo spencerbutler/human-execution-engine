@@ -1,4 +1,4 @@
-# path: blueprints/spec-hee-agent-concurrency.blueprint.yaml
+# path: blueprints/spec-hee-agent-concurrency-blueprint.yaml
 # HEE Agent Concurrency Specification
 # Specification for more concurrent hee-agents safely
 
