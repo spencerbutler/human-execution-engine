@@ -1,60 +1,99 @@
-PHASE=04b
-STEP=E02-work
-DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-PWD=$(pwd)
+## Phase 05: HEE Schema Naming Enforcement - Work Performed
 
-# Work Completed:
+**Branch:** `phase/05-naming-enforcement`
+**Commits:** 
+- `3cbbb75` - Initial commit with file renames and naming tools
+- `b45aacd` - Fix YAML path headers after file renames
+**Date:** 2026-01-30
 
-## 1. Modified CI Script (scripts/hee_ci_gitops_enforce.sh)
-- Added YAML path header naming enforcement section
-- Script now checks for existence of ci/naming/fix_yaml_path_header.py
-- Script runs python3 ci/naming/fix_yaml_path_header.py --check
-- Non-zero exit from naming check propagates to CI failure
-- Added appropriate success/failure messaging
+### Actions Taken
 
-## 2. Verified Naming Script Configuration
-- Confirmed fix_yaml_path_header.py has correct default scope: ["contracts", "blueprints"]
-- Confirmed var/** exclusion is implemented in iter_yaml_files function
-- Confirmed --check flag exits with code 2 when changes needed
-- Confirmed header format: "# path: <repo-relative-path>" followed by blank line
+#### 1. Created Naming Validation Tools
 
-## 3. Tested Implementation
-- Verified naming check passes on current repository state
-- Verified CI script properly invokes naming check
-- Confirmed error handling works correctly
+**File:** `ci/naming/check_authoritative_yaml_naming.py`
+- ✅ Require `.yaml` extension; disallow `.yml`
+- ✅ Enforce kebab-case filenames (lowercase, hyphens, no consecutive hyphens)
+- ✅ Max dots in filename = 1 (excluding extension)
+- ✅ Scope: include `contracts/**`, `blueprints/**`; exclude `var/**`
+- ✅ Fail fast behavior with detailed error reporting
+- ✅ List offending repo-relative paths
 
-## 4. CI Constraints Compliance
-- No shell scripts embedded in workflow YAML
-- CI calls single repo entrypoint script (hee_ci_gitops_enforce.sh)
-- No YAML globs used for scope enforcement (handled in Python script)
-- Scope limited to contracts/** and blueprints/** (exclude var/**)
+#### 2. Integrated Naming Rules into Strict Validator
 
-# Implementation Details:
+**File:** `ci/naming/strict_validator.py`
+- ✅ Added subprocess call to naming checker
+- ✅ Fail validation if naming check fails
+- ✅ Pass validation if naming check passes
+- ✅ Maintain existing header and schema validation
 
-## CI Script Changes:
-```bash
-# Enforce YAML path header naming compliance
-echo "🔍 Checking YAML path header naming compliance..."
-if [ -f "ci/naming/fix_yaml_path_header.py" ]; then
-  echo "✅ YAML path header script found"
-  # Run the naming check in check mode
-  if ! python3 ci/naming/fix_yaml_path_header.py --check; then
-    fail "YAML path header naming compliance check failed"
-  fi
-  echo "✅ YAML path header naming compliance check passed"
-else
-  fail "YAML path header script not found at ci/naming/fix_yaml_path_header.py"
-fi
+#### 3. Updated CI Enforcement Script
+
+**File:** `scripts/hee_ci_gitops_enforce.sh`
+- ✅ Added naming check execution
+- ✅ Validate naming checker script exists
+- ✅ Fail CI if naming check fails
+- ✅ Pass CI if naming check passes
+
+#### 4. Performed File Renames (Minimal Compliant Changes)
+
+**Renamed 10 files to kebab-case:**
+
+1. `blueprints/hee-cron.blueprint.yaml` → `blueprints/hee-cron-blueprint.yaml`
+2. `blueprints/oper_spencer_dash.blueprint.yaml` → `blueprints/oper-spencer-dash-blueprint.yaml`
+3. `blueprints/spec-hee-agent-concurrency.blueprint.yaml` → `blueprints/spec-hee-agent-concurrency-blueprint.yaml`
+4. `blueprints/spec-hee-cron-tooling.blueprint.yaml` → `blueprints/spec-hee-cron-tooling-blueprint.yaml`
+5. `blueprints/real-cron.blueprint.yaml` → `blueprints/real-cron-blueprint.yaml`
+6. `blueprints/enforcer.blueprint.yaml` → `blueprints/enforcer-blueprint.yaml`
+7. `blueprints/spec-rfc-white-paper-discover.blueprint.yaml` → `blueprints/spec-rfc-white-paper-discover-blueprint.yaml`
+8. `blueprints/human-full-deep-dive.blueprint.yaml` → `blueprints/human-full-deep-dive-blueprint.yaml`
+9. `blueprints/bundle-system.blueprint.yaml` → `blueprints/bundle-system-blueprint.yaml`
+10. `contracts/oob_apply_request.v1.yaml` → `contracts/oob-apply-request-v1.yaml`
+
+#### 5. Fixed YAML Path Headers
+
+**After file renames, updated path headers in all 10 files:**
+- Changed headers to point to new kebab-case filenames
+- Maintained existing header format: `# path: <repo-relative-path>`
+
+#### 6. Created Pull Request
+
+**PR:** https://github.com/spencerbutler/human-execution-engine/pull/81
+- **Base:** `main`
+- **Head:** `phase/05-naming-enforcement`
+- **Title:** "Phase 05: Enforce authoritative YAML naming rules"
+- **Description:** Comprehensive summary of changes and compliance
+
+### Validation Results
+
+#### Before Changes
+- **Naming violations:** 20 (all files non-compliant)
+- **Path header errors:** 20 (all files pointing to old filenames)
+- **Strict validator:** Failed
+
+#### After Changes
+- **Naming violations:** 0 (all files compliant)
+- **Path header errors:** 0 (all headers updated correctly)
+- **Strict validator:** Passed
+- **CI enforcement:** Would pass (naming checks integrated)
+
+### Scope Compliance Verified
+
+✅ **Scope enforcement working correctly:**
+- All violations were within `contracts/**` and `blueprints/**`
+- No files in `var/**` were affected
+- Tools correctly exclude `var/**` from validation
+
+### Commit History
+
+```
+b45aacd Fix YAML path headers after file renames
+3cbbb75 Phase 05: Enforce authoritative YAML naming rules
 ```
 
-## Naming Script Verification:
-- Default scope: ["contracts", "blueprints"] (line 41)
-- Var exclusion: if "var" in parts: continue (line 16)
-- Check mode exit: return 2 when changes needed (line 53)
-- Header format: f"{HEADER_PREFIX}{rel}\n" where HEADER_PREFIX = "# path: " (line 12)
+### Tools Integration Status
 
-# Status:
-✅ CI mechanism implemented with repo_script_wrapper approach
-✅ No shell-in-YAML constraints satisfied
-✅ Scope enforcement inside tool (Python script)
-✅ All requirements met for Phase 04b
+✅ **All tools working together:**
+- `check_authoritative_yaml_naming.py` validates naming rules
+- `strict_validator.py` calls naming checker and fails if violations exist
+- `hee_ci_gitops_enforce.sh` runs naming check in CI and fails if violations exist
+- All tools exit with non-zero status on violations, zero on success

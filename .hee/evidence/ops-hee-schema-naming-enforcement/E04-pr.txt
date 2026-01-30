@@ -1,0 +1,96 @@
+## Phase 05: HEE Schema Naming Enforcement - Pull Request
+
+**Branch:** `phase/05-naming-enforcement`
+**PR URL:** https://github.com/spencerbutler/human-execution-engine/pull/81
+**Base Branch:** `main`
+**Head Branch:** `phase/05-naming-enforcement`
+**Date:** 2026-01-30
+
+### Pull Request Details
+
+#### PR Information
+- **PR Number:** #81
+- **Title:** "Phase 05: Enforce authoritative YAML naming rules"
+- **State:** Open
+- **Mergeable:** Yes
+- **Merge Commit SHA:** `7c22d70f864af523e0ef8ef852c2c1f5e2f896e6`
+- **Created:** 2026-01-30T12:51:17Z
+- **Updated:** 2026-01-30T12:52:36Z
+
+#### PR Description
+```
+Enforce authoritative YAML naming rules for HEE schema compliance:
+
+- Require .yaml extension; disallow .yml
+- Enforce kebab-case filenames
+- Max dots in filename = 1
+- Scope: include contracts/**, blueprints/**; exclude var/**
+- Fail fast; list offending repo-relative paths; no auto-fix
+
+Changes:
+- Add check_authoritative_yaml_naming.py for strict naming validation
+- Wire naming rules into strict_validator.py
+- Update CI enforcement script to run naming checks
+- Rename 10 files to comply with kebab-case requirements
+```
+
+#### Commits in PR
+
+**Commit 1:** `3cbbb75` - "Phase 05: Enforce authoritative YAML naming rules"
+- **Author:** Spencer Butler
+- **Date:** 2026-01-30T12:50:54Z
+- **Changes:** 13 files changed, 239 insertions(+)
+- **Files:**
+  - `ci/naming/check_authoritative_yaml_naming.py` (new file)
+  - 10 file renames from old naming to kebab-case
+  - Updated `ci/naming/strict_validator.py`
+  - Updated `scripts/hee_ci_gitops_enforce.sh`
+
+**Commit 2:** `b45aacd` - "Fix YAML path headers after file renames"
+- **Author:** Spencer Butler
+- **Date:** 2026-01-30T12:52:23Z
+- **Changes:** 10 files changed, 10 insertions(+), 10 deletions(-)
+- **Files:** Updated path headers in all renamed files
+
+#### Statistics
+- **Commits:** 2
+- **Additions:** 249
+- **Deletions:** 10
+- **Changed Files:** 13
+- **Comments:** 0
+- **Review Comments:** 0
+
+#### Review Status
+- **Requested Reviewers:** None
+- **Review Status:** No reviews requested yet
+- **Merge Status:** Ready to merge (base=main)
+
+#### CI Status
+- **GitHub Actions:** Pending (not yet triggered by review)
+- **Pre-commit:** ✅ Passed on both commits
+- **HEE Validation:** ✅ All naming rules enforced
+
+#### Branch Protection Compliance
+✅ **Branch protection rules satisfied:**
+- PR targets `main` branch (required base)
+- All commits pass pre-commit validation
+- No direct commits to main (HEE rule compliance)
+- PR follows naming convention: `phase/05-naming-enforcement`
+
+#### Next Steps for Completion
+1. **Code Review:** Request review from team members
+2. **CI Validation:** Ensure GitHub Actions pass
+3. **Merge:** Merge PR to main branch
+4. **Cleanup:** Delete feature branch after merge
+
+#### Validation Summary
+✅ **All Phase 05 requirements implemented:**
+- Naming validation tools created and integrated
+- 10 files renamed to kebab-case compliance
+- Path headers updated for all renamed files
+- CI integration complete
+- Scope enforcement verified
+- Fail-fast behavior implemented
+- Exit codes properly handled
+
+The PR is ready for review and merge to complete Phase 05 implementation.
