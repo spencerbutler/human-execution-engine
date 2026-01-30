@@ -1,4 +1,4 @@
-# blueprints/blueprint-doctrine.yml
+# blueprints/doctrine/blueprint-doctrine.yaml
 blueprint:
   name: blueprint-doctrine
   schema-version: 2

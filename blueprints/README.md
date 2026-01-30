@@ -62,7 +62,7 @@ They form the foundation for priority, result, evidence, existence, and optional
 
 ---
 
-### `blueprint-doctrine.yml`
+### `blueprints/doctrine/blueprint-doctrine.yaml`
 Defines the **schema and rules** for creating blueprints, plans, phases, tasks, and items.
 
 This doctrine:
