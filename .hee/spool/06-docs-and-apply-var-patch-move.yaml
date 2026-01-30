@@ -1,7 +1,6 @@
 phase_id: "06-docs-and-apply-var-patch-move"
 branch: "phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move"
-pr_url: "https://github.com/spencerbutler/human-execution-engine/pull/74"
+pr_url: "https://github.com/spencerbutler/human-execution-engine/pull/82"
 timestamps:
   started_at: "2026-01-30T07:43:22-06:00"
-  last_update: "2026-01-30T07:47:10-06:00"
 status: "done"
