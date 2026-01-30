@@ -1,27 +1,14 @@
-# E01-start.txt
-# Task: RELAY RUN — PHASE 06
-# phase_id: 06-docs-and-apply-var-patch-move
-# branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
+Phase 07 - Plan Create Blueprint
+Start Time: 2026-01-30T08:43:24-06:00
+Branch: phase/ops-hee-schema-naming-07-plan-create-blueprint
+Status: Started
 
-## Start Time
-2026-01-30 07:43:22 CST
+Task: Create plan-create blueprint following HEE schema and naming conventions
+- Create spool file .hee/spool/07-plan-create-blueprint.yaml
+- Add blueprints/plan/plan-create.blueprint.yaml
+- Verify naming conventions (kebab-case, .yaml only, max 1 dot)
+- Verify schema compliance (apiVersion/kind resolves via schemas/hee/v1/)
+- Create PR and update spool with PR URL
+- Write/update evidence files E01-E06
 
-## Initial State
-- Source file exists at: ci/git/apply_var_patch.sh
-- Target directory 'tools' does not exist
-- Need to search for all references to 'apply_var_patch.sh' in the codebase
-- Need to update README.md and CHANGELOG.md
-- Need to create tools/git/ directory structure
-
-## Task Breakdown
-1. Create tools/git/ directory structure
-2. Move ci/git/apply_var_patch.sh to tools/git/apply-var-patch
-3. Search for all references to apply_var_patch.sh
-4. Update all references to point to new location
-5. Update README.md with changes
-6. Update CHANGELOG.md with changes
-7. Create remaining evidence files (E02-E06)
-
-## Preconditions Met
-- start_clean_main_required: true (will verify branch state)
-- Working from branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
+Initial commit: 4af557d "Add plan-create blueprint and spool file for phase 07"
