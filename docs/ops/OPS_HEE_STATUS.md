@@ -20,7 +20,7 @@
 
 ## Recent Operations
 - ✅ Hardware discovery spec updated with GNU name seeds
-- ✅ Patch applied via standard tooling (`ci/git/apply_var_patch.sh`)
+- ✅ Patch applied via standard tooling (`tools/git/apply-var-patch`)
 - ✅ P0 metrics promoted to disk
 - ✅ State capsule created and locked
 - ✅ Completion markers filed

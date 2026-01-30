@@ -1,38 +1,27 @@
-## Phase 05: HEE Schema Naming Enforcement - Starting State
+# E01-start.txt
+# Task: RELAY RUN — PHASE 06
+# phase_id: 06-docs-and-apply-var-patch-move
+# branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
 
-**Branch:** `phase/05-naming-enforcement`
-**Commit:** `3cbbb75` (initial commit with file renames)
-**Date:** 2026-01-30
+## Start Time
+2026-01-30 07:43:22 CST
 
-### Initial State Summary
+## Initial State
+- Source file exists at: ci/git/apply_var_patch.sh
+- Target directory 'tools' does not exist
+- Need to search for all references to 'apply_var_patch.sh' in the codebase
+- Need to update README.md and CHANGELOG.md
+- Need to create tools/git/ directory structure
 
-- **Files to rename:** 10 files with non-compliant naming
-- **Naming violations found:**
-  - 10 files using `blueprint.yaml` suffix instead of kebab-case
-  - 1 file using `v1.yaml` suffix instead of kebab-case
-  - All files had incorrect path headers pointing to old filenames
+## Task Breakdown
+1. Create tools/git/ directory structure
+2. Move ci/git/apply_var_patch.sh to tools/git/apply-var-patch
+3. Search for all references to apply_var_patch.sh
+4. Update all references to point to new location
+5. Update README.md with changes
+6. Update CHANGELOG.md with changes
+7. Create remaining evidence files (E02-E06)
 
-### Files Requiring Renames
-
-1. `blueprints/hee-cron.blueprint.yaml` → `blueprints/hee-cron-blueprint.yaml`
-2. `blueprints/oper_spencer_dash.blueprint.yaml` → `blueprints/oper-spencer-dash-blueprint.yaml`
-3. `blueprints/spec-hee-agent-concurrency.blueprint.yaml` → `blueprints/spec-hee-agent-concurrency-blueprint.yaml`
-4. `blueprints/spec-hee-cron-tooling.blueprint.yaml` → `blueprints/spec-hee-cron-tooling-blueprint.yaml`
-5. `blueprints/real-cron.blueprint.yaml` → `blueprints/real-cron-blueprint.yaml`
-6. `blueprints/enforcer.blueprint.yaml` → `blueprints/enforcer-blueprint.yaml`
-7. `blueprints/spec-rfc-white-paper-discover.blueprint.yaml` → `blueprints/spec-rfc-white-paper-discover-blueprint.yaml`
-8. `blueprints/human-full-deep-dive.blueprint.yaml` → `blueprints/human-full-deep-dive-blueprint.yaml`
-9. `blueprints/bundle-system.blueprint.yaml` → `blueprints/bundle-system-blueprint.yaml`
-10. `contracts/oob_apply_request.v1.yaml` → `contracts/oob-apply-request-v1.yaml`
-
-### Tools Created
-
-- `ci/naming/check_authoritative_yaml_naming.py` - New naming validation script
-- Updated `ci/naming/strict_validator.py` - Integrated naming checks
-- Updated `scripts/hee_ci_gitops_enforce.sh` - Added naming enforcement
-
-### Validation Status
-
-- **Naming check:** 20 violations found (all files non-compliant)
-- **Path headers:** All files had incorrect headers pointing to old filenames
-- **Scope compliance:** All violations within required scope (contracts/**, blueprints/**)
+## Preconditions Met
+- start_clean_main_required: true (will verify branch state)
+- Working from branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move

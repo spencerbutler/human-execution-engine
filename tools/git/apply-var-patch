@@ -7,8 +7,8 @@ usage() {
 apply_var_patch.sh - apply a unified diff stored in $VAR
 
 Usage:
-  ci/git/apply_var_patch.sh --check
-  ci/git/apply_var_patch.sh --apply
+  tools/git/apply-var-patch --check
+  tools/git/apply-var-patch --apply
 
 Requirements:
   - VAR must contain a unified diff (beginning with "diff --git ...").
