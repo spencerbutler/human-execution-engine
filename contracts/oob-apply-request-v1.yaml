@@ -1,4 +1,4 @@
-# path: contracts/oob_apply_request.v1.yaml
+# path: contracts/oob-apply-request-v1.yaml
 # OOB Apply Request Format v1
 # Agent emits this envelope when requesting out-of-band patch application
 # Operator fills operator field and executes the apply operation
