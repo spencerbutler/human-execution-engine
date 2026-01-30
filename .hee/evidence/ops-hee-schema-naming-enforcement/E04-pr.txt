@@ -4,11 +4,11 @@
 # branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
 
 ## PR Creation
-PR URL: https://github.com/spencerbutler/human-execution-engine/pull/74
+PR URL: https://github.com/spencerbutler/human-execution-engine/pull/82
 
 ## Git Log Summary
 git log -1 --oneline
-049e4fb phase01: schema README + v1 scaffold
+abe8865 (HEAD -> phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move, origin/phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move) ops: move apply-var-patch to tools/ and update docs
 
 ## PR Details
 - Branch: phase/ops-hee-schema-naming-06-docs-and-apply-var-patch-move
