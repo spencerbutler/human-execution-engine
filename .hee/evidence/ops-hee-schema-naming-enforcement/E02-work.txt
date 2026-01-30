@@ -1,0 +1,6 @@
+PHASE=04a
+STEP=E02-work
+DATE_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+ADDED_FIXER:
+ci/naming/fix_yaml_path_header.py

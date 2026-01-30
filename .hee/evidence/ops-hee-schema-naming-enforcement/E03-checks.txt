@@ -1,0 +1,92 @@
+NEEDS_FIX:
+contracts/repo-policy.yaml
+contracts/oob_apply_request.v1.yaml
+blueprints/hee-cron.blueprint.yaml
+blueprints/validator-contract-doctrine.yml
+blueprints/core-tools-doctrine.yml
+blueprints/oper_spencer_dash.blueprint.yaml
+blueprints/spec-hee-agent-concurrency.blueprint.yaml
+blueprints/spec-hee-cron-tooling.blueprint.yaml
+blueprints/real-cron.blueprint.yaml
+blueprints/chat-header-doctrine.yml
+blueprints/enforcer.blueprint.yaml
+blueprints/hee-doctrine.yml
+blueprints/spec-rfc-white-paper-discover.blueprint.yaml
+blueprints/human-full-deep-dive.blueprint.yaml
+blueprints/bundle-system.blueprint.yaml
+blueprints/doctrine/blueprint-doctrine.yaml
+contracts/repo-policy.yaml
+contracts/oob_apply_request.v1.yaml
+blueprints/hee-cron.blueprint.yaml
+blueprints/validator-contract-doctrine.yml
+blueprints/core-tools-doctrine.yml
+blueprints/oper_spencer_dash.blueprint.yaml
+blueprints/spec-hee-agent-concurrency.blueprint.yaml
+blueprints/spec-hee-cron-tooling.blueprint.yaml
+blueprints/real-cron.blueprint.yaml
+blueprints/chat-header-doctrine.yml
+blueprints/enforcer.blueprint.yaml
+blueprints/hee-doctrine.yml
+blueprints/spec-rfc-white-paper-discover.blueprint.yaml
+blueprints/human-full-deep-dive.blueprint.yaml
+blueprints/bundle-system.blueprint.yaml
+blueprints/doctrine/blueprint-doctrine.yaml
+UPDATED:
+contracts/repo-policy.yaml
+contracts/oob_apply_request.v1.yaml
+blueprints/hee-cron.blueprint.yaml
+blueprints/validator-contract-doctrine.yml
+blueprints/core-tools-doctrine.yml
+blueprints/oper_spencer_dash.blueprint.yaml
+blueprints/spec-hee-agent-concurrency.blueprint.yaml
+blueprints/spec-hee-cron-tooling.blueprint.yaml
+blueprints/real-cron.blueprint.yaml
+blueprints/chat-header-doctrine.yml
+blueprints/enforcer.blueprint.yaml
+blueprints/hee-doctrine.yml
+blueprints/spec-rfc-white-paper-discover.blueprint.yaml
+blueprints/human-full-deep-dive.blueprint.yaml
+blueprints/bundle-system.blueprint.yaml
+blueprints/doctrine/blueprint-doctrine.yaml
+OK
+
+GIT_STATUS_PORCELAIN_AFTER_APPLY:
+ M blueprints/bundle-system.blueprint.yaml
+ M blueprints/chat-header-doctrine.yml
+ M blueprints/core-tools-doctrine.yml
+ M blueprints/doctrine/blueprint-doctrine.yaml
+ M blueprints/enforcer.blueprint.yaml
+ M blueprints/hee-cron.blueprint.yaml
+ M blueprints/hee-doctrine.yml
+ M blueprints/human-full-deep-dive.blueprint.yaml
+ M blueprints/oper_spencer_dash.blueprint.yaml
+ M blueprints/real-cron.blueprint.yaml
+ M blueprints/spec-hee-agent-concurrency.blueprint.yaml
+ M blueprints/spec-hee-cron-tooling.blueprint.yaml
+ M blueprints/spec-rfc-white-paper-discover.blueprint.yaml
+ M blueprints/validator-contract-doctrine.yml
+ M contracts/oob_apply_request.v1.yaml
+ M contracts/repo-policy.yaml
+?? ci/naming/
+
+DIFFSTAT:
+ blueprints/bundle-system.blueprint.yaml                 | 1 +
+ blueprints/chat-header-doctrine.yml                     | 1 +
+ blueprints/core-tools-doctrine.yml                      | 1 +
+ blueprints/doctrine/blueprint-doctrine.yaml             | 1 +
+ blueprints/enforcer.blueprint.yaml                      | 1 +
+ blueprints/hee-cron.blueprint.yaml                      | 1 +
+ blueprints/hee-doctrine.yml                             | 1 +
+ blueprints/human-full-deep-dive.blueprint.yaml          | 1 +
+ blueprints/oper_spencer_dash.blueprint.yaml             | 1 +
+ blueprints/real-cron.blueprint.yaml                     | 1 +
+ blueprints/spec-hee-agent-concurrency.blueprint.yaml    | 1 +
+ blueprints/spec-hee-cron-tooling.blueprint.yaml         | 1 +
+ blueprints/spec-rfc-white-paper-discover.blueprint.yaml | 1 +
+ blueprints/validator-contract-doctrine.yml              | 1 +
+ contracts/oob_apply_request.v1.yaml                     | 1 +
+ contracts/repo-policy.yaml                              | 1 +
+ 16 files changed, 16 insertions(+)
+
+ASSERT_NO_VAR_CHANGES:
+OK: no var/** changes
