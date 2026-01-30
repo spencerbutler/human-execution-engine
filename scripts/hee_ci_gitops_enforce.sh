@@ -6,6 +6,7 @@ set -euo pipefail
 # - prompts reference scripts/hee_git_ops.sh
 # - runbook exists
 # - CI workflow includes enforcement step
+# - YAML path header naming enforcement
 #
 # This script should be invoked by .github/workflows/ci.yml.
 
@@ -53,6 +54,19 @@ done
 # CI workflow must call this enforcement script.
 grep -q "scripts/hee_ci_gitops_enforce.sh" .github/workflows/ci.yml \
   || fail "ci.yml must run scripts/hee_ci_gitops_enforce.sh"
+
+# Enforce YAML path header naming compliance
+echo "🔍 Checking YAML path header naming compliance..."
+if [ -f "ci/naming/fix_yaml_path_header.py" ]; then
+  echo "✅ YAML path header script found"
+  # Run the naming check in check mode
+  if ! python3 ci/naming/fix_yaml_path_header.py --check; then
+    fail "YAML path header naming compliance check failed"
+  fi
+  echo "✅ YAML path header naming compliance check passed"
+else
+  fail "YAML path header script not found at ci/naming/fix_yaml_path_header.py"
+fi
 
 # Optional: doc-path alignment guardrail (presence check, not correctness of content)
 # We only enforce that the workflow is no longer hard-coded to legacy docs/*.md.
