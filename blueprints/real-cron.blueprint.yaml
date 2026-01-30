@@ -1,3 +1,4 @@
+# path: blueprints/real-cron.blueprint.yaml
 # Real Cron Blueprint
 # System cron-based execution for HEE jobs without resident processes
 
