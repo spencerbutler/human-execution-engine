@@ -1,0 +1,21 @@
+# path: docs/history/status_capsules/20260130T172538Z-OPS-HEE-Schema-Naming-Enforcement-relay-state.pill.yaml
+
+pill:
+  id: OPS-HEE-Schema-Naming-Enforcement-RELAY-STATE
+  date: 2026-01-30
+  fin_marker: final_handoff
+
+  refs:
+    tag: r2-pre-dric-v1-p08-final
+    phase08_pr: https://github.com/spencerbutler/human-execution-engine/pull/84
+    phase07_pr: https://github.com/spencerbutler/human-execution-engine/pull/83
+    phase06_pr: https://github.com/spencerbutler/human-execution-engine/pull/82
+
+  invariants:
+    - "spool + evidence tracked via .gitignore allowlist"
+    - "validators green at closeout"
+    - "DRIC-v1 exercised; contract artifact TBD"
+
+  evidence_roots:
+    spool: .hee/spool/
+    evidence: .hee/evidence/ops-hee-schema-naming-enforcement/
