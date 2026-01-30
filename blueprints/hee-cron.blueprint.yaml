@@ -1,0 +1,104 @@
+# HEE Cron Blueprint
+# Hardware-aware cron system for recurring jobs
+
+type: hee.blueprint
+blueprint_id: hee-cron.v1
+version: v1
+description: "Hardware-aware cron system for running recurring HEE jobs locally"
+created_at: "2026-01-28T23:41:38-06:00"
+author: "HEE System"
+
+metadata:
+  name: hee-cron
+  intent: "run recurring jobs locally for discovery/maintenance without burning the laptop"
+  priority: P0
+  doctrine:
+    - hw_aware_execution_is_mandatory
+    - jobs_must_be_safe_by_default
+    - no_mutation_without_explicit_gate
+    - every_run_emits_bundle
+
+hw_contract:
+  inputs:
+    - ac_power: required
+    - battery_percent_min: 60
+    - cpu_temp_c_max: 85
+    - loadavg_max: 2.0
+    - idle_seconds_min: 120
+    - network: optional_ok
+  gate_behavior:
+    - if_hw_not_ok: skip_and_log_bundle
+    - never_force_override: true
+
+schedules:
+  frequent_safe:
+    cadence: "*/30 * * * *"
+    jobs:
+      - obs_healthcheck
+      - hg_hee_discover_small
+      - bundle_compact
+  daily_heavy:
+    cadence: "15 2 * * *"
+    jobs:
+      - hg_hee_discover_large
+      - depcheck
+      - bundle_dedupe
+  weekly_deep:
+    cadence: "30 3 * * 0"
+    jobs:
+      - lang_env_rebuild
+      - regression_corpus_refresh
+
+jobs:
+  obs_healthcheck:
+    mode: read_only
+    output: bundle
+    purpose: "verify repo sanity + tool availability without changes"
+  hg_hee_discover_small:
+    mode: read_only
+    limits:
+      max_pills: 5
+      timeout_s: 120
+    output: pills+bundle
+  hg_hee_discover_large:
+    mode: read_only
+    limits:
+      max_pills: 50
+      timeout_s: 900
+    output: pills+bundle
+  depcheck:
+    mode: read_only
+    output: bundle
+    purpose: "verify required/preferred toolbelt; record cost-of-missing"
+  lang_env_rebuild:
+    mode: build_only
+    output: bundle
+    purpose: "recreate language envs deterministically; prove they still build"
+  regression_corpus_refresh:
+    mode: read_only
+    output: bundle
+    purpose: "re-run golden fixtures; detect drift"
+
+outputs:
+  bundle_dir: ".hee/bundles/cron/"
+  audit_log: ".hee/audit/cron.log"
+  pills_dir: ".hee/pills/"
+  retention:
+    keep_days: 30
+    dedupe_by: patch_hash
+
+implementation:
+  core_component: rust_preferred
+  hw_monitoring: system_integration
+  job_runner: async_rust
+  bundle_emitter: integrated
+
+validation_gates:
+  - hw_contract_enforced
+  - read_only_jobs_only
+  - bundle_emission_verified
+  - audit_logging_complete
+
+notes:
+  - "hw-aware gating is contract-level: skip is success if logged"
+  - "cron is read-only unless a job explicitly declares mutation and is separately gated"

@@ -1,0 +1,323 @@
+# Bundle System Blueprint
+# Comprehensive blueprint defining the multi-layer bundle architecture for HEE
+
+type: hee.blueprint
+blueprint_id: bundle-system.v1
+version: v1
+description: "Multi-layer bundle system for HEE: BIOS, UEFI, BMC, Initramfs, Hypervisor, Terminal"
+created_at: "2026-01-29T00:00:00-06:00"
+author: "HEE System"
+
+metadata:
+  name: bundle-system
+  intent: "Define authoritative bundle system with one environment == one bundle; bundles compose into boot-to-mux chain"
+  priority: P0
+  doctrine:
+    - one_environment_one_bundle
+    - bundles_compose_boot_to_mux_chain
+    - firmware_bundles_no_processes_ptys_detach
+    - explicit_non_goals_prevent_tmux_clone_fantasy_creep
+    - every_bundle_defines_exit_handoff_contract
+
+# Bundle System Verdict: YES (correct)
+# Rule: one environment == one bundle; bundles compose into a boot-to-mux chain
+# Guardrails:
+#   - firmware bundles must not claim processes/PTYs/detach; only UI + handoff
+#   - each bundle has explicit non-goals to prevent tmux-clone fantasy creep
+#   - every bundle must define an exit/handoff contract
+
+bundles:
+  - id: BUNDLE-BIOS-LEGACY-UI
+    layer: "BIOS (legacy)"
+    goal: "minimal pre-boot selector + diagnostics screen"
+    can_do:
+      - "text UI"
+      - "simple key handling"
+      - "static/dumb panes"
+    cannot_do:
+      - "processes"
+      - "PTYs"
+      - "real mux"
+      - "scrollback"
+      - "network attach/detach"
+    deliverables:
+      - "boot menu + config toggles"
+      - "handoff selector (which boot path next)"
+    handoff:
+      to: "UEFI or OS bootloader"
+      contract: "writes choice to known location (NVRAM/boot order) then exits"
+    cost_shape: "weeks (but low ROI); high pain debugging"
+    risk:
+      - "brick-risk via bad firmware flashing"
+      - "hardware-specific behavior"
+    non_goals:
+      - "concurrent shell sessions"
+      - "persistent terminal state"
+      - "network connectivity"
+      - "complex user interaction"
+
+  - id: BUNDLE-UEFI-DASHBOARD
+    layer: "UEFI app"
+    goal: "pre-boot dashboard / operator console (NOT a mux)"
+    can_do:
+      - "event loop UI"
+      - "basic panes layout"
+      - "device info"
+      - "boot selection"
+    cannot_do:
+      - "concurrent shells"
+      - "PTY mux semantics"
+      - "persistent sessions"
+    deliverables:
+      - "pane-like dashboard (views: boot targets, hw status, logs if available)"
+      - "operator actions: choose boot profile, toggle safe flags"
+      - "handoff launcher"
+    handoff:
+      to: "INITRAMFS-MUX (preferred) or normal OS"
+      contract: "sets boot params + optional signed token; chainloads bootloader/kernel"
+    cost_shape: "1–3 months for solid UI + robustness"
+    risk:
+      - "driver/protocol variance"
+      - "secure boot signing complexity"
+    non_goals:
+      - "full terminal multiplexing"
+      - "session persistence across reboots"
+      - "network-based remote access"
+
+  - id: BUNDLE-BMC-OPENBMC-MUX
+    layer: "BMC / OpenBMC (Linux present)"
+    goal: "real mux runs on BMC for out-of-band ops"
+    can_do:
+      - "tmux/zellij"
+      - "ssh"
+      - "logs"
+      - "remote attach"
+    cannot_do:
+      - "be invisible to security review"
+      - "assume resources are plentiful"
+    deliverables:
+      - "hardened ssh entry + audited binaries"
+      - "mux profiles (sessions: console/logs/diag)"
+      - "rate-limited logging + rotation"
+    handoff:
+      to: "none (sidecar control plane)"
+      contract: "manages host via IPMI/Redfish/serial-over-lan; never touches host FS"
+    cost_shape: "days–weeks (if using tmux/zellij), months if building polished UX"
+    risk:
+      - "security surface"
+      - "compliance"
+      - "vendor lock-in"
+    non_goals:
+      - "host OS modification"
+      - "boot process interference"
+      - "primary console replacement"
+
+  - id: BUNDLE-INITRAMFS-MUX
+    layer: "early userspace (initramfs/minimal Linux)"
+    goal: "earliest *real* mux: sessions/panes/scrollback + guardrailed ops"
+    can_do:
+      - "PTYs"
+      - "processes"
+      - "network"
+      - "detach/attach"
+      - "real logging"
+    deliverables:
+      - "initramfs image with: busybox + ssh + tmux OR zellij"
+      - "HEE guardrails: signed runbooks, readonly defaults, explicit mount gates"
+      - "session layout: 3x3 grid preset + role panes"
+    handoff:
+      to: "full OS"
+      contract: "clean pivot_root/switch_root; preserves logs; leaves breadcrumbs"
+    cost_shape: "1–4 weeks for usable; 1–3 months for hardened + reproducible build"
+    risk:
+      - "boot fragility"
+      - "network bring-up variance"
+      - "secrets handling"
+    non_goals:
+      - "permanent system modification"
+      - "user data persistence"
+      - "complex application hosting"
+
+  - id: BUNDLE-HYPERVISOR-CONSOLE-MUX
+    layer: "hypervisor / VM console layer"
+    goal: "mux as a management plane around guests/hosts"
+    can_do:
+      - "mux on host OS"
+      - "attach to serial consoles"
+      - "snapshot-aware workflows"
+    deliverables:
+      - "host-side mux layouts per target (guest serial, logs, metrics, runbook)"
+      - "hooks: start/stop/attach sequences"
+    handoff:
+      to: "guest OS consoles"
+      contract: "console endpoints exposed; no guest mutation without explicit gate"
+    cost_shape: "days–weeks"
+    risk:
+      - "console reliability"
+      - "permission sprawl"
+    non_goals:
+      - "guest OS modification"
+      - "performance-critical path"
+      - "storage management"
+
+  - id: BUNDLE-TERMEMU-MUX
+    layer: "terminal emulator owns mux (WezTerm-style)"
+    goal: "best UX mux without tmux; consistent rendering + splits"
+    can_do:
+      - "tabs/splits"
+      - "ssh domains"
+      - "nice fonts/ligatures"
+      - "per-pane profiles"
+    deliverables:
+      - "terminal config profiles (HEE layouts, keymaps, 3x3 spawn)"
+      - "session recipes (connect targets + open panes)"
+    handoff:
+      to: "remote shells / tmux optional"
+      contract: "if detach required, chain into tmux on remote"
+    cost_shape: "hours–days to configure; months+ if building your own emulator"
+    risk:
+      - "vendor feature drift"
+      - "not a server-side detach substitute"
+    non_goals:
+      - "server-side session management"
+      - "cross-platform compatibility guarantees"
+      - "performance optimization"
+
+chains:
+  - id: CHAIN-PREFERRED
+    summary: "firmware does selection; earliest real mux is initramfs; BMC is optional sidecar"
+    flow:
+      - "BUNDLE-UEFI-DASHBOARD"
+      - "BUNDLE-INITRAMFS-MUX"
+      - "full OS (optional tmux)"
+    description: "Preferred boot-to-mux chain for maximum early access with real multiplexing"
+
+  - id: CHAIN-OOB
+    summary: "separate control plane: BMC mux for rescue + visibility"
+    flow:
+      - "BUNDLE-BMC-OPENBMC-MUX"
+      - "host via SOL/Redfish"
+    description: "Out-of-band management chain for rescue scenarios and hardware monitoring"
+
+  - id: CHAIN-UX-FIRST
+    summary: "terminal emulator provides splits; remote tmux provides detach"
+    flow:
+      - "BUNDLE-TERMEMU-MUX"
+      - "remote tmux/zellij (optional)"
+    description: "User experience focused chain prioritizing local terminal features"
+
+next_iters:
+  iter_27:
+    pick_one_chain: "CHAIN-PREFERRED"
+    define_contracts:
+      - "boot params schema"
+      - "log persistence + rotation"
+      - "secrets boundary (what exists pre-boot vs post-boot)"
+    acceptance_tests:
+      - "reboot loop safety: failure returns to safe boot selector"
+      - "mux grid9 spawns reliably"
+      - "detach/attach works over ssh in initramfs"
+
+implementation_phases:
+  phase_1:
+    name: "Foundation Layer"
+    priority: P0
+    bundles:
+      - BUNDLE-BIOS-LEGACY-UI
+      - BUNDLE-UEFI-DASHBOARD
+    deliverables:
+      - "Boot selection UI framework"
+      - "Handoff protocol specification"
+    timeline: "4-6 weeks"
+
+  phase_2:
+    name: "Early Userspace Mux"
+    priority: P0
+    bundles:
+      - BUNDLE-INITRAMFS-MUX
+    deliverables:
+      - "Initramfs multiplexing environment"
+      - "HEE guardrails implementation"
+      - "3x3 grid session management"
+    timeline: "6-12 weeks"
+
+  phase_3:
+    name: "Management Plane"
+    priority: P1
+    bundles:
+      - BUNDLE-BMC-OPENBMC-MUX
+      - BUNDLE-HYPERVISOR-CONSOLE-MUX
+    deliverables:
+      - "BMC multiplexing services"
+      - "Hypervisor console integration"
+      - "Remote access protocols"
+    timeline: "8-16 weeks"
+
+  phase_4:
+    name: "User Experience Layer"
+    priority: P2
+    bundles:
+      - BUNDLE-TERMEMU-MUX
+    deliverables:
+      - "Terminal emulator integration"
+      - "Session recipe system"
+      - "Cross-platform configuration"
+    timeline: "2-4 weeks"
+
+quality_assurance:
+  deterministic_rendering: true
+  security_review_required: true
+  performance_benchmarks:
+    - "UEFI dashboard load time < 2s"
+    - "Initramfs mux startup < 5s"
+    - "BMC remote access latency < 100ms"
+  compliance:
+    - "Secure boot compatible"
+    - "FIPS 140-2 compliance (where applicable)"
+    - "SOC 2 Type II ready"
+
+risk_mitigation:
+  brick_risk:
+    - "Dual firmware images with rollback"
+    - "Hardware-specific validation suites"
+  security_surface:
+    - "Principle of least privilege"
+    - "Network segmentation"
+    - "Audit logging"
+  performance_impact:
+    - "Resource usage monitoring"
+    - "Graceful degradation paths"
+    - "Configurable feature sets"
+
+monitoring_and_observability:
+  metrics:
+    - "Bundle startup time"
+    - "Handoff success rate"
+    - "Session persistence rate"
+    - "Error rates by layer"
+  logging:
+    - "Structured logging across all bundles"
+    - "Centralized log aggregation"
+    - "Boot-to-mux chain tracing"
+  alerting:
+    - "Critical path failures"
+    - "Security violations"
+    - "Performance degradation"
+
+deployment_strategy:
+  canary_deployment: true
+  rollback_procedures:
+    - "Firmware rollback mechanisms"
+    - "Initramfs fallback images"
+    - "BMC service restart protocols"
+  validation_gates:
+    - "Boot loop prevention"
+    - "Security compliance"
+    - "Performance benchmarks"
+
+documentation_requirements:
+  - "Bundle interface specifications"
+  - "Handoff contract documentation"
+  - "Security hardening guides"
+  - "Troubleshooting runbooks"
+  - "Performance tuning guides"
