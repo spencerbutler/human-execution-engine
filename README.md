@@ -55,6 +55,10 @@ RFCs may reference doctrine identities but MUST NOT define them.
 Automation and enforcement that **consume doctrine**.
 These are implementation details, not sources of truth.
 
+### `tools/`
+Operator tools and utilities that support HEE execution.
+Includes the `apply-var-patch` tool for applying patches from VAR environment variables.
+
 ---
 
 ## Doctrine Rules (Non-Negotiable)
