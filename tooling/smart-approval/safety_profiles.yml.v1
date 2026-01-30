@@ -1,0 +1,118 @@
+command_safety_profiles:
+  version: 1
+  profiles:
+    read_only:
+      description: no_state_change_expected
+      allowlist_prefixes:
+        - ls
+        - cat
+        - pwd
+        - whoami
+        - id
+        - date
+        - uname
+        - which
+        - type
+        - env
+        - printenv
+        - echo
+        - printf
+        - head
+        - tail
+        - sed
+        - awk
+        - rg
+        - grep
+        - find
+        - tree
+        - stat
+        - file
+        - du
+        - df
+        - ps
+        - top
+        - git
+        - gh
+      allowlist_exact:
+        - git status
+        - git diff
+        - git diff --cached
+        - git log
+        - git show
+        - git branch
+        - git remote -v
+        - git rev-parse --abbrev-ref HEAD
+        - git rev-parse HEAD
+        - git describe --tags
+        - git ls-files
+        - git ls-tree
+        - gh status
+        - gh repo view
+        - gh pr view
+      denylist_contains:
+        - " >"
+        - ">>"
+        - "| tee"
+        - "tee "
+        - "sudo"
+        - "su "
+        - "rm "
+        - "mv "
+        - "cp "
+        - "chmod"
+        - "chown"
+        - "kill"
+        - "pkill"
+        - "systemctl"
+        - "service "
+        - "shutdown"
+        - "reboot"
+        - "curl "
+        - "wget "
+        - "scp "
+        - "ssh "
+        - "docker "
+        - "podman "
+        - "kubectl "
+    low_risk:
+      description: bounded_local_state_change_expected
+      require_working_directory_clean: true
+      allowlist_prefixes:
+        - mkdir
+        - touch
+        - git
+      allowlist_exact:
+        - mkdir -p
+        - git add -p
+        - git add
+        - git restore --staged
+        - git checkout --
+        - git restore
+      denylist_contains:
+        - "rm -rf"
+        - "git reset --hard"
+        - "git clean"
+        - "git push"
+        - "git tag"
+        - "git commit"
+        - "git rebase"
+        - "git cherry-pick"
+        - "git merge"
+        - "npm "
+        - "pnpm "
+        - "yarn "
+        - "pip "
+        - "brew "
+        - "apt "
+        - "dnf "
+        - "pacman "
+        - "cargo "
+        - "go "
+        - "make"
+  decision_rules:
+    - rule: match_read_only_allowlist_and_not_denied
+      action: auto_approve
+    - rule: match_low_risk_allowlist_and_clean_repo_and_not_denied
+      action: auto_approve
+    - rule: any_denylist_match_or_ambiguity
+      action: require_explicit_approval
