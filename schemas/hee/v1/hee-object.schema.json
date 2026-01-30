@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://human-execution-engine.org/schemas/hee/v1/hee-object.schema.json",
+  "title": "HEE Object Envelope Schema",
+  "description": "Envelope schema for all HEE objects with required metadata fields",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "description": "API version of the HEE object",
+      "pattern": "^hee/v[0-9]+(\\.[0-9]+)?$"
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind of the HEE object",
+      "minLength": 1,
+      "pattern": "^[A-Z][A-Za-z0-9]*$"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata for the HEE object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the HEE object",
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the HEE object"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Labels for the HEE object",
+          "patternProperties": {
+            "^[a-z][a-z0-9-]*[a-z0-9]$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations for the HEE object",
+          "patternProperties": {
+            "^[a-z][a-z0-9-]*[a-z0-9]$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "description": "Specification for the HEE object"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "apiVersion": "hee/v1",
+      "kind": "Blueprint",
+      "metadata": {
+        "name": "example-blueprint",
+        "description": "An example blueprint",
+        "labels": {
+          "team": "ops"
+        }
+      },
+      "spec": {}
+    }
+  ]
+}
