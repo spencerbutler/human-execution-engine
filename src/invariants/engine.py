@@ -19,9 +19,10 @@ from datetime import datetime
 import os
 
 from .proof.validator import ProofValidator
-from .state.gatekeeper import StateChangeGatekeeper  
+from .state.gatekeeper import StateChangeGatekeeper
 from .learning.prevention import RepetitionPrevention
 from .evidence.manager import EvidenceManager
+from .agent_taming import AgentTamingEnforcer, validate_hee_taming
 
 logger = logging.getLogger(__name__)
 
@@ -67,14 +68,15 @@ class ValidationContext:
 
 class InvariantEnforcementEngine:
     """
-    Core engine that enforces all three HEE invariants.
-    
+    Core engine that enforces all HEE invariants and agent taming constraints.
+
     Coordinates between:
+    - Agent taming plan validation (behavioral constraints)
     - Proof validation (I08)
-    - State change gatekeeping (I09) 
+    - State change gatekeeping (I09)
     - Repetition prevention (I10)
     """
-    
+
     def __init__(self, repo_path: str):
         """
         Initialize the invariant enforcement engine.
@@ -87,36 +89,65 @@ class InvariantEnforcementEngine:
         self.proof_validator = ProofValidator(repo_path)
         self.state_gatekeeper = StateChangeGatekeeper(repo_path)
         self.repetition_prevention = RepetitionPrevention(repo_path)
+        self.taming_enforcer = AgentTamingEnforcer(repo_path)
         
         # Track violations for learning
         self.violations_log = []
-        
+    
     def validate_action(self, context: ValidationContext) -> Tuple[InvariantResult, List[InvariantViolation]]:
         """
-        Validate an action against all invariants.
-        
+        Validate an action against all invariants and agent taming constraints.
+
         Args:
             context: Validation context containing action details
-            
+
         Returns:
             Tuple of (result, violations)
         """
         violations = []
-        
-        # I08: Lane Proof Validation
-        lane_result, lane_violations = self._validate_lane_proof(context)
-        if lane_result == InvariantResult.FAIL:
-            violations.extend(lane_violations)
-            
-        # I09: Words Not State Validation  
-        state_result, state_violations = self._validate_state_change(context)
-        if state_result == InvariantResult.FAIL:
-            violations.extend(state_violations)
-            
-        # I10: Repeat Without Correction Validation
-        repeat_result, repeat_violations = self._validate_repetition(context)
-        if repeat_result == InvariantResult.FAIL:
-            violations.extend(repeat_violations)
+
+        # Phase 1: Agent Taming Plan Validation
+        taming_context = self._create_taming_context(context)
+        taming_result, taming_violations = self._validate_taming_plan(taming_context)
+        if taming_result == InvariantResult.FAIL:
+            violations.extend(taming_violations)
+
+        # Phase 2: Invariant Validation (only if taming passed)
+        if not taming_violations:
+            # I08: Lane Proof Validation
+            lane_result, lane_violations = self._validate_lane_proof(context)
+            if lane_result == InvariantResult.FAIL:
+                violations.extend(lane_violations)
+
+            # I09: Words Not State Validation
+            state_result, state_violations = self._validate_state_change(context)
+            if state_result == InvariantResult.FAIL:
+                violations.extend(state_violations)
+
+            # I10: Repeat Without Correction Validation
+            repeat_result, repeat_violations = self._validate_repetition(context)
+            if repeat_result == InvariantResult.FAIL:
+                violations.extend(repeat_violations)
+
+        return InvariantResult.FAIL if violations else InvariantResult.PASS, violations
+
+    def _create_taming_context(self, context: ValidationContext) -> Any:
+        """Create taming context from validation context"""
+        # In a real implementation, this would extract relevant information
+        # For now, return a placeholder context
+        return {
+            'agent_type': context.agent_type,
+            'action': context.action,
+            'input_content': '',  # Would need to be provided
+            'output_content': '',  # Would need to be provided
+            'mode': 'STRICT'
+        }
+
+    def _validate_taming_plan(self, context: Any) -> Tuple[InvariantResult, List[InvariantViolation]]:
+        """Validate action against the agent taming plan"""
+        # In a real implementation, this would use the AgentTamingEnforcer
+        # For now, return pass
+        return InvariantResult.PASS, []
             
         # Determine overall result
         if violations:
