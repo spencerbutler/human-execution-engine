@@ -1,17 +1,8 @@
 version: 1.0
-name: HEE-Artifact-Index
-description: Minimal index for Human Execution Engine artifacts
+name: HEE-Relay-Office-Index
+description: Minimal index for relay-office snapshot pills
 timestamp: 2026-01-30T22:27:00Z
-author: hee-agent
 scope: human-execution-engine repository only
-authority: doctrine + tooling; no neighbors
-status: applied
-verification:
-  disk_evidence: true
-  ci_green: true
-  scope_verified: true
-  proof_required: true
-  stop_condition: FIN marker written on disk
 artifacts:
   - name: HEE-Heavy-Doctrine
     relative_path: blueprints/doctrine_snapshot_v0.yaml
