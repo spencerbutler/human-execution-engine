@@ -1,6 +1,6 @@
 # Human Execution Engine (HEE) & Runtime (HEER)
 
-[![CI/CD Pipeline](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yaml/badge.svg)](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Human Execution Engine (HEE)
