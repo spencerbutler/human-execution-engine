@@ -1,6 +1,7 @@
+# path: blueprints/hee-squeeze-citation-strip-v0.yaml
 version: 1.0
-name: HEE-Prio-Interrogator
-description: Priority Interrogator for Human Execution Engine
+name: HEE-Squeeze-Citation-Strip
+description: Human Execution Engine Citation Stripping Component
 timestamp: 2026-01-30T22:27:00Z
 author: hee-agent
 scope: human-execution-engine repository only

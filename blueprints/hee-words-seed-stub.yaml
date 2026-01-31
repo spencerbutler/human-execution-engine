@@ -1,6 +1,7 @@
+# path: blueprints/hee-words-seed-stub.yaml
 version: 1.0
-name: HEE-Human
-description: Human Execution Engine Human Component
+name: HEE-Words-Seed-Stub
+description: Human Execution Engine Words Seed Stub
 timestamp: 2026-01-30T22:27:00Z
 author: hee-agent
 scope: human-execution-engine repository only

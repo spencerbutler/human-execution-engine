@@ -113,7 +113,7 @@ pill:
       forced_tooling: [git, rg]
     - phase_id: 07-plan-create-blueprint
       branch: phase/ops-hee-schema-naming-07-plan-create-blueprint
-      touches: [blueprints/plan/plan-create.blueprint.yaml]
+      touches: [blueprints/plan/plan-create-blueprint.yaml]
       forced_tooling: [git]
 
   disk_evidence:

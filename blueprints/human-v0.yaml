@@ -1,12 +1,13 @@
+# path: blueprints/human-v0.yaml
 version: 1.0
-name: HEE-Traverse-Proto
-description: Human Execution Engine Traverse Protocol
+name: HEE-Human
+description: Human Execution Engine Human Component
 timestamp: 2026-01-30T22:27:00Z
 author: hee-agent
 scope: human-execution-engine repository only
 authority: doctrine + tooling; no neighbors
-_APP_NAME: hee
 status: applied
+_APP_NAME: hee
 verification:
   disk_evidence: true
   ci_green: true
