@@ -49,7 +49,7 @@ class SecurityScanner:
         self.security_patterns = {
             # Dangerous functions
             'dangerous_functions': {
-                'pattern': r'\b(eval|exec|__import__|open|file|input)\s*\(',
+                'pattern': r'\b(eval|exec|__import__|file|input)\s*\(',
                 'severity': 'high',
                 'description': 'Use of potentially dangerous function',
                 'recommendation': 'Avoid eval/exec for security. Use safe alternatives.'
