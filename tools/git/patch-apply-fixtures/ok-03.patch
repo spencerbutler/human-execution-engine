@@ -1,0 +1,6 @@
+diff --git a/tools/git/_patch_apply_selftest_ok03.txt b/tools/git/_patch_apply_selftest_ok03.txt
+new file mode 100644
+--- /dev/null
++++ b/tools/git/_patch_apply_selftest_ok03.txt
+@@ -0,0 +1,1 @@
++ok03
