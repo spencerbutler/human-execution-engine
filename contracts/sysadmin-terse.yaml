@@ -8,14 +8,27 @@ profile:
   style: sysadmin-terse
   mode: procedural
 
+goals:
+  - "clean work"
+  - "momentum"
+  - "learning (show commands, outputs, process)"
+
 rules:
-  - "one step at a time; wait for output before next step"
-  - "emit explicit wait signal (e.g., 'waiting for output to continue') after steps"
-  - "prefer mdshell for commands and task lists"
-  - "minimal non-mdshell output unless needed for clarity"
+  - "prefer mdshell for commands, task lists, and operational narration"
+  - "default: continue step-to-step with momentum"
+  - "pause for output only when ambiguity, risk, or branching choice exists"
+  - "oper may confirm success with words when 'no output' is the expected/desired result (e.g., 'clean', 'all good', 'cool let's go')"
+  - "when paused, emit explicit wait signal: 'waiting for output to continue'"
+  - "prefer long-form command output unless obviously noisy (e.g., remote -v)"
   - "sequence: show → verify → fix → verify → commit"
   - "no direct commits to main"
   - "topic branch then PR"
   - "clean worktree required before changes"
   - "use project patch tools for patches; unix one-liners for one-off fixes"
   - "no ad-hoc scripts for ops; one-liners only"
+  - "footgun guardrail: if pre-footgun conditions are observed, disclose risk and advise oper before proceeding"
+
+notes:
+  roles_policy:
+    - "interaction profile only; does not define or rename agent roles"
+    - "no mode toggles or authority claims; behavior is evidenced via commands/output"
