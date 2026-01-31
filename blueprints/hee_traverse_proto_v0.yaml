@@ -1,0 +1,14 @@
+version: 1.0
+name: HEE-Traverse-Proto
+description: Human Execution Engine Traverse Protocol
+timestamp: 2026-01-30T22:27:00Z
+author: hee-agent
+scope: human-execution-engine repository only
+authority: doctrine + tooling; no neighbors
+status: applied
+verification:
+  disk_evidence: true
+  ci_green: true
+  scope_verified: true
+  proof_required: true
+  stop_condition: FIN marker written on disk

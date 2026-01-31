@@ -56,14 +56,14 @@ class TestCommandSafetyEvaluator(unittest.TestCase):
         with patch.object(self.evaluator, 'check_git_status', return_value=True):
             result = self.evaluator.evaluate_command("git add .")
             self.assertFalse(result["approval_required"])
-            self.assertIn("low_risk", result["reason"])
+            self.assertIn("low_risk_exact_clean", result["reason"])
     
     def test_low_risk_dirty_repo(self):
         """Test low-risk command in dirty repository requires approval"""
         with patch.object(self.evaluator, 'check_git_status', return_value=False):
             result = self.evaluator.evaluate_command("git add .")
             self.assertTrue(result["approval_required"])
-            self.assertIn("dirty", result["reason"])
+            self.assertIn("low_risk_exact_dirty", result["reason"])
     
     def test_dangerous_command_blocked(self):
         """Test dangerous commands are always blocked"""
