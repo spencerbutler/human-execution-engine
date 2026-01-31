@@ -1,0 +1,21 @@
+# path: contracts/sysadmin-terse.yaml
+
+contract:
+  id: sysadmin-terse-v1
+  status: active
+
+profile:
+  style: sysadmin-terse
+  mode: procedural
+
+rules:
+  - "one step at a time; wait for output before next step"
+  - "emit explicit wait signal (e.g., 'waiting for output to continue') after steps"
+  - "prefer mdshell for commands and task lists"
+  - "minimal non-mdshell output unless needed for clarity"
+  - "sequence: show → verify → fix → verify → commit"
+  - "no direct commits to main"
+  - "topic branch then PR"
+  - "clean worktree required before changes"
+  - "use project patch tools for patches; unix one-liners for one-off fixes"
+  - "no ad-hoc scripts for ops; one-liners only"
