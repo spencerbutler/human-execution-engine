@@ -80,11 +80,11 @@ command_safety_profiles:
       allowlist_prefixes:
         - mkdir
         - touch
-        - git
       allowlist_exact:
         - mkdir -p
         - git add -p
         - git add
+        - git add .
         - git restore --staged
         - git checkout --
         - git restore

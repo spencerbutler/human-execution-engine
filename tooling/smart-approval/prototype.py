@@ -70,37 +70,48 @@ class CommandSafetyEvaluator:
         for profile_name, profile in self.profiles['command_safety_profiles']['profiles'].items():
             if 'denylist_contains' in profile:
                 for denied in profile['denylist_contains']:
-                    if denied in full_command:
+                    # Trim whitespace from denied patterns for matching
+                    trimmed_denied = denied.strip()
+                    if trimmed_denied in full_command:
                         return {
                             "approval_required": True, 
                             "confidence": 1.0, 
                             "reason": f"denied_pattern_{profile_name}",
-                            "denied_pattern": denied
+                            "denied_pattern": trimmed_denied
                         }
-        
-        # Check read_only profile
-        read_only = self.profiles['command_safety_profiles']['profiles']['read_only']
-        if command_base in read_only.get('allowlist_prefixes', []):
-            return {"approval_required": False, "confidence": 0.9, "reason": "read_only_prefix"}
-        
-        if full_command in read_only.get('allowlist_exact', []):
-            return {"approval_required": False, "confidence": 1.0, "reason": "read_only_exact"}
-        
+
         # Check low_risk profile (requires clean working directory)
         low_risk = self.profiles['command_safety_profiles']['profiles']['low_risk']
         is_clean = self.check_git_status()
-        
-        if command_base in low_risk.get('allowlist_prefixes', []):
-            if is_clean:
-                return {"approval_required": False, "confidence": 0.8, "reason": "low_risk_prefix_clean"}
-            else:
-                return {"approval_required": True, "confidence": 0.9, "reason": "low_risk_prefix_dirty"}
-        
+
+        # First check for exact matches in low_risk
         if full_command in low_risk.get('allowlist_exact', []):
             if is_clean:
                 return {"approval_required": False, "confidence": 0.95, "reason": "low_risk_exact_clean"}
             else:
                 return {"approval_required": True, "confidence": 0.95, "reason": "low_risk_exact_dirty"}
+
+        # Then check for prefix matches in low_risk
+        if command_base in low_risk.get('allowlist_prefixes', []):
+            # For prefix matches, check if the full command matches any exact commands
+            if any(full_command.startswith(exact) for exact in low_risk.get('allowlist_exact', [])):
+                if is_clean:
+                    return {"approval_required": False, "confidence": 0.95, "reason": "low_risk_exact_clean"}
+                else:
+                    return {"approval_required": True, "confidence": 0.95, "reason": "low_risk_exact_dirty"}
+            else:
+                if is_clean:
+                    return {"approval_required": False, "confidence": 0.8, "reason": "low_risk_prefix_clean"}
+                else:
+                    return {"approval_required": True, "confidence": 0.9, "reason": "low_risk_prefix_dirty"}
+
+# Check read_only profile
+        read_only = self.profiles['command_safety_profiles']['profiles']['read_only']
+        if full_command in read_only.get('allowlist_exact', []):
+            return {"approval_required": False, "confidence": 1.0, "reason": "read_only_exact"}
+
+        if command_base in read_only.get('allowlist_prefixes', []):
+            return {"approval_required": False, "confidence": 0.9, "reason": "read_only_prefix"}
         
         # Default: require approval for unknown commands
         return {"approval_required": True, "confidence": 0.5, "reason": "unknown_command"}
