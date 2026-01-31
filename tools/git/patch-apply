@@ -21,10 +21,14 @@ def read_patch(args):
 
     var = os.environ.get("VAR", "")
     if var:
+        s = var.strip()
         if "diff --git" in var:
             return var.encode(), "env:VAR"
         if var in os.environ:
             return os.environ[var].encode(), f"env:VAR->{var}"
+        if s and os.path.exists(s):
+            return var.encode(), "env:VAR"
+        return var.encode(), "env:VAR"
 
     die("no patch input found")
 
@@ -38,10 +42,26 @@ def normalize(b):
     return b
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        epilog=("INPUT PRECEDENCE:\n"
+                "  1) --file PATH\n"
+                "  2) --patch TEXT\n"
+                "  3) stdin (non-TTY, non-empty)\n"
+                "  4) env VAR: if contains diff --git => patch text; else treat as indirection name\n"\
+                "VALIDATION:\n"
+                "  - normalizes CRLF->LF, strips BOM, trims leading whitespace\n"
+                "  - ensures trailing newline\n"
+                "  - hard-fails unless patch starts with: diff --git\n"\
+                "APPLY:\n"
+                "  - default uses: git apply\n"
+                "  - --check uses: git apply --check\n"
+                "  - --index (if used) stages via git apply --index\n"),
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     ap.add_argument("--file")
     ap.add_argument("--patch")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--index", action="store_true")
     ap.add_argument("--debug", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
@@ -50,6 +70,16 @@ def main():
         return selftest()
 
     raw, src = read_patch(args)
+
+    # Guard: env content accidentally passed as a file path
+    if src.startswith("env:"):
+        try:
+            s = raw.decode(errors="ignore").strip()
+        except Exception:
+            s = ""
+        if s and os.path.exists(s):
+            die(f"patch input looks like a path: {s} (use --file)")
+
     raw = normalize(raw)
 
     if not raw.startswith(b"diff --git"):
@@ -59,6 +89,8 @@ def main():
         print(f"[debug] source={src} bytes={len(raw)}", file=sys.stderr)
 
     cmd = ["git", "apply"]
+    if args.index:
+        cmd.append("--index")
     if args.check:
         cmd.append("--check")
 
