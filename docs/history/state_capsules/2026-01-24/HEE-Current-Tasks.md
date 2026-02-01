@@ -155,7 +155,7 @@ Optimized HEE prompts for Groq free tier usage and analyzed agent benefits.
 
 ### CI/CD Configuration
 
-- **Main workflow**: `.github/workflows/ci.yml`
+- **Main workflow**: `.github/workflows/ci.yaml`
 - **Pre-commit config**: `.pre-commit-config.yaml`
 - **Security scanning**: `scripts/security_scanner.py`
 

@@ -91,7 +91,7 @@ This repository has achieved 100% HEE compliance with advanced automation system
 
 ### CI/CD Configuration
 
-- **Main workflow**: `.github/workflows/ci.yml`
+- **Main workflow**: `.github/workflows/ci.yaml`
 - **Pre-commit config**: `.pre-commit-config.yaml`
 - **Security scanning**: `scripts/security_scanner.py`
 

@@ -279,7 +279,7 @@ def sanitize_input(text):
 
 #### Check CI Configuration
 ```yaml
-# .github/workflows/ci.yml
+# .github/workflows/ci.yaml
 name: HEE CI Pipeline
 on:
   pull_request:

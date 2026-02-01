@@ -160,7 +160,7 @@ jobs:
 
 **Steps**:
 
-1. Update `.github/workflows/ci.yml` with conflict prevention checks
+1. Update `.github/workflows/ci.yaml` with conflict prevention checks
 2. Add merge readiness validation to pull request checks
 3. Implement automated rebase validation
 4. Create conflict prevention scoring system
