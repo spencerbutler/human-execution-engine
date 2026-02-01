@@ -11,3 +11,13 @@ Artifacts:
 - template: `tools/sqz/sqz-roll.template.txt`
 
 Rule: unknown ≠ negative. If the source is unreachable/unreadable, remain UNKNOWN.
+
+## HEE shapes (v0)
+
+```mermaid
+flowchart LR
+  BAR["— bar"] --> DOUPLE["Y douple"]
+  DOUPLE --> STOOL["△ stool"]
+  STOOL --> CITY["□ neighborhood/city"]
+  CITY --> COUNTRY["○ country"]
+```
