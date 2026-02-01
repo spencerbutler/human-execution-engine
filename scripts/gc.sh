@@ -444,23 +444,23 @@ task_unused_scripts() {
   run_task "unused_scripts" "
     set -euo pipefail
     cd '$GC_ROOT'
-    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > '$GC_REPORTS/_scripts_all.txt' || true
+    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > $GC_REPORTS/_scripts_all.txt' || true
 
     # gather reference surfaces (best-effort)
-    touch '$GC_REPORTS/_refs.txt'
+    touch $GC_REPORTS/_refs.txt'
     if command -v rg >/dev/null 2>&1; then
       rg -n --no-heading -S \"scripts/|\\./scripts/\" .github Makefile makefile docs prompts 2>/dev/null \
-        | awk -F: '{print \$0}' >> '$GC_REPORTS/_refs.txt' || true
+        | awk -F: '{print \$0}' >> $GC_REPORTS/_refs.txt' || true
     else
       # fallback: grep (no PCRE)
-      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> '$GC_REPORTS/_refs.txt' || true
+      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> $GC_REPORTS/_refs.txt' || true
     fi
 
     python3 - <<'PY' > '$report'
 import os, re, subprocess, datetime
 root=os.getcwd()
-scripts=open('$GC_REPORTS/_scripts_all.txt','r',encoding='utf-8',errors='replace').read().splitlines()
-refs=open('$GC_REPORTS/_refs.txt','r',encoding='utf-8',errors='replace').read()
+scripts=open($GC_REPORTS/_scripts_all.txt','r',encoding='utf-8',errors='replace').read().splitlines()
+refs=open($GC_REPORTS/_refs.txt','r',encoding='utf-8',errors='replace').read()
 cands=[]
 for s in scripts:
     if not s.strip(): continue
@@ -538,7 +538,7 @@ generate_metrics_and_reports() {
 
   cruft_kv="$(python3 - <<'PY'
 import json, re
-txt=open("'$GC_REPORTS/cruft_summary.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
+txt=open("$GC_REPORTS/cruft_summary.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
 for line in txt:
     if '=' in line:
@@ -551,7 +551,7 @@ PY
   weird_by_cat="$(python3 - <<'PY'
 import collections
 c=collections.Counter()
-for line in open("'$GC_REPORTS/weird_paths.txt'","r",encoding="utf-8",errors="replace"):
+for line in open("$GC_REPORTS/weird_paths.txt'","r",encoding="utf-8",errors="replace"):
     line=line.strip()
     if not line: continue
     parts=line.split('\t',1)
@@ -565,7 +565,7 @@ import os, json
 total=0
 count=0
 top=[]
-for line in open("'$GC_REPORTS/large_files.txt'","r",encoding="utf-8",errors="replace"):
+for line in open("$GC_REPORTS/large_files.txt'","r",encoding="utf-8",errors="replace"):
     line=line.strip()
     if not line: continue
     sz_s, path = line.split('\t',1)
@@ -580,7 +580,7 @@ PY
 
   branches_summary="$(python3 - <<'PY'
 import re, json
-report=open("'$GC_REPORTS/branches.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
+report=open("$GC_REPORTS/branches.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
 merged=[]
 mode=None
@@ -611,7 +611,7 @@ PY
 import json
 rows=[]
 try:
-    for line in open("'$GC_REPORTS/_task_durations.txt'","r",encoding="utf-8",errors="replace"):
+    for line in open("$GC_REPORTS/_task_durations.txt'","r",encoding="utf-8",errors="replace"):
         name, sec = line.strip().split('|',1)
         rows.append({'task':name,'seconds':int(sec)})
 except FileNotFoundError:

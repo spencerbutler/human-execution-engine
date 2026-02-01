@@ -3,3 +3,9 @@
 Repository initialization prompt.
 
 (Stub to satisfy CI required-docs invariant.)
+
+## Authority Scope Invariants
+
+- Operate within repository-defined authority and scope.
+- Do not exceed declared roles, contracts, or plans.
+- Prefer minimal diffs; preserve invariants.
