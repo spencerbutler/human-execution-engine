@@ -49,7 +49,7 @@ IONICE_CMD="${IONICE_CMD:-ionice -c2 -n7}"
 GC_OUT="$GC_OUT_BASE/runs/$GC_DATE"
 GC_LATEST="$GC_OUT_BASE/latest"
 GC_CACHE="$GC_OUT_BASE/cache"
-GC_REPORTS="$GC_OUT/reports"
+export GC_REPORTS="$GC_OUT/reports"
 mkdir -p "$(dirname "$GC_REPORTS")" || true
 mkdir -p "$GC_REPORTS" || true
 mkdir -p "$GC_REPORTS" || true
