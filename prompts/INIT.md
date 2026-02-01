@@ -13,3 +13,9 @@ Repository initialization prompt.
 ## Scope Invariants
 - Keep focus; make it hard to lose and intuitive to regain.
 - Evidence-first; verify before fix; minimal diffs.
+
+Reference: scripts/hee_git_ops.sh
+
+## Invariants
+- Maintain focus and recoverability.
+- Evidence-first, minimal diffs.

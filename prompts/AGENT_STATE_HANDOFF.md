@@ -16,3 +16,7 @@
 - What is failing / passing (CI summary)
 - Next exact command to run
 - Evidence file pointers (.hee/evidence/...)
+
+## Invariants
+- Maintain focus and recoverability.
+- Evidence-first, minimal diffs.

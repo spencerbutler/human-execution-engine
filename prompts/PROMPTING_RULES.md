@@ -15,3 +15,7 @@ This documents pager prevention as required by CI.
 ## Scope Invariants
 - Keep focus; make it hard to lose and intuitive to regain.
 - Evidence-first; verify before fix; minimal diffs.
+
+## Invariants
+- Maintain focus and recoverability.
+- Evidence-first, minimal diffs.
