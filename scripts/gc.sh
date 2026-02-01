@@ -590,7 +590,7 @@ PY
 
   branches_summary="$(python3 - <<PY
 import re, json
-report=open("$GC_REPORTS/branches.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
+report=open("$GC_REPORTS/branches.txt","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
 merged=[]
 mode=None
@@ -621,7 +621,7 @@ PY
 import json
 rows=[]
 try:
-    for line in open("$GC_REPORTS/_task_durations.txt'","r",encoding="utf-8",errors="replace"):
+    for line in open("$GC_REPORTS/_task_durations.txt","r",encoding="utf-8",errors="replace"):
         name, sec = line.strip().split('|',1)
         rows.append({'task':name,'seconds':int(sec)})
 except FileNotFoundError:
