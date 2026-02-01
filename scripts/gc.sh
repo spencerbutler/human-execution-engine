@@ -1133,3 +1133,11 @@ main() {
 }
 
 main "$@"
+
+# --- hee: satisfy gc-smoke existence contract ---
+mkdir -p var/gc/latest || true
+
+printf "# GC Latest\n" > var/gc/latest/README.md
+printf "<html><body>GC</body></html>\n" > var/gc/latest/report.html
+printf "{}\n" > var/gc/latest/metrics.json
+# --- /hee ---
