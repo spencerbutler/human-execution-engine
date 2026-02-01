@@ -469,8 +469,8 @@ task_unused_scripts() {
     python3 - <<PY > '$report'
 import os, re, subprocess, datetime
 root=os.getcwd()
-scripts=open($GC_REPORTS/_scripts_all.txt,'r',encoding='utf-8',errors='replace').read().splitlines()
-refs=open($GC_REPORTS/_refs.txt,'r',encoding='utf-8',errors='replace').read()
+scripts=open("/_scripts_all.txt",'r',encoding='utf-8',errors='replace').read().splitlines()
+refs=open("/_refs.txt",'r',encoding='utf-8',errors='replace').read()
 cands=[]
 for s in scripts:
     if not s.strip(): continue
@@ -561,7 +561,7 @@ PY
   weird_by_cat="$(python3 - <<PY
 import collections
 c=collections.Counter()
-for line in open("$GC_REPORTS/weird_paths.txt'","r",encoding="utf-8",errors="replace"):
+for line in open("$GC_REPORTS/weird_paths.txt","r",encoding="utf-8",errors="replace"):
     line=line.strip()
     if not line: continue
     parts=line.split('\t',1)

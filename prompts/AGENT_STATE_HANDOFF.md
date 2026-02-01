@@ -20,3 +20,5 @@
 ## Invariants
 - Maintain focus and recoverability.
 - Evidence-first, minimal diffs.
+
+scripts/hee_git_ops.sh
