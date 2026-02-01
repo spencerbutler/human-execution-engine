@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://tcos.dev/schemas/hee/v1/blueprint-doctrine.schema.json",
+  "$id": "https://github.com/spencerbutler/human-execution-engine/blob/main/schemas/hee/v1/blueprint-doctrine.schema.json",
   "title": "HEE Blueprint Doctrine (v1)",
   "type": "object",
   "additionalProperties": true,
