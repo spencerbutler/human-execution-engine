@@ -22,3 +22,4 @@
 - Evidence-first, minimal diffs.
 
 scripts/hee_git_ops.sh
+BLOCKER: Stop on invariant violation.

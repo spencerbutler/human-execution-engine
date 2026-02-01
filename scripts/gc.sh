@@ -575,7 +575,7 @@ import os, json
 total=0
 count=0
 top=[]
-for line in open("$GC_REPORTS/large_files.txt'","r",encoding="utf-8",errors="replace"):
+for line in open("$GC_REPORTS/large_files.txt","r",encoding="utf-8",errors="replace"):
     line=line.strip()
     if not line: continue
     sz_s, path = line.split('\t',1)
