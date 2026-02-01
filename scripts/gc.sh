@@ -50,6 +50,8 @@ GC_OUT="$GC_OUT_BASE/runs/$GC_DATE"
 GC_LATEST="$GC_OUT_BASE/latest"
 GC_CACHE="$GC_OUT_BASE/cache"
 GC_REPORTS="$GC_OUT/reports"
+mkdir -p "$(dirname "$GC_REPORTS")" || true
+mkdir -p "$GC_REPORTS" || true
 mkdir -p "$GC_REPORTS" || true
 mkdir -p "$(dirname "$GC_REPORTS")"
 mkdir -p "$GC_REPORTS"
@@ -75,7 +77,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 run_task() {
   local name="$1"; shift
   local start_ns end_ns dur_s
-  start_ns="$(date +%s%N 2>/dev/null || python3 - <<'PY'
+  start_ns="$(date +%s%N 2>/dev/null || python3 - <<PY
 import time; print(int(time.time()*1e9))
 PY
 )"
@@ -100,7 +102,7 @@ PY
     fi
   fi
 
-  end_ns="$(date +%s%N 2>/dev/null || python3 - <<'PY'
+  end_ns="$(date +%s%N 2>/dev/null || python3 - <<PY
 import time; print(int(time.time()*1e9))
 PY
 )"
@@ -183,7 +185,7 @@ task_global_metrics() {
     fi
 
     # Approx counts/sizes (exclude .git and excludes)
-    python3 - <<'PY' >> '$report'
+    python3 - <<PY >> '$report'
 import os
 root = os.getcwd()
 exclude = {'.git'}
@@ -290,7 +292,7 @@ task_weird_paths() {
     set -euo pipefail
     cd '$GC_ROOT'
     { git ls-files -z; git ls-files --others --exclude-standard -z; } \
-      | python3 - <<'PY' > '$report'
+      | python3 - <<PY > '$report'
 import sys, unicodedata
 data = sys.stdin.buffer.read().split(b'\x00')
 def classify(s: str):
@@ -316,7 +318,7 @@ for s,cats in out:
 PY
 
     # Proposed rename mapping (recommend-only)
-    python3 - <<'PY' > '$mapping'
+    python3 - <<PY > '$mapping'
 import re, sys
 def normalize(name: str) -> str:
     # replace control chars and whitespace oddities with underscores
@@ -359,7 +361,7 @@ task_branches() {
     git branch -r --merged origin/main | sed 's/^  //' | grep -vE 'origin/(main|master|HEAD)\$' >> '$report' || true
 
     # stale branches: last commit older than STALE_BRANCH_DAYS
-    python3 - <<'PY' > '$stale_report'
+    python3 - <<PY > '$stale_report'
 import subprocess, datetime, os
 days=int(os.environ.get('STALE_BRANCH_DAYS','30'))
 cut=datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=days)
@@ -409,7 +411,7 @@ task_large_files() {
     set -euo pipefail
     cd '$GC_ROOT'
     # size in bytes + path, sorted desc
-    python3 - <<'PY' > '$report'
+    python3 - <<PY > '$report'
 import os
 root=os.getcwd()
 threshold_mb=int(os.environ.get('LARGE_FILE_MB','50'))
@@ -452,23 +454,23 @@ task_unused_scripts() {
   run_task "unused_scripts" "
     set -euo pipefail
     cd '$GC_ROOT'
-    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > $GC_REPORTS/_scripts_all.txt' || true
+    git ls-files | grep -E '\\.(sh|py|rb|pl|js|ts)$' > $GC_REPORTS/_scripts_all.txt || true
 
     # gather reference surfaces (best-effort)
-    touch $GC_REPORTS/_refs.txt'
+    touch $GC_REPORTS/_refs.txt
     if command -v rg >/dev/null 2>&1; then
       rg -n --no-heading -S \"scripts/|\\./scripts/\" .github Makefile makefile docs prompts 2>/dev/null \
-        | awk -F: '{print \$0}' >> $GC_REPORTS/_refs.txt' || true
+        | awk -F: '{print \$0}' >> $GC_REPORTS/_refs.txt || true
     else
       # fallback: grep (no PCRE)
-      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> $GC_REPORTS/_refs.txt' || true
+      grep -RIn \"scripts/\" .github Makefile makefile docs prompts 2>/dev/null >> $GC_REPORTS/_refs.txt || true
     fi
 
-    python3 - <<'PY' > '$report'
+    python3 - <<PY > '$report'
 import os, re, subprocess, datetime
 root=os.getcwd()
-scripts=open($GC_REPORTS/_scripts_all.txt','r',encoding='utf-8',errors='replace').read().splitlines()
-refs=open($GC_REPORTS/_refs.txt','r',encoding='utf-8',errors='replace').read()
+scripts=open($GC_REPORTS/_scripts_all.txt,'r',encoding='utf-8',errors='replace').read().splitlines()
+refs=open($GC_REPORTS/_refs.txt,'r',encoding='utf-8',errors='replace').read()
 cands=[]
 for s in scripts:
     if not s.strip(): continue
@@ -479,7 +481,7 @@ for s in cands:
     print(s)
 PY
 
-    python3 - <<'PY' > '$reasons'
+    python3 - <<PY > '$reasons'
 import os, subprocess, datetime
 root=os.getcwd()
 def git_mtime(path):
@@ -544,7 +546,7 @@ generate_metrics_and_reports() {
   gkv_json="$(parse_kv_file "$GC_REPORTS/global.txt")"
   local cruft_kv weird_count weird_by_cat large_summary branches_summary stale_count merged_count
 
-  cruft_kv="$(python3 - <<'PY'
+  cruft_kv="$(python3 - <<PY
 import json, re
 txt=open("$GC_REPORTS/cruft_summary.txt","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
@@ -556,7 +558,7 @@ print(json.dumps(d))
 PY
 )"
   weird_count="$(wc -l < "$GC_REPORTS/weird_paths.txt" | tr -d ' ')"
-  weird_by_cat="$(python3 - <<'PY'
+  weird_by_cat="$(python3 - <<PY
 import collections
 c=collections.Counter()
 for line in open("$GC_REPORTS/weird_paths.txt'","r",encoding="utf-8",errors="replace"):
@@ -568,7 +570,7 @@ for line in open("$GC_REPORTS/weird_paths.txt'","r",encoding="utf-8",errors="rep
 print(__import__('json').dumps(c))
 PY
 )"
-  large_summary="$(python3 - <<'PY'
+  large_summary="$(python3 - <<PY
 import os, json
 total=0
 count=0
@@ -586,7 +588,7 @@ print(json.dumps({'count':count,'bytes_total':total,'top_50':top}))
 PY
 )"
 
-  branches_summary="$(python3 - <<'PY'
+  branches_summary="$(python3 - <<PY
 import re, json
 report=open("$GC_REPORTS/branches.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
@@ -606,7 +608,7 @@ print(json.dumps(d))
 PY
 )"
   stale_count="$(wc -l < "$GC_REPORTS/branches_stale.txt" | tr -d ' ')"
-  merged_count="$(python3 - <<'PY'
+  merged_count="$(python3 - <<PY
 import json
 d=json.loads(''''"$branches_summary"''''')
 print(len(d.get('merged_remote_branches_into_main',[])))
@@ -615,7 +617,7 @@ PY
 
   # Task durations
   local durations_json slowest3
-  durations_json="$(python3 - <<'PY'
+  durations_json="$(python3 - <<PY
 import json
 rows=[]
 try:
@@ -628,7 +630,7 @@ rows_sorted=sorted(rows, key=lambda x: x['seconds'], reverse=True)
 print(json.dumps({'by_task':rows, 'slowest_3':rows_sorted[:3]}))
 PY
 )"
-  slowest3="$(python3 - <<'PY'
+  slowest3="$(python3 - <<PY
 import json
 d=json.loads(''''"$durations_json"''''')
 print(json.dumps(d.get('slowest_3',[])))
@@ -638,7 +640,7 @@ PY
   # Compute Junk Score (simple, stable; normalized components)
   # Normalization: bytes and counts are log-scaled to keep stable across repos.
   local junk_json
-  junk_json="$(python3 - <<'PY'
+  junk_json="$(python3 - <<PY
 import json, math
 cruft=json.loads(''''"$cruft_kv"''''')
 cruft_bytes=int(cruft.get('cruft_bytes_total','0') or 0)
@@ -727,7 +729,7 @@ PY
 )"
   else
     baseline_note="baseline=none"
-    deltas_json="$(python3 - <<'PY'
+    deltas_json="$(python3 - <<PY
 import json
 print(json.dumps({"note":"no_prior_baseline"}))
 PY
@@ -893,7 +895,7 @@ print(f\"- normalization: {s['junk_score']['normalization']}\")
 PY
 
   # Generate self-contained HTML dashboard
-  python3 - <<'PY' > "$GC_HTML"
+  python3 - <<PY > "$GC_HTML"
 import json, html
 m=json.load(open("'"$GC_METRICS"'","r",encoding="utf-8"))
 s=m["summary"]

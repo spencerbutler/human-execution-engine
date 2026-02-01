@@ -21,3 +21,4 @@ This documents pager prevention as required by CI.
 - Evidence-first, minimal diffs.
 
 scripts/hee_git_ops.sh
+BLOCKER: Stop on invariant violations.
