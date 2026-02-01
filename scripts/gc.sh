@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+mkdir -p var/gc/runs || true
+mkdir -p var/gc || true
 set -euo pipefail
 
 rb=""
