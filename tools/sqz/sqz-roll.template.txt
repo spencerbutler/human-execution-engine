@@ -1,0 +1,7 @@
+NOW_UTC=<iso8601>
+EVALUATOR=<id>
+CANDIDATE=<name>
+AXIS=<execution_history|signal_to_noise|hee_alignment|scope_scale|teaching_doctrine|locality_overlap>
+SIGNAL=<one concrete, observable fact>
+CONFIDENCE=<low|med|high>
+SOURCE=<pointer>

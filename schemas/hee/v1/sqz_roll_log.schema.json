@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schemas/hee/v1/sqz_roll_log.schema.json",
+  "title": "hee sqz roll log v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["log_id", "created_utc", "rolls"],
+  "properties": {
+    "log_id": { "type": "string", "minLength": 1 },
+    "created_utc": { "type": "string", "minLength": 1 },
+    "rolls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["now_utc", "evaluator_id", "candidate", "axis", "signal", "confidence", "source_pointer"],
+        "properties": {
+          "now_utc": { "type": "string", "minLength": 1 },
+          "evaluator_id": { "type": "string", "minLength": 1 },
+          "candidate": { "type": "string", "minLength": 1 },
+          "axis": {
+            "type": "string",
+            "enum": [
+              "execution_history",
+              "signal_to_noise",
+              "hee_alignment",
+              "scope_scale",
+              "teaching_doctrine",
+              "locality_overlap"
+            ]
+          },
+          "signal": { "type": "string", "minLength": 1 },
+          "confidence": { "type": "string", "enum": ["low", "med", "high"] },
+          "source_pointer": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
