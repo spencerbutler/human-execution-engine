@@ -19,3 +19,5 @@ This documents pager prevention as required by CI.
 ## Invariants
 - Maintain focus and recoverability.
 - Evidence-first, minimal diffs.
+
+scripts/hee_git_ops.sh

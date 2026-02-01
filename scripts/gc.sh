@@ -50,6 +50,7 @@ GC_OUT="$GC_OUT_BASE/runs/$GC_DATE"
 GC_LATEST="$GC_OUT_BASE/latest"
 GC_CACHE="$GC_OUT_BASE/cache"
 GC_REPORTS="$GC_OUT/reports"
+mkdir -p "$GC_REPORTS" || true
 mkdir -p "$(dirname "$GC_REPORTS")"
 mkdir -p "$GC_REPORTS"
 mkdir -p "$GC_REPORTS"
@@ -545,7 +546,7 @@ generate_metrics_and_reports() {
 
   cruft_kv="$(python3 - <<'PY'
 import json, re
-txt=open("$GC_REPORTS/cruft_summary.txt'","r",encoding="utf-8",errors="replace").read().splitlines()
+txt=open("$GC_REPORTS/cruft_summary.txt","r",encoding="utf-8",errors="replace").read().splitlines()
 d={}
 for line in txt:
     if '=' in line:
