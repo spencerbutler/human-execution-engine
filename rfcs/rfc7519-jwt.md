@@ -1,10 +1,5 @@
 # rfcs/rfc7519-jwt.md
 
-
-
-
-
-
 Internet Engineering Task Force (IETF)                          M. Jones
 Request for Comments: 7519                                     Microsoft
 Category: Standards Track                                     J. Bradley
@@ -12,7 +7,6 @@ ISSN: 2070-1721                                            Ping Identity
                                                              N. Sakimura
                                                                      NRI
                                                                 May 2015
-
 
                           JSON Web Token (JWT)
 
@@ -38,14 +32,4 @@ Status of This Memo
 
    Information about the current status of this document, any errata,
    and how to provide feedback on it may be obtained at
-   http://www.rfc-editor.org/info/rfc7519.
-
-
-
-
-
-
-
-
-
-
+   <http://www.rfc-editor.org/info/rfc7519>.

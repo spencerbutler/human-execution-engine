@@ -2,7 +2,8 @@
 
 ## Overview
 
-This guide provides comprehensive troubleshooting procedures for the Human Execution Engine (HEE) ecosystem, including common issues, resolution steps, and escalation procedures.
+This guide provides comprehensive troubleshooting procedures for the Human Execution Engine (HEE) ecosystem,
+including common issues, resolution steps, and escalation procedures.
 
 ## Quick Reference
 
@@ -21,11 +22,13 @@ This guide provides comprehensive troubleshooting procedures for the Human Execu
 ### Problem: Pager Invocation Detected
 
 **Symptoms**:
+
 - Commands hang or require user interaction
 - HEE autonomy violation
 - Process failure
 
 **Root Causes**:
+
 - Missing pager prevention flags
 - Shell environment pager settings
 - Command-specific pager behavior
@@ -33,6 +36,7 @@ This guide provides comprehensive troubleshooting procedures for the Human Execu
 **Solutions**:
 
 #### Git Commands
+
 ```bash
 # CORRECT: Pager prevention included
 git --no-pager log
@@ -45,6 +49,7 @@ git status                 # May invoke pager
 ```
 
 #### Man Pages
+
 ```bash
 # CORRECT: Pager prevention included
 man -P cat page
@@ -55,6 +60,7 @@ man page                   # May invoke pager
 ```
 
 #### System Commands
+
 ```bash
 # CORRECT: Pager prevention included
 PAGER=cat command
@@ -66,6 +72,7 @@ command                    # May invoke pager
 ```
 
 **Environment Variables**:
+
 ```bash
 # Set pager prevention globally
 export GIT_PAGER=cat
@@ -76,12 +83,14 @@ export PAGER=cat
 ### Problem: Pager Prevention Not Working
 
 **Diagnosis**:
+
 ```bash
 # Test pager behavior
 echo "Testing pager behavior..." && git --no-pager log --oneline -5
 ```
 
 **Solutions**:
+
 1. Check shell configuration for pager overrides
 2. Verify environment variables are set correctly
 3. Use command-specific pager prevention flags
@@ -92,11 +101,13 @@ echo "Testing pager behavior..." && git --no-pager log --oneline -5
 ### Problem: Direct Main Branch Commits
 
 **Symptoms**:
+
 - HEE governance violations
 - Process failure
 - State corruption
 
 **Root Causes**:
+
 - Committing directly to main/master
 - Missing feature branch workflow
 - Inadequate branch management
@@ -104,6 +115,7 @@ echo "Testing pager behavior..." && git --no-pager log --oneline -5
 **Solutions**:
 
 #### Create Feature Branch
+
 ```bash
 # Create feature branch
 git checkout -b feature/work-description
@@ -120,6 +132,7 @@ gh pr create --base main --head feature/work-description
 ```
 
 #### Fix Direct Main Commits
+
 ```bash
 # Revert main branch changes
 git checkout main
@@ -136,6 +149,7 @@ git push origin feature/fix-branch
 ### Problem: Branch Naming Violations
 
 **Solutions**:
+
 ```bash
 # Rename branch to follow HEE conventions
 git branch -m old-name feature/new-name
@@ -148,11 +162,13 @@ git push origin feature/new-name
 ### Problem: Invalid State Capsule Format
 
 **Symptoms**:
+
 - Validation failures
 - State corruption
 - Handoff issues
 
 **Root Causes**:
+
 - Missing required sections
 - Incorrect YAML format
 - Incomplete task tracking
@@ -160,12 +176,14 @@ git push origin feature/new-name
 **Solutions**:
 
 #### Validate State Capsule
+
 ```bash
 # Run validation script
 python scripts/validate_hee_capsule.py --input docs/history/state_capsules/current.md
 ```
 
 #### Fix Format Issues
+
 ```yaml
 # Required sections
 chat: HEE [Project] Session [Date]
@@ -192,6 +210,7 @@ next_chat_bootstrap:
 ### Problem: Missing State Capsule Updates
 
 **Solutions**:
+
 ```bash
 # Update task status immediately
 sed -i 's/- \[ \] Task description/- [x] Task description/' docs/history/state_capsules/current.md
@@ -205,11 +224,13 @@ echo "- [ ] New task description" >> docs/history/state_capsules/current.md
 ### Problem: Security Validation Failures
 
 **Symptoms**:
+
 - Pre-commit hook failures
 - Security scanner violations
 - Input validation errors
 
 **Root Causes**:
+
 - Unsafe code patterns
 - Missing input validation
 - Hardcoded secrets
@@ -217,12 +238,14 @@ echo "- [ ] New task description" >> docs/history/state_capsules/current.md
 **Solutions**:
 
 #### Run Security Scanner
+
 ```bash
 # Scan for security issues
 python scripts/security_scanner.py --format json
 ```
 
 #### Fix Common Issues
+
 ```python
 # CORRECT: Safe input validation
 def process_input(user_input):
@@ -239,6 +262,7 @@ def process_input(user_input):
 ```
 
 #### Remove Hardcoded Secrets
+
 ```python
 # CORRECT: Environment variables
 import os
@@ -251,6 +275,7 @@ password = "my-secret-password"  # DANGEROUS
 ### Problem: Unicode/Character Issues
 
 **Solutions**:
+
 ```python
 # Sanitize input
 def sanitize_input(text):
@@ -266,11 +291,13 @@ def sanitize_input(text):
 ### Problem: CI Pipeline Failures
 
 **Symptoms**:
+
 - Build failures
 - Test failures
 - Deployment issues
 
 **Root Causes**:
+
 - Missing dependencies
 - Configuration errors
 - Code quality issues
@@ -278,6 +305,7 @@ def sanitize_input(text):
 **Solutions**:
 
 #### Check CI Configuration
+
 ```yaml
 # .github/workflows/ci.yml
 name: HEE CI Pipeline
@@ -302,6 +330,7 @@ jobs:
 ```
 
 #### Fix Pre-commit Issues
+
 ```yaml
 # .pre-commit-config.yaml
 repos:
@@ -317,6 +346,7 @@ repos:
 ### Problem: Pre-commit Hook Failures
 
 **Solutions**:
+
 ```bash
 # Install pre-commit hooks
 pre-commit install
@@ -333,11 +363,13 @@ git commit --no-verify -m "Emergency commit [model: claude-3.5-sonnet]"
 ### Problem: State Handoff Failures
 
 **Symptoms**:
+
 - Agent transitions fail
 - State corruption
 - Context loss
 
 **Root Causes**:
+
 - Incomplete state capsules
 - Missing decision documentation
 - Format violations
@@ -345,12 +377,14 @@ git commit --no-verify -m "Emergency commit [model: claude-3.5-sonnet]"
 **Solutions**:
 
 #### Validate Handoff Capsule
+
 ```bash
 # Run handoff validation
 python scripts/validate_hee_handoff.py --input HEE-Handoff-[ID].md
 ```
 
 #### Fix Handoff Issues
+
 ```yaml
 # Required handoff format
 chat: HEE [Project] Agent Handoff [Originator]→[Recipient]
@@ -385,6 +419,7 @@ next_chat_bootstrap:
 ### Problem: Agent Communication Breakdown
 
 **Solutions**:
+
 ```bash
 # Check agent coordination
 python scripts/check_agent_coordination.py --status
@@ -398,11 +433,13 @@ python scripts/sync_agent_state.py --force
 ### Problem: Slow HEE Operations
 
 **Symptoms**:
+
 - Long execution times
 - Resource exhaustion
 - Timeout errors
 
 **Root Causes**:
+
 - Inefficient code patterns
 - Missing optimizations
 - Resource constraints
@@ -410,6 +447,7 @@ python scripts/sync_agent_state.py --force
 **Solutions**:
 
 #### Optimize Code
+
 ```python
 # CORRECT: Efficient patterns
 def process_large_dataset(data):
@@ -426,6 +464,7 @@ def process_large_dataset(data):
 ```
 
 #### Monitor Resource Usage
+
 ```bash
 # Check system resources
 top
@@ -439,6 +478,7 @@ df -h
 ### When to Escalate
 
 Escalate immediately if:
+
 - Critical security vulnerabilities found
 - State corruption detected
 - Multiple HEE violations occur
@@ -447,9 +487,10 @@ Escalate immediately if:
 ### Escalation Process
 
 1. **Document Issue**
+
    ```markdown
    ## 🚨 Critical HEE Issue
-   
+
    **Date**: [YYYY-MM-DD]
    **Issue**: [Description]
    **Impact**: [Severity assessment]
@@ -457,6 +498,7 @@ Escalate immediately if:
    ```
 
 2. **Update State Capsule**
+
    ```bash
    echo "🚨 CRITICAL: [Issue description]" >> docs/history/state_capsules/current.md
    ```
@@ -474,6 +516,7 @@ Escalate immediately if:
 ### Emergency Procedures
 
 #### Emergency State Recovery
+
 ```bash
 # Create emergency backup
 python scripts/create_emergency_backup.py --output emergency_backup.json
@@ -483,6 +526,7 @@ python scripts/restore_from_backup.py --backup emergency_backup.json
 ```
 
 #### Emergency Branch Recovery
+
 ```bash
 # Reset to known good state
 git checkout main
@@ -495,6 +539,7 @@ git clean -fd
 ### Regular Maintenance
 
 #### Daily Checks
+
 ```bash
 # Validate state capsules
 python scripts/validate_hee_capsule.py --all
@@ -504,6 +549,7 @@ python scripts/check_violations.py --daily
 ```
 
 #### Weekly Reviews
+
 ```bash
 # Review security posture
 python scripts/security_audit.py --weekly
@@ -513,6 +559,7 @@ python scripts/update_documentation.py --weekly
 ```
 
 #### Monthly Audits
+
 ```bash
 # Comprehensive system audit
 python scripts/comprehensive_audit.py --monthly
@@ -534,18 +581,21 @@ python scripts/performance_review.py --monthly
 ## Support Resources
 
 ### Documentation
+
 - [HEE Policy](HEE_POLICY.md)
 - [State Capsule Guide](STATE_CAPSULE_GUIDE.md)
 - [Prompting Rules](../prompts/PROMPTING_RULES.md)
 - [Agent Handoff Guide](../prompts/AGENT_STATE_HANDOFF.md)
 
 ### Tools
+
 - `scripts/security_scanner.py` - Security validation
 - `scripts/validate_hee_capsule.py` - State capsule validation
 - `scripts/violation_checker.sh` - Violation detection
 - `scripts/validate_hee_handoff.py` - Handoff validation
 
 ### Emergency Contacts
+
 - HEE Monitor: [monitor@hee.example.com]
 - Security Team: [security@hee.example.com]
 - DevOps Team: [devops@hee.example.com]

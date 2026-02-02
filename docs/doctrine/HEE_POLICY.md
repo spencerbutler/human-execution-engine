@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document defines the policies and governance rules for the Human Execution Engine (HEE) ecosystem, ensuring consistent behavior and preventing violations of HEE principles.
+This document defines the policies and governance rules for the
+Human Execution Engine (HEE) ecosystem, ensuring consistent behavior
+and preventing violations of HEE principles.
 
 ## Core HEE Policies
 
@@ -123,25 +125,7 @@ git push origin --delete feature/merged-branch  # Remote
 - Design for smooth handoffs and team onboarding
 - Maintain consistency with existing documentation patterns
 
-### 6. Model Disclosure Policy
-
-**Requirement**: ALL commits require model disclosure
-
-**Enforcement**:
-
-- No commits without model identification
-- Model name must match actual model used
-- Disclosure required in commit subject line
-- No exceptions for any commit
-
-**Format**:
-
-```
-Pattern: [model: model-name]
-Example: [model: claude-3.5-sonnet]
-```
-
-### 7. Command Safety Policy
+### 6. Command Safety Policy
 
 **Requirement**: PRE-VALIDATION required for all commands
 
@@ -159,7 +143,7 @@ Example: [model: claude-3.5-sonnet]
 [ -f file.txt ] && echo "File exists" || echo "File missing - plan violation"
 ```
 
-### 8. Integration Compliance Policy
+### 7. Integration Compliance Policy
 
 **Requirement**: HEE/HEER compliance enforced
 
@@ -170,7 +154,7 @@ Example: [model: claude-3.5-sonnet]
 - Breaking changes require ecosystem coordination
 - Integration examples must be executable immediately
 
-### 9. Conflict Prevention Policy
+### 8. Conflict Prevention Policy
 
 **CRITICAL HEE VIOLATION**: Conflicts must be prevented, not resolved
 
@@ -234,7 +218,7 @@ git push origin feature/work
 # Creating PR without conflict validation
 ```
 
-### 10. Token Optimization Policy
+### 9. Token Optimization Policy
 
 **Requirement**: Token usage must balance efficiency with process integrity
 

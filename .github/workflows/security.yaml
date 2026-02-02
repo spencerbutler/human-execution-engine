@@ -86,7 +86,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "🔍 Checking HEE-specific security compliance..."
-      
+
           # Example condition — replace with your real check
           if [ -f "scripts/check_security_compliance.sh" ]; then
             bash scripts/check_security_compliance.sh
@@ -94,7 +94,7 @@ jobs:
           else
             echo "ℹ️ No HEE-specific security compliance script found; skipping"
           fi
-      
+
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest

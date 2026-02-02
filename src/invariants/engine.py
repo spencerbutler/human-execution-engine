@@ -3,7 +3,7 @@ HEE Invariant Enforcement Engine
 
 Implements the three core invariants:
 - I08: Lane Proof - Claims require lane-appropriate proof
-- I09: Words Not State - Language alone cannot change system state  
+- I09: Words Not State - Language alone cannot change system state
 - I10: Repeat Without Correction - Uncorrected repetition degrades signal
 
 This engine coordinates validation across all invariants before any action is taken.
@@ -40,7 +40,7 @@ class InvariantViolation:
     message: str
     evidence: Optional[Dict[str, Any]] = None
     timestamp: str = None
-    
+
     def __post_init__(self):
         if self.timestamp is None:
             self.timestamp = datetime.now().isoformat()
@@ -54,7 +54,7 @@ class ValidationContext:
     evidence_paths: List[str]
     target_state: Optional[str] = None
     previous_attempts: List[str] = None
-    
+
     def to_hash(self) -> str:
         """Generate hash for repetition detection"""
         context_data = {
@@ -80,7 +80,7 @@ class InvariantEnforcementEngine:
     def __init__(self, repo_path: str):
         """
         Initialize the invariant enforcement engine.
-        
+
         Args:
             repo_path: Path to the repository root
         """
@@ -90,10 +90,10 @@ class InvariantEnforcementEngine:
         self.state_gatekeeper = StateChangeGatekeeper(repo_path)
         self.repetition_prevention = RepetitionPrevention(repo_path)
         self.taming_enforcer = AgentTamingEnforcer(repo_path)
-        
+
         # Track violations for learning
         self.violations_log = []
-    
+
     def validate_action(self, context: ValidationContext) -> Tuple[InvariantResult, List[InvariantViolation]]:
         """
         Validate an action against all invariants and agent taming constraints.
@@ -148,7 +148,7 @@ class InvariantEnforcementEngine:
         # In a real implementation, this would use the AgentTamingEnforcer
         # For now, return pass
         return InvariantResult.PASS, []
-            
+
         # Determine overall result
         if violations:
             result = InvariantResult.FAIL
@@ -156,17 +156,17 @@ class InvariantEnforcementEngine:
         else:
             result = InvariantResult.PASS
             logger.info("Action validation passed all invariants")
-            
+
         # Log violations for learning
         if violations:
             self._log_violations(violations)
-            
+
         return result, violations
-    
+
     def _validate_lane_proof(self, context: ValidationContext) -> Tuple[InvariantResult, List[InvariantViolation]]:
         """Validate I08: Lane Proof invariant"""
         violations = []
-        
+
         # Check if claims require proof
         if context.claims:
             for claim in context.claims:
@@ -175,7 +175,7 @@ class InvariantEnforcementEngine:
                     claim=claim,
                     evidence_paths=context.evidence_paths
                 )
-                
+
                 if not proof_result.is_valid:
                     violations.append(InvariantViolation(
                         invariant_id="I08",
@@ -183,13 +183,13 @@ class InvariantEnforcementEngine:
                         message=f"Claim '{claim}' lacks lane-appropriate proof",
                         evidence={"claim": claim, "required_evidence": proof_result.required_evidence}
                     ))
-                    
+
         return InvariantResult.FAIL if violations else InvariantResult.PASS, violations
-    
+
     def _validate_state_change(self, context: ValidationContext) -> Tuple[InvariantResult, List[InvariantViolation]]:
         """Validate I09: Words Not State invariant"""
         violations = []
-        
+
         # Check if this is a state-changing action
         if context.target_state:
             state_result = self.state_gatekeeper.validate_state_change(
@@ -197,7 +197,7 @@ class InvariantEnforcementEngine:
                 target_state=context.target_state,
                 evidence_paths=context.evidence_paths
             )
-            
+
             if not state_result.is_valid:
                 violations.append(InvariantViolation(
                     invariant_id="I09",
@@ -205,20 +205,20 @@ class InvariantEnforcementEngine:
                     message="State change attempted without immutable evidence",
                     evidence={"target_state": context.target_state, "evidence_paths": context.evidence_paths}
                 ))
-                
+
         return InvariantResult.FAIL if violations else InvariantResult.PASS, violations
-    
+
     def _validate_repetition(self, context: ValidationContext) -> Tuple[InvariantResult, List[InvariantViolation]]:
         """Validate I10: Repeat Without Correction invariant"""
         violations = []
-        
+
         # Check for repeated attempts without correction
         if context.previous_attempts:
             repeat_result = self.repetition_prevention.check_repetition(
                 context_hash=context.to_hash(),
                 previous_attempts=context.previous_attempts
             )
-            
+
             if not repeat_result.is_valid:
                 violations.append(InvariantViolation(
                     invariant_id="I10",
@@ -226,19 +226,19 @@ class InvariantEnforcementEngine:
                     message="Action represents uncorrected repetition of previous failure",
                     evidence={"context_hash": context.to_hash(), "previous_attempts": context.previous_attempts}
                 ))
-                
+
         return InvariantResult.FAIL if violations else InvariantResult.PASS, violations
-    
+
     def _log_violations(self, violations: List[InvariantViolation]):
         """Log violations for learning and audit purposes"""
         for violation in violations:
             self.violations_log.append(violation)
             logger.warning(f"Invariant violation: {violation.invariant_id} - {violation.message}")
-            
+
         # Write to disk for persistent tracking
         violations_file = os.path.join(self.repo_path, ".hee", "violations", "invariant_violations.json")
         os.makedirs(os.path.dirname(violations_file), exist_ok=True)
-        
+
         # Load existing violations
         existing_violations = []
         if os.path.exists(violations_file):
@@ -247,7 +247,7 @@ class InvariantEnforcementEngine:
                     existing_violations = json.load(f)
             except Exception as e:
                 logger.error(f"Failed to load existing violations: {e}")
-                
+
         # Append new violations
         existing_violations.extend([{
             'invariant_id': v.invariant_id,
@@ -256,14 +256,14 @@ class InvariantEnforcementEngine:
             'evidence': v.evidence,
             'timestamp': v.timestamp
         } for v in violations])
-        
+
         # Write back to disk
         try:
             with open(violations_file, 'w') as f:
                 json.dump(existing_violations, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to write violations to disk: {e}")
-    
+
     def get_violation_summary(self) -> Dict[str, Any]:
         """Get summary of all violations for reporting"""
         summary = {
@@ -271,12 +271,12 @@ class InvariantEnforcementEngine:
             'by_invariant': {},
             'recent_violations': []
         }
-        
+
         for violation in self.violations_log:
             if violation.invariant_id not in summary['by_invariant']:
                 summary['by_invariant'][violation.invariant_id] = 0
             summary['by_invariant'][violation.invariant_id] += 1
-            
+
         # Show recent violations
         summary['recent_violations'] = [
             {
@@ -285,17 +285,17 @@ class InvariantEnforcementEngine:
                 'timestamp': v.timestamp
             } for v in self.violations_log[-10:]  # Last 10 violations
         ]
-        
+
         return summary
 
 # Convenience function for quick validation
-def validate_hee_action(repo_path: str, agent_type: str, action: str, 
+def validate_hee_action(repo_path: str, agent_type: str, action: str,
                        claims: List[str], evidence_paths: List[str],
                        target_state: Optional[str] = None,
                        previous_attempts: Optional[List[str]] = None) -> Tuple[InvariantResult, List[InvariantViolation]]:
     """
     Quick validation of an HEE action against all invariants.
-    
+
     Args:
         repo_path: Repository path
         agent_type: Type of agent (chat-agent, gpt-agent, hee-agent)
@@ -304,7 +304,7 @@ def validate_hee_action(repo_path: str, agent_type: str, action: str,
         evidence_paths: Paths to evidence files
         target_state: Target state if state-changing
         previous_attempts: List of previous attempt hashes
-        
+
     Returns:
         Tuple of (result, violations)
     """
@@ -316,6 +316,6 @@ def validate_hee_action(repo_path: str, agent_type: str, action: str,
         target_state=target_state,
         previous_attempts=previous_attempts or []
     )
-    
+
     engine = InvariantEnforcementEngine(repo_path)
     return engine.validate_action(context)

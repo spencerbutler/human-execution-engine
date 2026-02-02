@@ -173,7 +173,7 @@ parse_violation_line() {
   [[ "$line" == WAIVER_APPLIED:* ]] && return 1
 
   # Accept ONLY these shapes:
-  #   GOV-XXXX-001: ... 
+  #   GOV-XXXX-001: ...
   #   GOV-XXXX-001 | subject | description
   #   VIOLATION: GOV-XXXX-001 | subject | description
   if [[ "$line" =~ ^(VIOLATION:[[:space:]]*)?GOV-[A-Z0-9]+-[0-9]{3}[[:space:]]*(:|\|) ]]; then

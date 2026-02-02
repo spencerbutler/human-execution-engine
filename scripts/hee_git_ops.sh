@@ -143,7 +143,7 @@ case "$op" in
     if ! printf '%s\0' "$@" | tr '\0' '\n' | grep -qE '^-m$'; then
       die "commit requires -m \"message\""
     fi
-    
+
 # --- BEGIN: model disclosure precheck based on commit argv (-m) ---
 extract_commit_message_from_args() {
   local msg=""

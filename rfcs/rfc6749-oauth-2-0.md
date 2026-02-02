@@ -1,16 +1,10 @@
 # rfcs/rfc6749-oauth-2-0.md
 
-
-
-
-
-
 Internet Engineering Task Force (IETF)                     D. Hardt, Ed.
 Request for Comments: 6749                                     Microsoft
 Obsoletes: 5849                                             October 2012
 Category: Standards Track
 ISSN: 2070-1721
-
 
                  The OAuth 2.0 Authorization Framework
 
@@ -36,7 +30,7 @@ Status of This Memo
 
    Information about the current status of this document, any errata,
    and how to provide feedback on it may be obtained at
-   http://www.rfc-editor.org/info/rfc6749.
+   <http://www.rfc-editor.org/info/rfc6749>.
 
 Copyright Notice
 
@@ -45,7 +39,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (<http://trustee.ietf.org/license-info>) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -53,13 +47,9 @@ Copyright Notice
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
-
-
-
 Hardt                        Standards Track                    [Page 1]
-
-RFC 6749                        OAuth 2.0                   October 2012
 
+RFC 6749                        OAuth 2.0                   October 2012
 
 Table of Contents
 

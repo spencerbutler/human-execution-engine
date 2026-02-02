@@ -166,7 +166,7 @@ hee_specific:
 
 **Pattern**: State capsule chain for agent transitions
 
-```
+```sh
 HEE Agent A → State Capsule → HEE Agent B → Updated State Capsule → HEE Agent C
 ```
 
@@ -180,7 +180,7 @@ HEE Agent A → State Capsule → HEE Agent B → Updated State Capsule → HEE 
 
 **Pattern**: Release-specific state capsules
 
-```
+```sh
 Pre-Release Capsule → Release Capsule → Post-Release Capsule → Maintenance Capsule
 ```
 
@@ -195,7 +195,7 @@ Pre-Release Capsule → Release Capsule → Post-Release Capsule → Maintenance
 
 **Pattern**: Ecosystem state capsules
 
-```
+```sh
 HEE Core Capsule → MT-logo-render Integration Capsule → tick-task Integration Capsule
 ```
 
@@ -286,7 +286,7 @@ decisions:
 
 **HEE Template Structure**:
 
-```
+```sh
 docs/TEMPLATES/
 └── STATE_CAPSULE_TEMPLATE.md  # This file
 ```
@@ -335,4 +335,6 @@ LATEST_HEE=$(ls -dt docs/history/state_capsules/*/ | head -1)/HEE-*.md
 - HEE date and version references accurate
 - HEE file organization maintained
 
-This HEE-specific State Capsule Template provides the foundation for consistent, reliable handoffs within the Human Execution Engine ecosystem while maintaining full compatibility with HEE's core principles and architecture.
+This HEE-specific State Capsule Template provides the foundation
+for consistent, reliable handoffs within the Human Execution Engine
+ecosystem while maintaining full compatibility with HEE's core principles and architecture.

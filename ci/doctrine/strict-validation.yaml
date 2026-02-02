@@ -10,23 +10,23 @@ on:
 jobs:
   doctrine-validation:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyyaml jsonschema
-    
+
     - name: Run HEE Doctrine Validation
       run: python ci/doctrine/validate_doctrine.py
-    
+
     - name: HEE Policy Check
       run: |
         if [ ! -f "docs/hee/VERSION.md" ]; then
@@ -34,7 +34,7 @@ jobs:
           exit 1
         fi
         echo "✅ HEE policy files present"
-    
+
     - name: State Capsule Integrity Check
       run: |
         capsule_count=$(find docs/history/state_capsules/ -name "*.yml" | wc -l)

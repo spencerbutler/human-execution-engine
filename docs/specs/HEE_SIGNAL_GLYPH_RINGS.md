@@ -2,11 +2,14 @@
 
 ## Overview
 
-This specification defines glyph rings as structured containers for encoding signal properties within HEE SVL. Glyph rings provide deterministic signal representation and transformation rules.
+This specification defines glyph rings as structured containers for encoding
+signal properties within HEE SVL. Glyph rings provide deterministic signal
+representation and transformation rules.
 
 ## Glyph Ring Definition
 
 A glyph ring is a structured encoding container for signal properties. Each glyph ring consists of:
+
 - Core ring: Signal class identifier
 - Property rings: Encoded signal properties
 - Boundary ring: Authority and scope constraints
@@ -14,17 +17,20 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 ## Ring Structure
 
 ### Core Ring
+
 **Required:** Exactly one core ring per glyph ring.
 **Encoding:** Signal class identifier from taxonomy {COMMAND, STATE, VALIDATION, ERROR, BOUNDARY}.
 **Validation:** Must match exactly one defined signal class.
 
 ### Property Rings
+
 **Required:** One ring per required signal property.
 **Encoding:** Property name and value pairs.
 **Order:** Deterministic property ordering required.
 **Validation:** All required properties must be present and valid.
 
 ### Boundary Ring
+
 **Required:** Exactly one boundary ring per glyph ring.
 **Encoding:** Authority scope and observation constraints.
 **Validation:** Boundary must be explicitly declared and enforceable.
@@ -32,6 +38,7 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 ## Encoding Rules
 
 ### Allowed Content
+
 - Structured property values from signal taxonomy
 - Authority scope declarations
 - Timestamp values in ISO 8601 format
@@ -39,6 +46,7 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 - Enumeration values from defined sets
 
 ### Forbidden Content
+
 - Aspirational language
 - Intent interpretations
 - Moral judgments
@@ -50,12 +58,14 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 ## Transformation Rules
 
 ### Valid Transformations
+
 - Property ring reordering (maintaining deterministic sequence)
 - Boundary ring updates (with authority verification)
 - Core ring preservation (class cannot change)
 - Timestamp updates (for state transitions)
 
 ### Invalid Transformations
+
 - Core ring modification
 - Required property removal
 - Boundary violation expansion
@@ -65,6 +75,7 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 ## State Definitions
 
 ### Glyph Ring States
+
 - CONSTRUCTED: Rings assembled but not validated
 - VALID: All rings meet encoding and content rules
 - INVALID: One or more rings violate rules
@@ -72,6 +83,7 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 - BOUNDARY_VIOLATED: Boundary constraints breached
 
 ### Processing States
+
 - ENCODE_REQUESTED: Glyph ring construction initiated
 - ENCODING: Property rings being assembled
 - VALIDATION_PENDING: Awaiting validation completion
@@ -81,6 +93,7 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 ## Validation Requirements
 
 ### Structural Validation
+
 - Core ring present and valid
 - All required property rings present
 - Boundary ring present and enforceable
@@ -88,12 +101,14 @@ A glyph ring is a structured encoding container for signal properties. Each glyp
 - Deterministic property ordering
 
 ### Content Validation
+
 - All property values match taxonomy requirements
 - No forbidden content types present
 - Authority scope properly declared
 - Boundary constraints are verifiable
 
 ### Transformation Validation
+
 - Transformation maintains signal class integrity
 - Authority verification completed
 - Boundary constraints preserved or explicitly updated

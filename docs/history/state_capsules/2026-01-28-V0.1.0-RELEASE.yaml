@@ -5,7 +5,7 @@ capsule:
   timestamp_utc: 2026-01-28T00:00:00Z
   authority: COG
   permanence: locked
-  
+
 baseline_artifacts:
   - docs/specs/HEE_HARDWARE_DISCOVERY.md
   - var/patches/0001-spec-hw-discovery-gnu-name-docs-gate.patch

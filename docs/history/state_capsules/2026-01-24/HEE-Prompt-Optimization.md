@@ -1,6 +1,10 @@
-chat: HEE Prompt Optimization Session
-purpose: Optimize prompts for Groq free tier and compare benefits and costs of using different agents for planning and acting
-context:
+# chat: HEE Prompt Optimization Session 2026-01-24
+
+## Purpose
+
+Optimize prompts for Groq free tier and compare benefits and costs of using different agents for planning and acting
+
+## Context
 
 - Project: Human Execution Engine (HEE) Prompt Optimization
 - Current Phase: Initial Analysis and Planning
@@ -10,7 +14,7 @@ context:
 - Tools/Technologies: Groq API, HEE tooling, agent prompts
 - HEE Integration: Full state capsule support required, must comply with spec-first discipline
 
-decisions:
+## Decisions
 
 - Use Groq free tier for prompt optimization
     Rationale: Ensures cost-effective usage and compliance with free tier constraints
@@ -21,21 +25,21 @@ decisions:
     Impact: Informed decision-making for agent usage
     HEE Alignment: Efficient and effective agent usage
 
-open_threads:
+## Open Threads
 
 - Review current prompts to understand their sizes and content
 - Define optimization rules for Groq free tier
 - Analyze the benefits and costs of using different agents for planning and acting
 - Update agent prompts to include optimization rules and guidelines
 
-next_chat_bootstrap:
+## Next Chat Bootstrap
 
 - Review current prompts to understand their sizes and content
 - Define optimization rules for Groq free tier
 - Analyze the benefits and costs of using different agents for planning and acting
 - Update agent prompts to include optimization rules and guidelines
 
-task_list:
+## Task List
 
 - [ ] Review current prompts to understand their sizes and content
 - [ ] Define optimization rules for Groq free tier

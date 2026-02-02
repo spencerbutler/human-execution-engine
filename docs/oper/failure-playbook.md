@@ -5,36 +5,42 @@ Strict failure response procedures for HEE operations.
 ## Failure Flow
 
 ### 1. STOP
+
 - Immediately halt all operations
 - Preserve current state
 - Do not make additional changes
 - Document current status
 
 ### 2. CAPTURE
+
 - Collect all relevant logs and artifacts
 - Take git status snapshots
 - Capture error messages and stack traces
 - Document timeline of events
 
 ### 3. CLASSIFY
+
 - Identify failure mode from classification table
 - Determine severity level
 - Assess impact scope
 - Assign investigation priority
 
 ### 4. CORRECT
+
 - Apply minimal corrective action
 - Follow containment procedures
 - Restore to known good state
 - Verify fix effectiveness
 
 ### 5. VERIFY
+
 - Run validation checks
 - Confirm no additional issues
 - Test related functionality
 - Document resolution
 
 ### 6. REPORT
+
 - Generate failure report
 - Document lessons learned
 - Update procedures if needed
@@ -58,6 +64,7 @@ Strict failure response procedures for HEE operations.
 ## Recovery Procedures
 
 ### Dirty Main Branch
+
 1. **STOP** - Do not proceed with operation
 2. **CAPTURE** - Document current git status
 3. **CORRECT** - Stash or commit changes to main
@@ -65,6 +72,7 @@ Strict failure response procedures for HEE operations.
 5. **REPORT** - Document cause of dirty state
 
 ### Wrong Branch
+
 1. **STOP** - Halt all operations immediately
 2. **CAPTURE** - Document current branch and changes
 3. **CORRECT** - Switch to correct branch
@@ -72,6 +80,7 @@ Strict failure response procedures for HEE operations.
 5. **REPORT** - Document branch confusion
 
 ### Outside Write Detection
+
 1. **STOP** - Immediately cease file operations
 2. **CAPTURE** - Document all files written outside scope
 3. **CORRECT** - Remove or move files to correct location
@@ -79,6 +88,7 @@ Strict failure response procedures for HEE operations.
 5. **REPORT** - Document scope violation
 
 ### Missing Paths
+
 1. **STOP** - Halt operations requiring missing paths
 2. **CAPTURE** - Document missing files/directories
 3. **CORRECT** - Create missing paths or adjust operation
@@ -88,6 +98,7 @@ Strict failure response procedures for HEE operations.
 ## Never Do List
 
 **DO NOT:**
+
 - Force push to main branch
 - Edit YAML by hand for quick fixes
 - Introduce new scripts/tools as a "quick fix"
@@ -98,6 +109,7 @@ Strict failure response procedures for HEE operations.
 - Modify files outside scope without approval
 
 **ALWAYS:**
+
 - Stop immediately on hard gate failures
 - Capture evidence before making changes
 - Follow established procedures
@@ -108,6 +120,7 @@ Strict failure response procedures for HEE operations.
 ## Escalation Criteria
 
 Escalate to senior operator when:
+
 - Multiple hard gates fail
 - Root cause cannot be identified
 - Fix requires scope changes
