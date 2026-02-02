@@ -1,13 +1,12 @@
-# Human Execution Engine (HEE) & Runtime (HEER)
+# Human Execution Engine (HEE)
 
 [![CI/CD Pipeline](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yaml/badge.svg)](https://github.com/spencerbutler/human-execution-engine/actions/workflows/ci.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Human Execution Engine (HEE)
-
 HEE is a **doctrine-first execution framework** for coordinating human reasoning, machine assistance, and automation **without ambiguity**.
 
 It prioritizes:
+
 - correctness over consensus,
 - structure over vibes,
 - determinism over convenience.
@@ -29,8 +28,10 @@ Doctrine is **standing, non-terminal**, and validated **strictly**.
 ## Repository Layout
 
 ### `blueprints/`
-Authoritative doctrine.  
+
+Authoritative doctrine.
 This directory defines:
+
 - world-derived core tools,
 - blueprint and plan schemas,
 - validator contracts,
@@ -42,20 +43,24 @@ Nothing here is operational.
 > **Rule:** Doctrine MUST validate in strict mode.
 
 ### `docs/`
+
 Narrative documentation only:
+
 - explanations,
 - rationale,
 - examples,
 - RFCs.
 
-RFC-style identifiers are **reserved exclusively** for `docs/rfc/`.  
+RFC-style identifiers are **reserved exclusively** for `docs/rfc/`.
 RFCs may reference doctrine identities but MUST NOT define them.
 
 ### Operational directories (e.g. `ci/`, `ops/`, scripts)
+
 Automation and enforcement that **consume doctrine**.
 These are implementation details, not sources of truth.
 
 ### `tools/`
+
 Operator tools and utilities that support HEE execution.
 Includes the `apply-var-patch` tool for applying patches from VAR environment variables.
 
@@ -81,11 +86,13 @@ Includes the `apply-var-patch` tool for applying patches from VAR environment va
 ## Validation & CI/CD
 
 CI/CD enforces:
+
 - strict doctrine validation,
 - schema correctness,
 - formatting invariants.
 
 Future lanes include:
+
 - multi-language “Hello World” compile tests,
 - metrics export compatibility (Prometheus + SNMP),
 - doctrine-driven MIB generation.
@@ -112,12 +119,13 @@ unclear authority, drifting scope, unverifiable claims, and
 HEE exists to make work **correct by construction**.
 
 It does this by:
+
 - separating **doctrine** from **operations**,
 - enforcing **strict validation**,
 - requiring **evidence** for terminal actions,
 - and using **deterministic identity** so changes remain auditable and merge-safe.
 
-The goal is simple:  
+The goal is simple:
 turn intent into **verifiable outcomes** without relying on memory, vibes,
 or fragile UI state.
 
@@ -127,9 +135,9 @@ or fragile UI state.
 
 HEE doctrine is **active and evolving**.
 History is preserved via:
+
 - git history (authoritative),
 - explicit `schema-version`,
 - narrative RFCs when needed.
 
 If you are reading this to “get started,” start in `blueprints/`.
-

@@ -3,4 +3,5 @@
 This is the stable entrypoint document required by CI validation.
 
 Canonical doctrine lives at:
+
 - docs/doctrine/HEE.md

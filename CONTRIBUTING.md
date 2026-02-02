@@ -26,6 +26,7 @@ This repository is the canonical source of **HEE doctrine**. Contributions must 
 ## PR Shape
 
 A good PR includes:
+
 - the doctrinal change (in `blueprints/`), formatted canonically
 - validation evidence (CI output or equivalent)
 - narrative justification only if needed (in `docs/` or an RFC)

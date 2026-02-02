@@ -6,6 +6,7 @@ This document records **frozen operational contracts** of the Human Execution En
 
 These contracts are **non-negotiable invariants**.
 They MAY NOT be changed without:
+
 - an explicit PLAN
 - disk evidence
 - successful verification
@@ -59,6 +60,7 @@ Planning and discussion MAY use other formats.
 - All other output is treated as noise by default.
 
 Noise includes, but is not limited to:
+
 - bash -x / xtrace output
 - debug diagnostics
 - comments
@@ -155,4 +157,3 @@ They do not describe how things are implemented.
 
 Implementation MAY evolve.
 Contracts MAY NOT, except by deliberate thaw with evidence.
-

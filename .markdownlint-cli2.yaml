@@ -1,0 +1,73 @@
+# markdownlint-cli2 configuration (docs-heavy / low-churn profile)
+# CLI runner: https://github.com/DavidAnson/markdownlint-cli2
+# Rules docs:  https://github.com/DavidAnson/markdownlint
+
+config:
+  # MD040 — fenced-code-language
+  # Require language tags on fenced code blocks (```bash, ```yaml, etc.).
+  # High-signal: improves readability + highlighting + tooling.
+  MD040: true
+
+  # MD025 — single-title
+  # Only one H1 per document.
+  MD025: true
+
+  # MD041 — first-line-heading
+  # File should start with an H1 heading.
+  MD041: true
+
+  # MD024 — no-duplicate-heading
+  # Duplicate headings are usually confusing. siblings_only reduces false positives.
+  MD024:
+    siblings_only: true
+
+  # MD003 — heading-style
+  # Keep headings consistent: prefer ATX style (## Heading).
+  MD003:
+    style: atx
+
+  # MD029 — ordered-list-item-prefix
+  # Ordered list numbering style is mostly preference; tolerant mode reduces noise.
+  MD029:
+    style: one_or_ordered
+
+  # MD033 — no-inline-html
+  # Allow a small set of practical HTML elements commonly used in docs.
+  MD033:
+    allowed_elements:
+      - br
+      - details
+      - summary
+      - kbd
+      - img
+
+  # MD060 — table-column-style
+  # Keep table formatting consistent; padded matches common editor output.
+  MD060:
+    style: padded
+
+  # MD036 — no-emphasis-as-heading
+  # Bold-as-heading is common in docs; disable to avoid churn.
+  MD036: false
+
+  # MD013 — line-length
+  # Line-length is noisy in docs; enforce only outside docs (see overrides).
+  # (If you want a global default anyway, set it here; override will disable in docs.)
+  MD013:
+    line_length: 160
+    code_blocks: false
+    tables: false
+
+overrides:
+  # Docs: disable line-length entirely (prose, URLs, templates, history capsules).
+  - files:
+      - "docs/**"
+    config:
+      MD013: false
+
+  # Templates: structure rules often intentionally violated.
+  - files:
+      - "docs/TEMPLATES/**"
+    config:
+      MD041: false
+      MD025: false

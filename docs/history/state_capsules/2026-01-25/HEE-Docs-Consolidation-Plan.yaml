@@ -15,6 +15,10 @@ context:
     plan_act_boundary_enforced: true
 
 decisions:
+
+  - Decision: Docs vs Prompts Authority Model A
+    Rationale: docs/ is canonical for normative and user-facing documentation; prompts/ is agent execution guidance
+    Impact: Conflicting files in both locations are BLOCKED pending human resolution
   - Decision: Docs vs Prompts Authority Model A
     Rationale: docs/ is canonical for normative and user-facing documentation; prompts/ is agent execution guidance
     Impact: Conflicting files in both locations are BLOCKED pending human resolution
@@ -26,11 +30,12 @@ decisions:
     HEE_Compliance: Safe Incremental Execution
 
 approved_narrow_act_scope:
-  - docs/HEE.md -> docs/doctrine/HEE.md
-  - docs/HEER.md -> docs/specs/HEER.md
-  - docs/HEE_POLICY.md -> docs/doctrine/HEE_POLICY.md
-  - docs/SECURITY.md -> docs/doctrine/SECURITY.md
-  - docs/SPEC.md -> docs/specs/SPEC.md
+
+- docs/HEE.md -> docs/doctrine/HEE.md
+- docs/HEER.md -> docs/specs/HEER.md
+- docs/HEE_POLICY.md -> docs/doctrine/HEE_POLICY.md
+- docs/SECURITY.md -> docs/doctrine/SECURITY.md
+- docs/SPEC.md -> docs/specs/SPEC.md
 
 explicitly_excluded:
   blocked:
@@ -44,17 +49,19 @@ explicitly_excluded:
     - templates/ vs TEMPLATES/ naming resolution
 
 open_threads:
-  - Resolve docs vs prompts authority conflicts for BLOCKED files
-  - Decide classification for MEDIUM/LOW confidence files
-  - Decide whether to extend hee_git_ops.sh with mv/mkdir ops
+
+- Resolve docs vs prompts authority conflicts for BLOCKED files
+- Decide classification for MEDIUM/LOW confidence files
+- Decide whether to extend hee_git_ops.sh with mv/mkdir ops
 
 act_preconditions:
-  - Explicit APPROVED_TO_ACT token from human
-  - Use scripts/hee_git_ops.sh exclusively
-  - Stop after first commit boundary
-  - No BLOCKED or DEFERRED items included
+
+- Explicit APPROVED_TO_ACT token from human
+- Use scripts/hee_git_ops.sh exclusively
+- Stop after first commit boundary
+- No BLOCKED or DEFERRED items included
 
 next_chat_bootstrap:
-  - If proceeding to execution: authorize ACT for narrow scope only
-  - If pausing: resume from this capsule without re-analysis
 
+- If proceeding to execution: authorize ACT for narrow scope only
+- If pausing: resume from this capsule without re-analysis

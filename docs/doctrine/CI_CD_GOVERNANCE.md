@@ -13,12 +13,14 @@ Any CI/CD behavior, tooling, or design decision that violates these invariants i
 ## Scope and Authority
 
 These invariants apply to:
+
 - CI/CD pipeline design and enforcement
 - Automated validation and governance checks
 - Repository state verification and conflict detection
 - Provenance tracking and audit requirements
 
 These invariants do NOT apply to:
+
 - Specific CI platform implementations (GitHub Actions, etc.)
 - Workflow YAML syntax or platform-specific features
 - Tool-specific command invocations

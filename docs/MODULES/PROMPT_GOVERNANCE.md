@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document establishes the governance framework for agent prompts within the Human Execution Engine (HEE) ecosystem, ensuring consistency, maintainability, and cross-editor compatibility.
+This document establishes the governance framework for agent prompts within the
+Human Execution Engine (HEE) ecosystem, ensuring consistency, maintainability,
+and cross-editor compatibility.
 
 ## Core Principles
 

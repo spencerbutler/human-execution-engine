@@ -2,7 +2,8 @@
 
 ## Overview
 
-This document specifies the comprehensive release system for the Human Execution Engine (HEE) ecosystem, integrating best practices from tick-task's operations framework and adapting them to HEE's architecture and principles.
+This document specifies the comprehensive release system for the Human Execution Engine (HEE) ecosystem,
+integrating best practices from tick-task's operations framework and adapting them to HEE's architecture and principles.
 
 ## Release Philosophy
 
@@ -161,7 +162,7 @@ graph LR
 
 **Standard Package Structure**:
 
-```
+```sh
 hee-release-<version>/
 ├── bin/                    # Executables
 ├── lib/                    # Libraries
@@ -305,7 +306,7 @@ next_chat_bootstrap:
 
 **Structure**:
 
-```
+```sh
 docs/
 ├── v1.2/                     # Versioned docs
 │   ├── USER_GUIDE.md         # User documentation
@@ -545,4 +546,6 @@ python scripts/generate_post_release_report.py --version 1.2.3 --output report.m
 python scripts/archive_state_capsules.py --version 1.2.3 --destination archive/
 ```
 
-This HEE Release System provides a comprehensive framework for versioning, packaging, and deployment that integrates seamlessly with HEE's core principles of spec-first development, quality discipline, and state preservation.
+This HEE Release System provides a comprehensive framework for versioning, packaging,
+and deployment that integrates seamlessly with HEE's core principles of spec-first development,
+quality discipline, and state preservation.

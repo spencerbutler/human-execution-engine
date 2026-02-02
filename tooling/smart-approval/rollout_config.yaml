@@ -8,17 +8,17 @@ rollout:
     low_risk_auto_approve: false  # Disabled until toggle
     safety_validation: true
     transcript_logging: true
-  
+
   rollout_toggles:
     enable_low_risk: false  # Keep disabled for read-only phase  # Set to true to enable low_risk auto-approval
     enable_override_controls: true
     enable_metrics_collection: true
-  
+
   monitoring:
     alert_on_high_prompt_rate: true
     alert_threshold: 0.8  # Alert if >80% of commands require prompts
     report_interval: daily
-    
+
   rollback_plan:
     immediate_disable: "Set enable_low_risk: false  # Keep disabled for read-only phase"
     full_rollback: "Set read_only_auto_approve: false"

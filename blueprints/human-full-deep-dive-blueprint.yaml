@@ -14,22 +14,22 @@ resources:
   discovery_mapping:
     selector:
       type: "analysis.phase"
-  
+
   # Assumption Audit Phase
   assumption_audit:
     selector:
       type: "analysis.phase"
-  
+
   # Edge Case Exploration Phase
   edge_case_exploration:
     selector:
       type: "analysis.phase"
-  
+
   # Guardrail Validation Phase
   guardrail_validation:
     selector:
       type: "analysis.phase"
-  
+
   # Evidence Verification Phase
   evidence_verification:
     selector:

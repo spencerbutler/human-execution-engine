@@ -1,0 +1,30 @@
+{
+  "health_monitoring": {
+    "enabled": true,
+    "interval_minutes": 30,
+    "alert_thresholds": {
+      "critical_branches": 2,
+      "warning_branches": 5,
+      "health_score_drop": 10.0
+    }
+  },
+  "predictive_analytics": {
+    "enabled": true,
+    "interval_hours": 6,
+    "trend_analysis_days": 7
+  },
+  "maintenance_tasks": {
+    "enabled": true,
+    "stale_branch_cleanup_days": 90,
+    "health_report_generation": "daily"
+  },
+  "notifications": {
+    "enabled": true,
+    "email_enabled": false,
+    "slack_webhook": null,
+    "alert_levels": [
+      "critical",
+      "warning"
+    ]
+  }
+}
