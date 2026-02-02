@@ -30,4 +30,4 @@ If work is in a lane’s scope, that lane’s contract is authoritative.
 
 - DRIC (Design–Relay Interface Contract): governs Design ↔ Relay separation and Agent-facing relay behavior.
 - Outfile Evidence Contract: governs GPT ↔ Oper evidence/outfile generation (command emission allowed only here).
-- Trilateral Roles Contract: governs GPT ↔ Oper ↔ Agent boundaries and allowed speech/authority.
+- Roles Trilateral Contract: governs GPT ↔ Oper ↔ Agent boundaries and allowed speech/authority.
