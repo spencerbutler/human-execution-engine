@@ -1,13 +1,9 @@
 # rfcs/rfc8696-constrained-application-protocol.md
-﻿
-
-
 
 Internet Engineering Task Force (IETF)                        R. Housley
 Request for Comments: 8696                                Vigil Security
 Category: Standards Track                                  December 2019
 ISSN: 2070-1721
-
 
   Using Pre-Shared Key (PSK) in the Cryptographic Message Syntax (CMS)
 
@@ -39,7 +35,7 @@ Status of This Memo
 
    Information about the current status of this document, any errata,
    and how to provide feedback on it may be obtained at
-   https://www.rfc-editor.org/info/rfc8696.
+   <https://www.rfc-editor.org/info/rfc8696>.
 
 Copyright Notice
 
@@ -48,4 +44,4 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (<https://trustee.ietf.org/license-info>) in effect on the date of

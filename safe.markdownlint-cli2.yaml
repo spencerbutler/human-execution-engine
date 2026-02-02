@@ -1,0 +1,9 @@
+config:
+  default: false
+
+  # enable only “safe autofix” rules
+  MD009: true  # trailing spaces
+  MD010: true  # hard tabs
+  MD012: true  # multiple blank lines
+  MD022: true  # heading spacing
+  MD030: true  # list marker spacing

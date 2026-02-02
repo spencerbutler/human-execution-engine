@@ -226,8 +226,6 @@ monitoring_state:
 - [ ] Quality gates passed
 - [ ] Governance compliance verified
 
-```
-
 ## Usage Instructions
 
 ### 1. Report Generation
@@ -325,4 +323,6 @@ python scripts/validate_auto_fix_report.py --input auto_fix_report_[ID].md
 - Deprecate ineffective patterns
 - Improve pattern documentation
 
-This Auto-Fix Report Template provides a comprehensive framework for documenting HEE's automated CI/CD monitoring and fixing operations while maintaining full integration with HEE's state preservation and quality discipline requirements.
+This Auto-Fix Report Template provides a comprehensive framework for documenting HEE's automated
+CI/CD monitoring and fixing operations while maintaining full integration with HEE's state preservation
+and quality discipline requirements.

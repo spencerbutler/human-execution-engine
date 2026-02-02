@@ -1,4 +1,3 @@
-# docs/CONTRIBUTING.md
 # Contributing to Blueprint Doctrine
 
 This document governs changes to files in `blueprints/`.
@@ -41,6 +40,7 @@ Changes must be deliberate and minimal.
 ## Non-Goals
 
 This directory is not the place for:
+
 - prompts,
 - agent instructions,
 - implementation logic,

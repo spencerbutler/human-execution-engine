@@ -64,3 +64,6 @@ docs/AUTOMATION_CONFIG.json
 !.hee/spool/**
 !.hee/evidence/**
 .hee
+
+# node
+node_modules/

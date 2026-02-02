@@ -13,21 +13,24 @@ repos:
 
       - id: hee-conflict-prevention-check
         name: HEE Conflict Prevention Check
-        entry: bash -c 'echo "🔍 Checking for potential merge conflicts..." && git fetch origin 2>/dev/null && if git diff origin/main...HEAD --exit-code 2>/dev/null; then echo "✅ No conflicts detected with main branch"; else echo "⚠️  Potential conflicts detected - consider rebasing"; echo "💡 Run: git fetch origin && git rebase origin/main"; fi'
+        entry: |
+          bash -c 'echo "🔍 Checking for potential merge conflicts..." && git fetch origin 2>/dev/null && if git diff origin/main...HEAD --exit-code 2>/dev/null; then echo "✅ No conflicts detected with main branch"; else echo "⚠️  Potential conflicts detected - consider rebasing"; echo "💡 Run: git fetch origin && git rebase origin/main"; fi'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-state-capsule-validation
         name: HEE State Capsule Validation
-        entry: bash -c 'echo "🔍 Validating HEE state capsule format..." && if [ -d "docs/STATE_CAPSULES" ]; then echo "✅ State capsule directory found"; else echo "⚠️  No state capsule directory found"; fi'
+        entry: | 
+          bash -c 'echo "🔍 Validating HEE state capsule format..." && if [ -d "docs/STATE_CAPSULES" ]; then echo "✅ State capsule directory found"; else echo "⚠️  No state capsule directory found"; fi'
         language: system
         files: 'docs/STATE_CAPSULES/.*\.md$'
         pass_filenames: false
 
       - id: hee-policy-compliance
         name: HEE Policy Compliance Check
-        entry: bash -c 'echo "🔍 Checking HEE policy compliance..." && if [ -f "docs/HEE_POLICY.md" ]; then echo "✅ HEE policy file found"; else echo "❌ HEE policy file missing"; exit 1; fi && if [ -f "prompts/PROMPTING_RULES.md" ]; then echo "✅ Prompting rules found"; else echo "❌ Prompting rules missing"; exit 1; fi'
+        entry: | 
+          bash -c 'echo "🔍 Checking HEE policy compliance..." && if [ -f "docs/HEE_POLICY.md" ]; then echo "✅ HEE policy file found"; else echo "❌ HEE policy file missing"; exit 1; fi && if [ -f "prompts/PROMPTING_RULES.md" ]; then echo "✅ Prompting rules found"; else echo "❌ Prompting rules missing"; exit 1; fi'
         language: system
         files: '.*'
         pass_filenames: false
@@ -40,49 +43,63 @@ repos:
 
       - id: hee-documentation-check
         name: HEE Documentation Check
-        entry: bash -c 'echo "🔍 Checking HEE documentation..." && for doc in "docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md"; do if [ -f "$doc" ]; then echo "✅ $doc found"; else echo "⚠️  $doc missing"; fi; done'
+        entry: | 
+          bash -c 'echo "🔍 Checking HEE documentation..." && for doc in "docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md"; do if [ -f "$doc" ]; then echo "✅ $doc found"; else echo "⚠️  $doc missing"; fi; done'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-branch-management-check
         name: HEE Branch Management Check
-        entry: bash -c 'echo "🔍 Checking branch management compliance..." && if [ "$GITHUB_HEAD_REF" != "" ] && [ "$GITHUB_HEAD_REF" != "main" ] && [ "$GITHUB_HEAD_REF" != "master" ]; then if echo "$GITHUB_HEAD_REF" | grep -q "^feature/"; then echo "✅ Feature branch naming followed"; else echo "⚠️  Branch naming may not follow HEE conventions"; fi; else echo "✅ Main/master branch or no PR context"; fi'
+        entry: | 
+          bash -c 'echo "🔍 Checking branch management compliance..." && if [ "$GITHUB_HEAD_REF" != "" ] && [ "$GITHUB_HEAD_REF" != "main" ] && [ "$GITHUB_HEAD_REF" != "master" ]; then if echo "$GITHUB_HEAD_REF" | grep -q "^feature/"; then echo "✅ Feature branch naming followed"; else echo "⚠️  Branch naming may not follow HEE conventions"; fi; else echo "✅ Main/master branch or no PR context"; fi'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-security-check
         name: HEE Security Check
-        entry: bash -c 'echo "🔍 Running HEE security checks..." && if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo" | head -1; then echo "⚠️  Potential sensitive information found"; else echo "✅ No obvious security issues"; fi'
+        entry: | 
+          bash -c 'echo "🔍 Running HEE security checks..." && if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo" | head -1; then echo "⚠️  Potential sensitive information found"; else echo "✅ No obvious security issues"; fi'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-formatting-check
         name: HEE Formatting Check
-        entry: bash -c 'echo "🔍 Checking HEE formatting standards..." && if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then echo "✅ State capsule formatting check passed"; else echo "⚠️  State capsule formatting may need attention"; fi'
+        entry: | 
+          bash -c 'echo "🔍 Checking HEE formatting standards..." && if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then echo "✅ State capsule formatting check passed"; else echo "⚠️  State capsule formatting may need attention"; fi'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-violation-check
         name: HEE Violation Prevention Check
-        entry: bash -c 'echo "🔍 Running HEE violation prevention check..." && ./scripts/violation_checker.sh'
+        entry: | 
+          bash -c 'echo "🔍 Running HEE violation prevention check..." && ./scripts/violation_checker.sh'
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-agent-instruction-check
         name: HEE Agent Instruction Check
-        entry: bash -c 'echo "📋 HEE Agent Instructions:" && echo "⚠️  If this pre-commit hook blocks your commit, it is working correctly!" && echo "📝 Report the violation in your output and document it in the state capsule" && echo "🔧 This is expected behavior - the system is preventing violations" && echo "✅ Always update the state capsule with violation reports before pushing" && echo "🎯 Violations should be documented, not bypassed"'
+        entry: | 
+          bash -c 'echo "📋 HEE Agent Instructions:" && echo "⚠️  If this pre-commit hook blocks your commit, it is working correctly!" && echo "📝 Report the violation in your output and document it in the state capsule" && echo "🔧 This is expected behavior - the system is preventing violations" && echo "✅ Always update the state capsule with violation reports before pushing" && echo "🎯 Violations should be documented, not bypassed"'
         language: system
         files: '.*'
         pass_filenames: false
+      
+      - id: markdownlint-cli2-safe-fix
+        name: markdownlint (safe autofix)
+        entry: scripts/pre-commit/markdownlint-safe-fix
+        language: system
+        types: [markdown]
+        stages: [manual]
+
 
   # Standard pre-commit hooks for code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -93,23 +110,21 @@ repos:
       - id: debug-statements
 
   # Markdown linting
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.37.0
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.20.0
     hooks:
-      - id: markdownlint
-        args: ['--fix']
-        files: '\.md$'
+      - id: markdownlint-cli2
 
   # YAML linting
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.29.0
+    rev: v1.38.0
     hooks:
       - id: yamllint
         args: ['-d', 'relaxed']
         files: '\.(yaml|yml)$'
 
 # Configuration for pre-commit
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 fail_fast: false
 
 # Exclude patterns

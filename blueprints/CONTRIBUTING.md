@@ -40,6 +40,7 @@ Changes must be deliberate and minimal.
 ## Non-Goals
 
 This directory is not the place for:
+
 - prompts,
 - agent instructions,
 - implementation logic,

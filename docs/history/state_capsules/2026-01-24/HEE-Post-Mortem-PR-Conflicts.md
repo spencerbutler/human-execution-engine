@@ -9,7 +9,9 @@
 
 ### Incident Overview
 
-Two open PRs (#18 and #19) in the human-execution-engine repository contained unresolved conflicts that required extensive rebase operations, conflict resolution, and re-merging. This resulted in significant wasted computational resources (tokens) and development time.
+Two open PRs (#18 and #19) in the human-execution-engine repository contained unresolved conflicts that
+required extensive rebase operations, conflict resolution, and re-merging. This resulted in significant
+wasted computational resources (tokens) and development time.
 
 ### Impact Assessment
 
@@ -463,7 +465,10 @@ jobs:
 
 ## Conclusion
 
-This post-mortem analysis has identified critical gaps in our conflict prevention processes and provided a comprehensive improvement plan. The key lessons learned will drive significant enhancements to our HEE governance framework and development practices.
+This post-mortem analysis has identified critical gaps in our conflict prevention
+processes and provided a comprehensive improvement plan.
+The key lessons learned will drive significant enhancements to our HEE governance
+framework and development practices.
 
 ### Immediate Actions Required
 
@@ -474,7 +479,8 @@ This post-mortem analysis has identified critical gaps in our conflict preventio
 
 ### Long-term Vision
 
-Create a development environment where merge conflicts are prevented rather than resolved, optimizing both token usage and development efficiency while maintaining 100% HEE compliance.
+Create a development environment where merge conflicts are prevented rather than resolved,
+optimizing both token usage and development efficiency while maintaining 100% HEE compliance.
 
 ### Success Criteria
 
@@ -483,4 +489,5 @@ Create a development environment where merge conflicts are prevented rather than
 - 50% reduction in time spent on conflict resolution
 - 100% compliance with updated HEE governance rules
 
-This incident, while costly, provides valuable lessons that will significantly improve our development processes and prevent similar issues in the future.
+This incident, while costly, provides valuable lessons that will significantly improve our
+development processes and prevent similar issues in the future.

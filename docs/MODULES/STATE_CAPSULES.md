@@ -2,7 +2,9 @@
 
 ## Overview
 
-State Capsules are structured handoff documents that preserve decision state and context when transitioning between agents, chat sessions, or execution contexts within the Human Execution Engine (HEE) ecosystem.
+State Capsules are structured handoff documents that preserve decision
+state and context when transitioning between agents, chat sessions, or
+execution contexts within the Human Execution Engine (HEE) ecosystem.
 
 ## Core Concepts
 
@@ -113,7 +115,7 @@ next_chat_bootstrap:
 
 ### 1. Directory Organization
 
-```
+```sh
 docs/history/state_capsules/
 ├── README.md                    # Directory documentation
 ├── 2026-01-23/                 # Date-based organization
@@ -226,7 +228,7 @@ graph TD
 
 **Pattern**: Chain of State Capsules
 
-```
+```sh
 Agent A → State Capsule 1 → Agent B → State Capsule 2 → Agent C
 ```
 
@@ -241,7 +243,7 @@ Agent A → State Capsule 1 → Agent B → State Capsule 2 → Agent C
 
 **Pattern**: Milestone-Based Capsules
 
-```
+```sh
 Phase 1 Capsule → Phase 2 Capsule → Phase 3 Capsule → Release Capsule
 ```
 
@@ -256,7 +258,7 @@ Phase 1 Capsule → Phase 2 Capsule → Phase 3 Capsule → Release Capsule
 
 **Pattern**: Project Ecosystem Capsules
 
-```
+```sh
 Project A Capsule → Integration Capsule → Project B Capsule
 ```
 

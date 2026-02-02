@@ -6,7 +6,7 @@ replay_corpus:
   version: 1.0
   description: "Golden set of commands with expected approval decisions"
   last_updated: "2026-01-28"
-  
+
   test_cases:
     # Read-only exact matches (should auto-approve)
     - command: "git status"
@@ -15,21 +15,21 @@ replay_corpus:
         reason: "read_only_exact"
         confidence: 1.0
       description: "Basic git status check"
-      
+
     - command: "git diff"
       expected:
         requires_approval: false
         reason: "read_only_exact"
         confidence: 1.0
       description: "Git diff view"
-      
+
     - command: "gh status"
       expected:
         requires_approval: false
         reason: "read_only_exact"
         confidence: 1.0
       description: "GitHub CLI status"
-    
+
     # Read-only prefixes (should auto-approve)
     - command: "ls -la"
       expected:
@@ -37,21 +37,21 @@ replay_corpus:
         reason: "read_only_prefix"
         confidence: 0.9
       description: "List directory contents"
-      
+
     - command: "cat README.md"
       expected:
         requires_approval: false
         reason: "read_only_prefix"
         confidence: 0.9
       description: "View file contents"
-      
+
     - command: "git log --oneline"
       expected:
         requires_approval: false
         reason: "read_only_prefix"
         confidence: 0.9
       description: "View git history"
-    
+
     # Dangerous patterns (should require approval)
     - command: "rm -rf /tmp/test"
       expected:
@@ -59,21 +59,21 @@ replay_corpus:
         reason: "denied_pattern_read_only"
         confidence: 1.0
       description: "Dangerous rm command"
-      
+
     - command: "git status > output.txt"
       expected:
         requires_approval: true
         reason: "denied_pattern_read_only"
         confidence: 1.0
       description: "Output redirection"
-      
+
     - command: "sudo apt update"
       expected:
         requires_approval: true
         reason: "denied_pattern_read_only"
         confidence: 1.0
       description: "Privileged command"
-    
+
     # Low-risk commands (require clean repo)
     - command: "git add ."
       expected_clean_repo:
@@ -85,7 +85,7 @@ replay_corpus:
         reason: "low_risk_exact_dirty"
         confidence: 0.95
       description: "Stage all files"
-      
+
     - command: "mkdir new-dir"
       expected_clean_repo:
         requires_approval: false
@@ -96,7 +96,7 @@ replay_corpus:
         reason: "low_risk_prefix_dirty"
         confidence: 0.9
       description: "Create directory"
-    
+
     # Unknown commands (should require approval)
     - command: "unknown_cmd --help"
       expected:
@@ -104,14 +104,14 @@ replay_corpus:
         reason: "unknown_command"
         confidence: 0.5
       description: "Unknown command"
-      
+
     - command: "custom_script.sh"
       expected:
         requires_approval: true
         reason: "unknown_command"
         confidence: 0.5
       description: "Custom script"
-    
+
     # Edge cases
     - command: ""
       expected:
@@ -119,14 +119,14 @@ replay_corpus:
         reason: "empty_command"
         confidence: 0.0
       description: "Empty command"
-      
+
     - command: "git commit -m \"fix: bug\""
       expected:
         requires_approval: true
         reason: "denied_pattern_low_risk"
         confidence: 1.0
       description: "Git commit (blocked)"
-      
+
     - command: "docker run hello-world"
       expected:
         requires_approval: true

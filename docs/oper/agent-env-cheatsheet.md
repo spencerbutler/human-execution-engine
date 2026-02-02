@@ -5,6 +5,7 @@ Environment variables and runtime controls for HEE-style agent runs.
 ## Environment Variables
 
 ### Repo Root Binding / Path Safety
+
 ```bash
 # Operate from repo root; no absolute path writes outside repo
 HEE_REPO_ROOT="/path/to/repo"
@@ -13,6 +14,7 @@ HEE_SAFE_PATHS="${HEE_REPO_ROOT}/doc/oper/**"
 ```
 
 ### Step Variables
+
 ```bash
 # Per-step identifiers and names
 HEE_STEP_ID="step-001"
@@ -22,6 +24,7 @@ HEE_BRANCH="phase/ops-hee-oper-runtime-docs"
 ```
 
 ### Logging Controls
+
 ```bash
 # Log directory and artifact paths
 HEE_LOG_DIR="${HEE_REPO_ROOT}/.hee/logs"
@@ -31,6 +34,7 @@ HEE_REPORT_PATH="${HEE_LOG_DIR}/run-report.md"
 ```
 
 ### Mode Controls
+
 ```bash
 # PLAN vs ACT indicator
 HEE_MODE="ACT"  # or "PLAN"
@@ -72,12 +76,14 @@ export HEE_PLAN_ONLY="false"
 ## Usage Examples
 
 ### Initialize Environment
+
 ```bash
 # Source this in your shell before running HEE operations
 source "${HEE_REPO_ROOT}/doc/oper/agent-env-cheatsheet.md"
 ```
 
 ### Check Environment Status
+
 ```bash
 echo "HEE Mode: ${HEE_MODE}"
 echo "Working Directory: ${HEE_WORKING_DIR}"
@@ -87,6 +93,7 @@ echo "Log Directory: ${HEE_LOG_DIR}"
 ```
 
 ### Validate Safe Paths
+
 ```bash
 if [[ "${FILE_PATH}" != "${HEE_REPO_ROOT}/doc/oper/"* ]]; then
     echo "ERROR: Attempting to write outside safe paths"
@@ -109,6 +116,7 @@ echo "Using token: [REDACTED]"  # Safe logging
 ```
 
 ### Operational Rules
+
 - Never commit secrets to the repository
 - Redact tokens from logs before sharing
 - Use environment variables for sensitive data

@@ -2,11 +2,14 @@
 
 ## Product Statement
 
-human-execution-engine provides canonical specifications and reference implementations for Human Execution Engine (HEE) and Runtime (HEER) standards, enabling deterministic human work orchestration across ecosystems.
+human-execution-engine provides canonical specifications and reference implementations for
+Human Execution Engine (HEE) and Runtime (HEER) standards, enabling deterministic human work
+orchestration across ecosystems.
 
 ## Vision
 
-A comprehensive standards framework that defines how systems can treat humans as constrained, deterministic processing units, with humans as the primary runtime rather than passive assignees.
+A comprehensive standards framework that defines how systems can treat humans as constrained,
+deterministic processing units, with humans as the primary runtime rather than passive assignees.
 
 ## Success Criteria (v1.0)
 

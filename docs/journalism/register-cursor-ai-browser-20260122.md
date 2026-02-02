@@ -1,9 +1,18 @@
-# docs/journalism/register-cursor-ai-browser-20260122.md
+# Register AI Browser
 
-**Source URL:** https://www.theregister.com/2026/01/22/cursor_ai_wrote_a_browser/
+## Source URL
 
-**Publication Date:** 2026-01-22
+[Cursor AI Wrote A Browser](https://www.theregister.com/2026/01/22/cursor_ai_wrote_a_browser/)
 
-**Excerpt:** Cursor's AI has written a fully functional web browser, marking a significant milestone in AI-driven software development.
+## Publication Date
 
-**Summary:** The Register reports on Cursor's achievement of creating a complete web browser using AI, highlighting the potential implications for software development and AI capabilities in complex system creation.
+2026-01-22
+
+## Exerpt
+
+Cursor's AI has written a fully functional web browser, marking a significant milestone in AI-driven software development.
+
+## Summary
+
+The Register reports on Cursor's achievement of creating a complete web browser using AI, highlighting the potential
+implications for software development and AI capabilities in complex system creation.
