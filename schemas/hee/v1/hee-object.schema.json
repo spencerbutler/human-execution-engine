@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://human-execution-engine.org/schemas/hee/v1/hee-object.schema.json",
+  "$id": "schemas/hee/v1/hee-object.schema.json",
   "title": "HEE Object Envelope Schema",
   "description": "Envelope schema for all HEE objects with required metadata fields",
   "type": "object",
