@@ -150,7 +150,7 @@ Failure MUST abort early with a clear error message.
 
 Each consumer repo MUST contain:
 
-```
+```sh
 docs/hee/VENDORED_FROM.yml
 ```
 
@@ -199,7 +199,7 @@ Canonical implementation:
 * Render canonical HEE content into a temporary directory
 * Diff against consumer vendored paths using:
 
-```
+```sh
 git diff --no-index
 ```
 
@@ -251,7 +251,7 @@ This hardening:
 
 The following sequence is the **approved, single-shot workflow** to land this specification into the canonical repository.
 
-```
+```sh
 # from ~/git/human-execution-engine
 
 git status

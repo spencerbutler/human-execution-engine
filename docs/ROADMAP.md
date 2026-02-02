@@ -2,7 +2,9 @@
 
 ## Development Strategy: Numbered Prompt Phases
 
-Following tick-task's structured development approach, each phase corresponds to numbered implementation prompts that guide incremental development with git state preservation.
+Following tick-task's structured development approach, each phase
+corresponds to numbered implementation prompts that guide incremental
+development with git state preservation.
 
 **Prompt Structure:**
 
@@ -18,7 +20,7 @@ Following tick-task's structured development approach, each phase corresponds to
 
 ### Files Laid Down
 
-```
+```sh
 docs/
 ├── HEE.md           # Canonical conceptual model specification
 ├── HEER.md          # Canonical runtime contract specification
@@ -53,7 +55,7 @@ scripts/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 docs/
 ├── ARCHITECTURE.md           # Reference architecture guide
 ├── API.md                     # Standard HEE/HEER API specifications
@@ -83,7 +85,7 @@ src/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 src/heer/
 ├── __init__.py
 ├── runtime.py              # Core HEER runtime implementation
@@ -119,7 +121,7 @@ tests/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 src/security/
 ├── __init__.py
 ├── validator.py            # Input validation for HEE/HEER
@@ -154,7 +156,7 @@ tests/security/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 examples/
 ├── tick_task_integration/
 │   ├── README.md
@@ -191,7 +193,7 @@ docs/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 docs/
 ├── CONTRIBUTING.md          # Contribution guidelines
 ├── CHANGELOG.md             # Automated changelog
@@ -223,7 +225,7 @@ scripts/
 
 ### Files to Lay Down (Order)
 
-```
+```sh
 tools/
 ├── ecosystem_validator.py   # Cross-ecosystem compliance checking
 └── adoption_tracker.py      # Track HEE/HEER adoption metrics
@@ -313,4 +315,6 @@ docs/
 - **Community Growth**: Active ecosystem with multiple implementations
 - **Standards Stability**: Specifications remain stable and authoritative
 
-This roadmap provides the complete file tree and implementation order, ensuring systematic development of the HEE/HEER standards ecosystem following the numbered prompt methodology.
+This roadmap provides the complete file tree and implementation order,
+ensuring systematic development of the HEE/HEER standards ecosystem following
+the numbered prompt methodology.

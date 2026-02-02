@@ -280,5 +280,6 @@ repos:
 **Requiring human decision**: 3
 
 **Details**:
+
 - Auto-remediated: Created target directory structure, moved 5 core files to proper locations
 - Human decision required: Resolve docs-vs-prompts conflicts (2 files), classify unclear intent files (6 files)

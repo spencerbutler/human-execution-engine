@@ -21,9 +21,9 @@
    - **Prevention**: Create feature branch for all future changes
 
 2. **CH-001: Missing Model Disclosure** (Level 1 - 1 point)
-   - **Status**: ACTIVE ⚠️
+   - **Status**: IDLE
    - **Description**: No model disclosure in recent commit messages
-   - **Prevention**: Include [model: <model-name>] in all commit messages
+   - **Prevention**: Include `[model: <model-name>]` in all commit messages
 
 3. **PA-001: Missing Documentation** (Level 1 - 1 point)
    - **Status**: ACTIVE ⚠️

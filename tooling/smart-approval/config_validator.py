@@ -64,23 +64,23 @@ def validate_config(config_path):
     try:
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
-        
+
         validate(instance=config, schema=SAFETY_PROFILE_SCHEMA)
-        
+
         # Additional semantic validation
         profiles = config["command_safety_profiles"]["profiles"]
-        
+
         # Ensure no overlap between allowlists and denylists
         for profile_name, profile in profiles.items():
             allowlist = set(profile.get("allowlist_prefixes", []) + profile.get("allowlist_exact", []))
             denylist = set(profile.get("denylist_contains", []))
-            
+
             overlap = allowlist & denylist
             if overlap:
                 raise ValidationError(f"Profile {profile_name} has overlap between allowlist and denylist: {overlap}")
-        
+
         return True, "Configuration is valid"
-        
+
     except FileNotFoundError:
         return False, f"Configuration file not found: {config_path}"
     except yaml.YAMLError as e:
@@ -91,7 +91,7 @@ def validate_config(config_path):
 if __name__ == "__main__":
     config_path = Path(__file__).parent / "safety_profiles.yml"
     valid, message = validate_config(config_path)
-    
+
     if valid:
         print("✅ Configuration validation passed")
         sys.exit(0)

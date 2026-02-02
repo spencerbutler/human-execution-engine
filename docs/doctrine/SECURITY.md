@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document defines the security requirements and implementation guidelines for Human Execution Engine (HEE) and Runtime (HEER) systems. Security is the highest priority constraint in HEE/HEER development.
+This document defines the security requirements and implementation guidelines
+for Human Execution Engine (HEE) and Runtime (HEER) systems.
+Security is the highest priority constraint in HEE/HEER development.
 
 ## Core Security Principles
 

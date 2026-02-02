@@ -1,4 +1,5 @@
 # HEE State Capsule Guide
+
 ## Status
 
 OPTIONAL / HISTORICAL LOGGING (NON-AUTHORITATIVE)
@@ -14,7 +15,9 @@ OPTIONAL / HISTORICAL LOGGING (NON-AUTHORITATIVE)
 
 ## Overview
 
-State Capsules are structured documentation artifacts that preserve critical project state, decisions, and context between agent sessions. They enable seamless handoffs and maintain project continuity in the Human Execution Engine (HEE) ecosystem.
+State Capsules are structured documentation artifacts that preserve critical
+project state, decisions, and context between agent sessions. They enable seamless
+handoffs and maintain project continuity in the Human Execution Engine (HEE) ecosystem.
 
 ## Purpose
 
@@ -28,7 +31,7 @@ State Capsules serve multiple critical functions:
 
 ## Directory Structure
 
-```
+```sh
 docs/history/state_capsules/
 ├── README.md                    # Directory overview and conventions
 ├── CURRENT_TASKS.md             # Optional operator dashboard (non-authoritative)
@@ -42,6 +45,7 @@ docs/history/state_capsules/
 ## File Naming Convention
 
 ### Session Capsules
+
 - **Format**: `Project-Phase-Description.md`
 - **Examples**:
   - `HEE-Compliance-Closure.md`
@@ -49,7 +53,9 @@ docs/history/state_capsules/
   - `Security-Scanner-Implementation.md`
 
 ### Completion Convention
+
 When tasks are complete, prepend `done.` to the filename:
+
 - `Project-Phase-Description.md` → `done.Project-Phase-Description.md`
 
 ## Capsule Structure
@@ -241,6 +247,9 @@ next_chat_bootstrap:
 
 ## Conclusion
 
-State Capsules are the backbone of HEE project continuity and governance. By maintaining comprehensive, current, and well-structured capsules, the system ensures that critical project knowledge is preserved, decisions are documented, and seamless handoffs between agents are possible.
+State Capsules are the backbone of HEE project continuity and governance.
+By maintaining comprehensive, current, and well-structured capsules, the
+system ensures that critical project knowledge is preserved, decisions are
+documented, and seamless handoffs between agents are possible.
 
 **Remember**: A well-maintained state capsule system is the difference between chaotic project handoffs and smooth, efficient development continuity.

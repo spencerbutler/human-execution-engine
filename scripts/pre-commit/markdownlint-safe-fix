@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# pre-commit passes filenames; if none, do nothing
+if [ "$#" -eq 0 ]; then
+  exit 0
+fi
+
+# Use the repo-installed version (fast + deterministic).
+npx --no-install markdownlint-cli2 \
+  --fix \
+  --config safe.markdownlint-cli2.yaml \
+  "$@"

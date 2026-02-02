@@ -19,6 +19,7 @@ Use **Conventional Commits**:
 ```
 
 Examples:
+
 - docs(history): add CI/CD greenline post-mortem
 - fix(ci): correct merge-readiness check abort behavior
 - feat(cli): add `hee validate` subcommand
@@ -82,10 +83,11 @@ If using semantic-release or similar, use this mapping:
 ## Breaking Changes (How to Declare)
 
 Either:
+
 - `feat!: ...` or `fix!: ...`
 
 Or include a footer:
-BREAKING CHANGE: <what broke and migration notes>
+BREAKING CHANGE: `<what broke and migration notes>`
 
 Example:
 feat!(cli): rename `hee run` to `hee exec`
@@ -97,31 +99,43 @@ BREAKING CHANGE: `hee run` removed. Use `hee exec`. Update scripts accordingly.
 ## Examples (Common Scenarios)
 
 ### Adding a post-mortem / knowledge base entry
+
 Commit:
+
 - docs(history): add CI/CD greenline post-mortem
 
 SemVer:
+
 - No bump
 
 ### Fixing a CI merge-readiness validator
+
 Commit:
+
 - ci: fix conflict prevention to detect real merge conflicts
 
 SemVer:
+
 - No bump (unless it changes a public runtime contract; CI-only generally does not)
 
 ### Fixing a runtime bug
+
 Commit:
+
 - fix(core): handle empty config without crash
 
 SemVer:
+
 - PATCH
 
 ### Adding a new CLI command
+
 Commit:
+
 - feat(cli): add `hee doctor` command
 
 SemVer:
+
 - MINOR
 
 ---
@@ -135,4 +149,3 @@ SemVer:
   - If users get a new capability without changing anything → MINOR
   - If behavior is corrected without changing contract → PATCH
   - Otherwise → no bump
-
