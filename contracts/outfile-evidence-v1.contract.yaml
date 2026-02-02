@@ -1,0 +1,55 @@
+version: outfile-evidence-v1
+name: outfile-evidence
+title: GPT–Oper Outfile Evidence Contract
+
+intent:
+  - govern generation and update of evidence outfiles
+  - define the GPT↔Oper lane for file-producing work
+  - make disk evidence authoritative
+
+scope:
+  applies_when:
+    - chat emits runnable commands to create or update repo files
+    - chat produces or updates evidence markdown
+  excludes:
+    - dric_design_lane
+    - dric_relay_lane
+
+lane:
+  participants:
+    - gpt
+    - oper
+  exclusive_from:
+    - dric_relay
+
+evidence:
+  bucket_root: hee/evidence/external/gpt
+  outfile_naming:
+    requires_outfile_prefix: true
+    pattern_hint: "outfile-<topic>[-NN].md"
+  pointer_required: true
+  pointer_forms_allowed:
+    - raw_github_url
+    - repo_relative_path
+
+emissions:
+  gpt_must_emit:
+    - evidence_pointer
+    - outfile_command_block
+  gpt_must_not_emit:
+    - completion_without_disk_evidence
+    - ack_only_completion
+
+verification:
+  completion_requires:
+    - oper_confirmation
+    - disk_evidence
+
+failure_behavior:
+  if_blocked:
+    gpt_must:
+      - state_missing_input_or_permission
+      - request_specific_evidence
+    gpt_must_not:
+      - fabricate_state
+      - ack_only
