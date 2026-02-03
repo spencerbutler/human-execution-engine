@@ -1,5 +1,8 @@
 # hee-schema-id-v1
 
+> Status: legacy reference. YAML is authoritative at `contracts/hee-schema-id-v1.contract.yaml`.
+> This Markdown file is retained for provenance and will be generated from YAML in a later stage.
+
 ## Problem
 
 Branch-churn and domain drift in schema `$id`/`$ref` reduces portability and makes evidence trails brittle.

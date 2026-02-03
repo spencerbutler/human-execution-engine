@@ -1,6 +1,3 @@
-# path: blueprints/validator-contract-doctrine.yaml
-# blueprints/validator-contract-doctrine.yml
-# blueprints/validator-contract-doctrine.yml
 
 blueprint:
   name: validator-contract-doctrine
