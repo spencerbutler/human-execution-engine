@@ -69,6 +69,15 @@ docs/AUTOMATION_CONFIG.json
 node_modules/
 
 # local build outputs
-/hee
 /cmd/hee/hee
 /cmd/hee/cmd/
+
+# committed evidence (track)
+
+# repo-internal scratch (do not commit)
+.hee/
+
+# committed evidence (track)
+!hee/
+!hee/evidence/
+!hee/**
