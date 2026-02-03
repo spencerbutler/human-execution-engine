@@ -26,8 +26,10 @@ def read_patch(args):
             return var.encode(), "env:VAR"
         if var in os.environ:
             return os.environ[var].encode(), f"env:VAR->{var}"
+        # Convenience: allow VAR to point directly at a patch file path.
         if s and os.path.exists(s):
-            return var.encode(), "env:VAR"
+            with open(s, "rb") as f:
+                return f.read(), f"env:VAR->file:{s}"
         return var.encode(), "env:VAR"
 
     die("no patch input found")
@@ -70,15 +72,6 @@ def main():
         return selftest()
 
     raw, src = read_patch(args)
-
-    # Guard: env content accidentally passed as a file path
-    if src.startswith("env:"):
-        try:
-            s = raw.decode(errors="ignore").strip()
-        except Exception:
-            s = ""
-        if s and os.path.exists(s):
-            die(f"patch input looks like a path: {s} (use --file)")
 
     raw = normalize(raw)
 
