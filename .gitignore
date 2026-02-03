@@ -67,3 +67,8 @@ docs/AUTOMATION_CONFIG.json
 
 # node
 node_modules/
+
+# local build outputs
+/hee
+/cmd/hee/hee
+/cmd/hee/cmd/
