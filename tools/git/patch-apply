@@ -65,11 +65,12 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--index", action="store_true")
     ap.add_argument("--debug", action="store_true")
+    ap.add_argument("--terse", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
 
     if args.selftest:
-        return selftest()
+        return selftest(args)
 
     raw, src = read_patch(args)
 
@@ -78,7 +79,7 @@ def main():
     if not raw.startswith(b"diff --git"):
         die("patch must start with 'diff --git'")
 
-    if args.debug:
+    if args.debug and not args.terse:
         print(f"[debug] source={src} bytes={len(raw)}", file=sys.stderr)
 
     cmd = ["git", "apply"]
@@ -90,7 +91,7 @@ def main():
     p = subprocess.run(cmd + ["-"], input=raw)
     sys.exit(p.returncode)
 
-def selftest():
+def selftest(args):
     base = os.path.join(os.path.dirname(__file__), "patch-apply-fixtures")
     ok = 0
     for name in os.listdir(base):
@@ -104,7 +105,9 @@ def selftest():
             ok += 1
         elif name.startswith("bad-") and rc != 0:
             ok += 1
-    print(f"selftest passed={ok}")
+    total = ok
+    if not args.terse:
+        print(f"selftest passed={ok}")
     return 0
 
 if __name__ == "__main__":
