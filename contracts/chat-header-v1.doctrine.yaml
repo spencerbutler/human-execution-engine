@@ -1,5 +1,3 @@
-# path: blueprints/chat-header-doctrine.yaml
-# blueprints/chat-header-doctrine.yml
 
 identity:
   seed: chat-header
