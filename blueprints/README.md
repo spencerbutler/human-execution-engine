@@ -51,7 +51,7 @@ RFC documents **may reference** doctrine identities, but RFC numbering **must no
 
 ## Contents
 
-### `core-tools-doctrine.yml`
+### `blueprints/doctrine/core-tools-doctrine.yaml`
 
 Defines the canonical set of **core-tools**.
 
@@ -97,7 +97,7 @@ It does not prescribe tooling or implementation.
 
 ---
 
-### `chat-header-doctrine.yml`
+### `contracts/chat-header-v1.doctrine.yaml`
 
 Defines the **schema and rules** for chat headers:
 
@@ -110,7 +110,7 @@ It defines structure only; authorization/policy is defined elsewhere.
 
 ---
 
-### `hee-doctrine.yml`
+### `blueprints/doctrine/hee-doctrine.yaml`
 
 Defines the **HEE doctrine index** for this repository:
 
