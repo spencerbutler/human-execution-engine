@@ -1,5 +1,8 @@
 # hee-sqz-roll-v1
 
+> Status: legacy reference. YAML is authoritative at `contracts/hee-sqz-roll-v1.contract.yaml`.
+> This Markdown file is retained for provenance and will be generated from YAML in a later stage.
+
 ## Definition
 
 A **SQZ roll** converts one UNKNOWN axis into one KNOWN signal using exactly one source artifact.
@@ -35,15 +38,13 @@ A **SQZ roll** converts one UNKNOWN axis into one KNOWN signal using exactly one
 
 ## Output format (≤5 lines)
 
-```yaml
-NOW_UTC=<iso8601>
-EVALUATOR=<id>
-CANDIDATE=<name>
-AXIS=<axis>
-SIGNAL=<one concrete, observable fact>
-CONFIDENCE=<low|med|high>
-SOURCE=<pointer>
-```
+    NOW_UTC=<iso8601>
+    EVALUATOR=<id>
+    CANDIDATE=<name>
+    AXIS=<axis>
+    SIGNAL=<one concrete, observable fact>
+    CONFIDENCE=<low|med|high>
+    SOURCE=<pointer>
 
 (If you must stay ≤5 lines, fold CANDIDATE+AXIS and fold SOURCE into SIGNAL.)
 

@@ -1,5 +1,3 @@
-# path: blueprints/hee-doctrine.yaml
-# blueprints/hee-doctrine.yml
 
 identity:
   seed: hee-doctrine
@@ -26,9 +24,9 @@ dependencies:
     schema-version: 1
   - doctrine: blueprint-doctrine
     schema-version: 2
-  - doctrine: validator-contract-doctrine
+  - doctrine: validator-contract-v1
     schema-version: 2
-  - doctrine: chat-header-doctrine
+  - doctrine: chat-header-v1
     schema-version: 1
 
 notes:
