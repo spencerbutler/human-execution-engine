@@ -1,5 +1,3 @@
-# path: blueprints/doctrine/blueprint-doctrine.yaml
-# blueprints/doctrine/blueprint-doctrine.yaml
 blueprint:
   name: blueprint-doctrine
   schema-version: 2

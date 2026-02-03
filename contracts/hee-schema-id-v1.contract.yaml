@@ -1,0 +1,28 @@
+version: hee-schema-id-v1
+name: hee-schema-id
+title: HEE Schema ID Contract (v1)
+
+problem:
+  - branch-churn and domain drift in JSON Schema $id/$ref reduces portability
+  - evidence trails become brittle when identifiers encode distribution state
+
+non_goals:
+  - no vars inside JSON Schema ($id/$ref do not support env expansion)
+
+rules:
+  - canonical_id_must_not_encode_branch_state
+  - prefer_relative_ref_within_schemas_dir
+  - locators_may_be_generated_at_publish_time_without_changing_canonical_source
+
+definitions:
+  canonical_id: stable name (doctrine identity)
+  locator: where to fetch (distribution detail)
+
+allowed_locator_patterns_publish_time_only:
+  - "https://raw.githubusercontent.com/<org>/<repo>/<SHA>/schemas/..."
+  - "https://raw.githubusercontent.com/<org>/<repo>/refs/tags/<tag>/schemas/..."
+
+evidence_guardrails:
+  - no_mass_rewrite_without_scan_outfile: "file -> $id/$ref"
+  - patch_emitter_output_required: true
+  - verification_run_evidence_required: true
