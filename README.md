@@ -141,3 +141,7 @@ History is preserved via:
 - narrative RFCs when needed.
 
 If you are reading this to “get started,” start in `blueprints/`.
+
+## Patching (CBA safe)
+
+- See docs/tools/patching.md
