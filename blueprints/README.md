@@ -80,7 +80,7 @@ Instances inherit meaning from this doctrine and do not redeclare dependencies.
 
 ---
 
-### `validator-contract-doctrine.yml`
+### `contracts/validator-contract-v1.contract.yaml`
 
 Defines a **descriptive validator contract**.
 
