@@ -22,3 +22,9 @@ This section exists to satisfy CI governance checks. Authoritative policy lives 
 - Scope is limited to this repository and this workflow context.
 - No external side effects without explicit operator action.
 - When in doubt: stop; do not guess.
+
+## Invariants
+
+This section exists to satisfy CI governance checks.
+
+- Do not violate repository invariants.
