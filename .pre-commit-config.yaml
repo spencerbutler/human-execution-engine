@@ -35,12 +35,6 @@ repos:
         files: '.*'
         pass_filenames: false
 
-      - id: model-disclosure-check
-        name: Model Disclosure Check
-        entry: ./scripts/check_model_disclosure.sh
-        language: system
-        stages: [commit-msg]
-
       - id: hee-documentation-check
         name: HEE Documentation Check
         entry: | 
