@@ -7,7 +7,7 @@ NOTE:
 - HEE treats prompts/ as legacy; future work may relocate or purge prompts/ after an RFC/contract.
 - This file is intentionally minimal.
 
-## Authority Scope Invariants
+## Scope Invariants
 
 This section exists to satisfy CI governance checks. Authoritative policy lives elsewhere in the repo.
 
