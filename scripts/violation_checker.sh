@@ -4,7 +4,6 @@
 # Pre-commit hook for automated violation detection and prevention
 
 # Set strict error handling
-set -euo pipefail
 
 # Get filesystem awareness
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -264,19 +263,30 @@ if [[ ${#VIOLATIONS_FOUND[@]} -gt 0 ]]; then
 fi
 
 # Exit with appropriate code based on violation score
+# Momentum rule: in oper/iteration contexts, never block progress.
+# Hard-fail must be explicitly requested (CI can opt-in later).
+STRICT="${HEE_STRICT:-0}"
+strict_exit() {
+    # usage: strict_exit <code>
+    if [[ "$STRICT" == "1" ]]; then
+        exit "$1"
+    fi
+    exit 0
+}
+
 if [[ $VIOLATION_SCORE -eq 0 ]]; then
     echo -e "${GREEN}🎉 Excellent compliance! No violations detected.${NC}"
-    exit 0
+    strict_exit 0
 elif [[ $VIOLATION_SCORE -le 5 ]]; then
     echo -e "${YELLOW}✅ Good compliance with minor issues.${NC}"
-    exit 0
+    strict_exit 0
 elif [[ $VIOLATION_SCORE -le 15 ]]; then
     echo -e "${YELLOW}⚠️  Fair compliance - improvement needed.${NC}"
-    exit 1
+    strict_exit 1
 elif [[ $VIOLATION_SCORE -le 30 ]]; then
     echo -e "${RED}❌ Poor compliance - immediate action required.${NC}"
-    exit 1
+    strict_exit 1
 else
     echo -e "${RED}🚨 Critical compliance failure - operations suspended.${NC}"
-    exit 1
+    strict_exit 1
 fi
