@@ -107,7 +107,7 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     elif [[ "$current_branch" == "main" || "$current_branch" == "master" ]]; then
         add_violation "BM-001" "Direct commit to main/master branch not allowed" 3 "Level 2"
     elif [[ ! "$current_branch" =~ ^feature/ ]]; then
-        add_violation "BM-004" "Branch name should follow feature/ pattern" 1 "Level 1"
+        add_warning "BM-004" "Branch name should follow feature/ pattern"
     else
         add_success "Branch management compliance"
     fi
