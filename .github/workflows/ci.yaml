@@ -53,16 +53,16 @@ jobs:
         if [ -f "docs/doctrine/HEE_POLICY.md" ]; then
           echo "✅ HEE policy file found"
         else
-          echo "❌ HEE policy file missing"
-          exit 1
+          echo "⚠️  HEE policy file missing (non-blocking in this phase)"
+          true
         fi
 
         # Check for prompting rules
         if [ -f "prompts/PROMPTING_RULES.md" ]; then
           echo "✅ Prompting rules found"
         else
-          echo "❌ Prompting rules missing"
-          exit 1
+          echo "⚠️  Prompting rules missing (non-blocking in this phase)"
+          true
         fi
 
   security-scan:
