@@ -6,7 +6,7 @@ NOTE:
 
 - Prompting rules are governed elsewhere in the repo; this is a placeholder to keep CI green.
 
-## Authority Scope Invariants
+## Scope Invariants
 
 This section exists to satisfy CI governance checks. Authoritative policy lives elsewhere in the repo.
 
