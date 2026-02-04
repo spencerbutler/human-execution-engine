@@ -15,6 +15,7 @@ jobs:
         run: bash -n scripts/gc.sh
 
       - name: Run GC (recommend-only)
+        continue-on-error: true
         env:
           LARGE_FILE_MB: "25"
           STALE_BRANCH_DAYS: "14"
