@@ -15,6 +15,16 @@ This repository is the **canonical source of HEE doctrine**.
 
 ---
 
+## Tooling & Workflows
+
+- Patching workflow: `docs/tools/patching.md`
+- Operator tools: `tools/oper/README.md`
+- Automation tools: `tools/auto/README.md`
+
+## Tooling docs
+
+- Patching workflow: `docs/tools/patching.md`
+
 ## Core Principles
 
 - **Doctrine defines correctness.**
