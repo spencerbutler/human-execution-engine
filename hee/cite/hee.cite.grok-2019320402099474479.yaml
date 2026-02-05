@@ -1,0 +1,28 @@
+hee.cite:
+  id: hee-cite.grok-xai.2019320402099474479.20260205T082617Z
+  status: recorded
+
+  source:
+    system: grok
+    org: xAI
+    url: "https://x.com/i/grok?conversation=2019320402099474479"
+    note: "Summary bullets + suggested shell bundling script (non-authoritative; ideas-only)."
+
+  captured:
+    host: "flippy.localdomain"
+    host_short: "flippy"
+    ts_utc: "20260205T082617Z"
+    artifact:
+      path: "hee://current-oper-home/../evidence/grok-2019320402099474479-analyzehee-evidence.png"
+      sha256: "cc6e0b0cef6fe8e9fc07a1ce6ef9a69a5ced6510660918e238289794f476df36"
+      bytes: 111031
+      mode: "644"
+
+  handling:
+    authority: non_authoritative
+    allowed_use:
+      - naming_inputs
+      - idea_inputs
+    forbidden_use:
+      - doctrine_as_truth
+      - evidence_substitution
