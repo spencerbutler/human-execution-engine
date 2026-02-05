@@ -75,3 +75,8 @@ Recommended guard:
 
 - VAR may point directly to a patch file path. This exists to keep patches file based and reduce terminal paste risk.
 - --terse may be used for tight automation loops where output is undesirable.
+
+## Notes: ripgrep regex engine
+
+- `rg` (Rust regex) does **not** support look-around (look-ahead / look-behind). Avoid patterns like `^(?!tools/)`.
+- Prefer invert-match gates instead, e.g. `rg -v '^tools/'` or `grep -v '^tools/'`.

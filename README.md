@@ -15,6 +15,16 @@ This repository is the **canonical source of HEE doctrine**.
 
 ---
 
+## Tooling & Workflows
+
+- Patching workflow: `docs/tools/patching.md`
+- Operator tools: `tools/oper/README.md`
+- Automation tools: `tools/auto/README.md`
+
+## Tooling docs
+
+- Patching workflow: `docs/tools/patching.md`
+
 ## Core Principles
 
 - **Doctrine defines correctness.**
@@ -145,3 +155,48 @@ If you are reading this to “get started,” start in `blueprints/`.
 ## Patching (CBA safe)
 
 - See docs/tools/patching.md
+
+## HEELANG example
+
+HEELANG is a compact, hashable vocabulary used to label high-signal workflow events and artifacts.
+
+Example (tokens from a reconcile session):
+
+- `RECONCILE`
+- `PILL-WRAPPER`
+- `DRIC-DELTA`
+- `EVIDENCE-IS-TRUTH`
+- `WROTE`
+- `SHA256`
+- `BYTES`
+- `TERMINATION-POINT`
+
+## Dogfood: this session (docs + lint + workflow lessons)
+
+What we did (high signal):
+
+- Used targeted lint runs to stay focused: `pre-commit run markdownlint-cli2 --files <file...>`
+- Verified changes with minimal diffs and kept churn low.
+- Fixed markdown issues via safe, deterministic edits.
+- Enabled markdownlint autofix in pre-commit to prevent recurring paper-cuts.
+
+Lessons learned:
+
+- **WROTE ≠ CHANGED**: scripts can rewrite a file without changing content; Git only cares about diffs.
+- Markdownlint errors like MD012/MD032 are best handled by **autofix**, not hand-editing.
+- When autofix is enabled, always **stage + commit the autofix fallout** (or explicitly discard it) to keep the tree clean.
+
+## HEELANG example (dogfood)
+
+HEELANG is a compact, hashable vocabulary used to label high-signal workflow events and artifacts.
+
+Example tokens from a reconcile / triage session:
+
+- `RECONCILE`
+- `PILL-WRAPPER`
+- `DRIC-DELTA`
+- `EVIDENCE-IS-TRUTH`
+- `WROTE`
+- `SHA256`
+- `BYTES`
+- `TERMINATION-POINT`
