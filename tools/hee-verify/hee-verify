@@ -1,0 +1,18 @@
+#!/bin/sh
+# hee-verify (repo template): verify hee://_ for presented actor
+# no 'set' flags by policy
+HOME_ROOT="${HEE_HOME:-$HOME}"
+LIB_PY="$HOME_ROOT/.hee/library/py"
+VERIFY="$HOME_ROOT/.hee/library/py/hee_hash/verify_current.py"
+
+if [ ! -x "$(command -v python3 2>/dev/null)" ]; then
+  echo "ERR: python3 not found"
+  exit 1
+fi
+if [ ! -r "$VERIFY" ]; then
+  echo "ERR: missing verifier: $VERIFY"
+  exit 1
+fi
+
+PYTHONPATH="$LIB_PY" python3 "$VERIFY"
+exit "$?"
