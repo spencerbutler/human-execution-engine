@@ -155,3 +155,18 @@ If you are reading this to “get started,” start in `blueprints/`.
 ## Patching (CBA safe)
 
 - See docs/tools/patching.md
+
+## HEELANG example
+
+HEELANG is a compact, hashable vocabulary used to label high-signal workflow events and artifacts.
+
+Example (tokens from a reconcile session):
+
+- `RECONCILE`
+- `PILL-WRAPPER`
+- `DRIC-DELTA`
+- `EVIDENCE-IS-TRUTH`
+- `WROTE`
+- `SHA256`
+- `BYTES`
+- `TERMINATION-POINT`
