@@ -1,0 +1,45 @@
+proof: branch-triad
+time_utc: 2026-02-07T17:20:23Z
+branch: hotfix/triad-proof
+head_at_write: 65ab46247480226bf026fe99cbd21fc294debebd
+
+# local heads (sorted)
+ci/fix-hee-preflight-main-branch
+dev
+docs/live-examples-pr119
+docs/patching-links-and-gates
+feature/general-audit
+feature/udpate-schema-files
+feature/update-dric-and-gpt-workflows
+hee-go/demo-hello
+hee-go/demo-hello-fixpatch-20260205-0854
+hotfix/triad-proof
+main
+ops/shellboss-mutators-lib
+p0/governance-pretty-template-and-placeholder-postmortem
+phase/finalize-pr99
+phase/next-go-green
+recover/reflect-stasis
+stage
+staging/butter-20260207T154138Z
+topic/fix-blueprint-yml-headers
+topic/fix-yml-string-refs
+topic/hee-contract-sysadmin-terse
+topic/hee-work-continue-j01-appname-v0
+
+# origin heads (sorted)
+origin/dev
+origin/docs/live-examples-pr119
+origin/feature/general-audit
+origin/feature/udpate-schema-files
+origin/feature/update-dric-and-gpt-workflows
+origin/hotfix/triad-proof
+origin/main
+origin/p0/governance-pretty-template-and-placeholder-postmortem
+origin/phase/finalize-pr99
+origin/phase/next-go-green
+origin/recover/reflect-stasis
+origin/stage
+origin/staging/butter-20260207T154138Z
+origin/topic/fix-blueprint-yml-headers
+origin/topic/hee-contract-sysadmin-terse
