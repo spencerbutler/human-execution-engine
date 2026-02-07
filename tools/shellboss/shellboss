@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+
+# --- shellboss authoritative library (mutators) ---
+. '/home/spencer/.hee/library/bash/fs.mkdir_p.shfn.bash'
+. '/home/spencer/.hee/library/bash/fs.write_stdin.shfn.bash'
+
+LIB="$HOME/.hee/library/bash"
+
+loaded=0
+for f in "$LIB"/*.bash; do
+  [ -f "$f" ] || continue
+  . "$f"
+  loaded=$((loaded+1))
+done
+
+sb_return_ok() {
+  echo ""
+  echo ""
+  echo "🟢 RETURN"
+  echo "SB_STATUS=ok"
+  echo "SB_RC=0"
+}
+
+sb_return_fail() {
+  rc="$1"
+  err="$2"
+  echo ""
+  echo ""
+  echo "🔴 RETURN" >&2
+  echo "SB_STATUS=fail" >&2
+  echo "SB_RC=$rc" >&2
+  echo "SB_ERR=$err" >&2
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sb_help() {
+  cat <<'HELP'
+shellboss help
+
+BASE
+  shellboss            (shows lib load status)
+  shellboss help
+
+FS
+  shellboss fs help
+  shellboss fs mkdir-p <dir>
+  shellboss fs sha256 <path> [path...]
+  shellboss fs write-stdin <path>   (content from stdin)
+  shellboss fs tail <n> <path>
+  shellboss fs cat <path>
+  shellboss fs exists <path>
+  shellboss fs is-file <path>
+  shellboss fs is-dir <path>
+  shellboss fs readlink <path>
+HELP
+}
+
+sb_fs_help() {
+  cat <<'HELP'
+shellboss fs help
+
+FS
+  shellboss fs help
+  shellboss fs mkdir-p <dir>
+  shellboss fs sha256 <path> [path...]
+  shellboss fs write-stdin <path>   (content from stdin)
+  shellboss fs tail <n> <path>
+  shellboss fs cat <path>
+  shellboss fs exists <path>
+  shellboss fs is-file <path>
+  shellboss fs is-dir <path>
+  shellboss fs readlink <path>
+HELP
+}
+
+cmd="${1:-}"
+
+if [ -z "$cmd" ]; then
+  echo "shellboss.lib_dir=$LIB"
+  echo "shellboss.libs_loaded=$loaded"
+  if [ "$loaded" -gt 0 ]; then
+    echo "shellboss.status=ok"
+  else
+    echo "shellboss.status=empty"
+  fi
+  exit 0
+fi
+
+case "$cmd" in
+  help|-h|--help)
+    sb_help
+    exit 0
+    ;;
+  fs)
+    op="${2:-}"
+    case "$op" in
+      help|-h|--help|"")
+        sb_fs_help
+        exit 2
+        ;;
+      mkdir-p)
+        d="${3:-}"
+        if [ -z "$d" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs mkdir-p <dir>" >&2
+          exit 2
+        fi
+        sb_fs_mkdir_p "$d"; exit $?
+        ;;
+      sha256)
+        shift 2
+        sb_fs_sha256 "$@"; exit $?
+        ;;
+      write-stdin)
+        out="${3:-}"
+        if [ -z "$out" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs write-stdin <path>  (content from stdin)" >&2
+          exit 2
+        fi
+        sb_fs_write_stdin "$out"; exit $?
+        ;;
+      tail)
+        n="${3:-}"
+        p="${4:-}"
+        if [ -z "$n" ] || [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs tail <n> <path>" >&2
+          exit 2
+        fi
+        sb_fs_tail "$n" "$p"; exit $?
+        ;;
+      cat)
+        p="${3:-}"
+        if [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs cat <path>" >&2
+          exit 2
+        fi
+        sb_fs_cat "$p"; exit $?
+        ;;
+      exists)
+        p="${3:-}"
+        if [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs exists <path>" >&2
+          exit 2
+        fi
+        sb_fs_exists "$p"; exit $?
+        ;;
+      is-file)
+        p="${3:-}"
+        if [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs is-file <path>" >&2
+          exit 2
+        fi
+        sb_fs_is_file "$p"; exit $?
+        ;;
+      is-dir)
+        p="${3:-}"
+        if [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs is-dir <path>" >&2
+          exit 2
+        fi
+        sb_fs_is_dir "$p"; exit $?
+        ;;
+      readlink)
+        p="${3:-}"
+        if [ -z "$p" ]; then
+          sb_return_fail 2 "usage"
+          echo "SB_HINT=shellboss fs readlink <path>" >&2
+          exit 2
+        fi
+        sb_fs_readlink "$p"; exit $?
+        ;;
+      *)
+        sb_fs_help
+        exit 0
+        ;;
+    esac
+    ;;
+  *)
+    sb_help
+    exit 2
+    ;;
+esac
