@@ -1,10 +1,11 @@
 proof: branch-triad
-time_utc: 2026-02-07T17:00:05Z
+time_utc: 2026-02-07T17:06:27Z
 branch: hotfix/triad-proof
-head: 4f6860e4f01d8332660f7a5f54e3ddcbaaf3eaf9
+head: d6fd7a436a0325cffd1f65bd674a398497315fe8
 
-# local heads
+# local heads (sorted)
 ci/fix-hee-preflight-main-branch
+dev
 docs/live-examples-pr119
 docs/patching-links-and-gates
 feature/general-audit
@@ -19,8 +20,26 @@ p0/governance-pretty-template-and-placeholder-postmortem
 phase/finalize-pr99
 phase/next-go-green
 recover/reflect-stasis
+stage
 staging/butter-20260207T154138Z
 topic/fix-blueprint-yml-headers
 topic/fix-yml-string-refs
 topic/hee-contract-sysadmin-terse
 topic/hee-work-continue-j01-appname-v0
+
+# origin heads (sorted)
+origin/dev
+origin/docs/live-examples-pr119
+origin/feature/general-audit
+origin/feature/udpate-schema-files
+origin/feature/update-dric-and-gpt-workflows
+origin/hotfix/triad-proof
+origin/main
+origin/p0/governance-pretty-template-and-placeholder-postmortem
+origin/phase/finalize-pr99
+origin/phase/next-go-green
+origin/recover/reflect-stasis
+origin/stage
+origin/staging/butter-20260207T154138Z
+origin/topic/fix-blueprint-yml-headers
+origin/topic/hee-contract-sysadmin-terse
