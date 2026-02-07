@@ -1,5 +1,1 @@
-{
-  "$id": "hee/v1/evidence-pointer",
-  "type": "string",
-  "pattern": "^https://raw\\.githubusercontent\\.com/.+/hee/evidence/.+\\.md$"
-}
+{"$id": "hee/v1/evidence-pointer", "pattern": "^https://raw\\.githubusercontent\\.com/.+/hee/evidence/.+\\.(md|json)$", "type": "string"}

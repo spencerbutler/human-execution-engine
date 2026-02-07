@@ -1,0 +1,49 @@
+apiVersion: hee/v1
+kind: Contract
+metadata:
+  name: evidence-index-v1
+  description: Canonical indices + sqz token hash math + gh-raw chaining
+  labels:
+    area: governance
+    domain: evidence-index
+spec:
+  authority:
+    anchor:
+      kind: soa
+      path: "$HOME/.hee"
+    chain: [soa, gcic, dric, shell]
+  rules:
+    yaml_first:
+      must: true
+      definition: Official specs originate as YAML; JSON/MD are derived.
+    evidence_root:
+      must: true
+      definition: Canonical published evidence lives under repo-root hee/evidence/.
+    gh_raw_required:
+      must: true
+      definition: Every index record MUST include gh-raw URL(s) for quick retrieval.
+  indices:
+    canon_index_json:
+      path: hee/evidence/index/canon.index.v1.json
+      includes:
+        - path: pills/contracts/pr-handoff.v1.yaml
+          kind: Contract
+        - path: pills/contracts/evidence-index.v1.yaml
+          kind: Contract
+        - path: schemas/hee/v1/hee-object.schema.json
+          kind: Schema
+        - path: schemas/hee/v1/evidence-pointer.schema.json
+          kind: Schema
+    repo_files_index_json:
+      path: hee/evidence/index/repo.files.v1.json
+  hash_math:
+    sqz_token_hash:
+      version: sqz-token-hash.v1
+      canonical_order: LC_ALL=C sort by path
+      file_hash: sha256(file_bytes)
+      aggregate_hash_input: |
+        "sqz-token-hash.v1\n" +
+        for each file in canonical order:
+          path + "\n" + sha256_hex + "\n"
+      aggregate_hash: sha256(aggregate_hash_input as UTF-8)
+      token: first 16 hex chars of aggregate_hash

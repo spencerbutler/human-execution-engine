@@ -1,0 +1,31 @@
+{
+  "canon": [
+    {
+      "gh_raw": "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/pills/contracts/pr-handoff.v1.yaml",
+      "kind": "Contract",
+      "path": "pills/contracts/pr-handoff.v1.yaml"
+    },
+    {
+      "gh_raw": "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/pills/contracts/evidence-index.v1.yaml",
+      "kind": "Contract",
+      "path": "pills/contracts/evidence-index.v1.yaml"
+    },
+    {
+      "gh_raw": "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/schemas/hee/v1/hee-object.schema.json",
+      "kind": "Schema",
+      "path": "schemas/hee/v1/hee-object.schema.json"
+    },
+    {
+      "gh_raw": "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/schemas/hee/v1/evidence-pointer.schema.json",
+      "kind": "Schema",
+      "path": "schemas/hee/v1/evidence-pointer.schema.json"
+    }
+  ],
+  "generated_utc": "2026-02-07T13:46:36.833493Z",
+  "repo": {
+    "head_sha": "44efe105757b335d5d393597935a9b3eca53755a",
+    "owner_repo": "spencerbutler/human-execution-engine",
+    "ref": "44efe105757b335d5d393597935a9b3eca53755a"
+  },
+  "version": "canon-index.v1"
+}
