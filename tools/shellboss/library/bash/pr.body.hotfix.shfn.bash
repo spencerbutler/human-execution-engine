@@ -1,5 +1,12 @@
 # pr.body.hotfix.shfn.bash
 # Pretty PR-body generator: mktemp-first, icons, no ANSI dependency, no exit.
+
+# Usage:
+#   . tools/shellboss/library/bash/pr.body.hotfix.shfn.bash
+#   shellboss_pr_body_hotfix
+#
+# Writes a ready-to-paste PR body to mktemp and updates /tmp/hee.pr.body.latest.md.
+
 shellboss_pr_body_hotfix() {
   local OUT
   OUT="$(mktemp -t hee.pr.body.XXXXXX.md)" || return 1

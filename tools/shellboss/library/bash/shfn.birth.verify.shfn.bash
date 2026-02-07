@@ -1,6 +1,13 @@
 # shfn.birth.verify.shfn.bash
 # Guard: shfn births must land in tools/shellboss/library/bash in the same PR,
 # and must include wiring in install.sh + shellboss.
+
+# Usage:
+#   . tools/shellboss/library/bash/shfn.birth.verify.shfn.bash
+#   shfn_birth_verify
+#
+# Prints PASS/FAIL summary and writes a mktemp report path.
+
 shfn_birth_verify() {
   local OUT
   OUT="$(mktemp -t hee.shfn.birth.verify.XXXXXX.txt)" || return 1
