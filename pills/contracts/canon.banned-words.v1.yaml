@@ -1,0 +1,9 @@
+canon: banned-words
+version: 1
+rules:
+  - word: "`"
+    name: no-backticks
+    why: command-substitution hazard in bash; causes hangs and hidden execution
+    scope: shell,pasteables,docs
+    severity: red
+    fix: use $(...) or plain text; never emit ` in code or examples
