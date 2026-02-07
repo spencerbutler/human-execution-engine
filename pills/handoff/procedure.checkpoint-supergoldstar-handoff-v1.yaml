@@ -1,0 +1,76 @@
+apiVersion: hee/v1
+kind: Procedure
+metadata:
+  name: checkpoint-supergoldstar-handoff-v1
+  description: >-
+    End-to-end handoff procedure: merge -> clean main ->
+    on-disk cards+pill -> upload set
+  labels:
+    class: handoff
+    checkpoint: supergoldstar
+    lane: relay
+spec:
+  invariants:
+    cards_dir: cards/
+    paste_safety:
+      no_exit_in_paste_blocks: true
+      preexpand_all_file_content: true
+    fs_safety:
+      noclobber_default: true
+    git_safety:
+      end_state: main-clean
+  steps:
+    - id: s01-anchor
+      name: anchors-and-evidence-root
+      do:
+        - cd: /home/spencer/git/human-execution-engine
+        - set: [GURLID, EVD, CARDS]
+        - mkdir_p: cards/
+    - id: s02-referee-open
+      name: open-referee-card
+      do:
+        - write_card: cards/referee.cards.<ts>.open.txt
+        - fields: [gurlid, repo, branch, ts, open_cards]
+    - id: s03-verify-pre
+      name: verify-preconditions
+      do:
+        - git_status_sb: true
+        - git_head_branch_sha: true
+    - id: s04-pr-snapshot
+      name: snapshot-pr-and-ci
+      do:
+        - capture_pr_state: true
+        - capture_pr_files: true
+        - capture_ci_checks: true
+    - id: s05-merge
+      name: merge-and-delete-branch
+      do:
+        - merge_pr:
+            mode: squash
+            delete_branch: true
+    - id: s06-sync-main
+      name: sync-and-verify-main-clean
+      do:
+        - checkout: main
+        - pull_ff_only: true
+        - verify_clean: true
+    - id: s07-write-handoff-v2
+      name: write-v2-handoff-artifacts
+      do:
+        - preexpand_all_fields: true
+        - write_card: cards/referee.cards.<ts>.merge.v2.txt
+        - write_pill: handoff.<ts>.pr<id>.v2.md
+    - id: s08-record-p0
+      name: record-policy-seam
+      do:
+        - note: contracts-canon-drift-yaml-first-md-derived
+    - id: s09-final-verify
+      name: final-verify-and-close
+      do:
+        - assert_main_clean: true
+        - assert_pr_merged: true
+        - write_card: cards/referee.cards.<ts>.close.txt
+        - list_upload_set:
+        -   - handoff_pill_v2
+        -   - referee_close_card
+        -   - p0_note_optional
