@@ -1,0 +1,18 @@
+apiVersion: hee/v1
+kind: Postmortem
+metadata:
+  name: mdcli2-noncanon-invocation-v1
+  description: Non-canon markdownlint invocation caused operator churn
+  labels:
+    severity: p0
+    domain: governance
+spec:
+  incident:
+    summary: Direct markdownlint-cli2 invocation emitted; repo uses npx markdownlint-cli2.
+    impact: command failed; operator time wasted.
+  root_cause:
+    - Tool availability not verified.
+    - Repo canon path not followed.
+  remediation:
+    - Use npx markdownlint-cli2 exclusively unless tool presence proven.
+    - Add guardrail: never emit direct tool call without `command -v` proof.
