@@ -1,0 +1,11 @@
+version: v1
+generated_utc: 2026-02-07T15:42:48Z
+repo:
+  file_count: 411
+  shfn_count: 11
+  toplevel_top5:
+    - {name: "docs", count: 98}
+    - {name: "hee", count: 66}
+    - {name: "tooling", count: 27}
+    - {name: "blueprints", count: 22}
+    - {name: ".hee", count: 20}
