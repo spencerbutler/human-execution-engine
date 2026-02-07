@@ -1,0 +1,32 @@
+apiVersion: hee/v1
+kind: Contract
+metadata:
+  name: shellboss-shfn-birth-law-v1
+  labels:
+    class: contract
+    domain: shellboss
+    enforcement: mandatory
+spec:
+  authority:
+    parent: GCIC
+    binds:
+      - DRIC
+  canon:
+    plan_link:
+      kind: pill
+      ref: pills/handoff/procedure.checkpoint-supergoldstar-handoff-v1.yaml
+  invariants:
+    - id: shfn-birth-law
+      must: true
+      rule: >
+        Any .shfn.bash introduced/modified as part of a fix MUST land in the SAME PR
+        under tools/shellboss/library/bash/, and MUST include wiring changes in:
+        - tools/shellboss/install.sh (install into $ROOT/library/bash/)
+        - tools/shellboss/shellboss (source from ~/.hee/library/bash/)
+  enforcement:
+    shellboss:
+      command: shellboss_verify_shfn_birth
+      must_pass: true
+    ci:
+      ordered_by: shellboss
+      must_obey: true
