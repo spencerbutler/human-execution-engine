@@ -1,0 +1,19 @@
+name: "P2 Follow-up"
+description: "Non-blocking tracked debt"
+labels: ["p2"]
+body:
+  - type: textarea
+    attributes:
+      label: Summary
+  - type: textarea
+    attributes:
+      label: Evidence
+      description: mktemp OUTDIR pointers and/or GitHub run links
+  - type: textarea
+    attributes:
+      label: Proposed Fix
+  - type: dropdown
+    attributes:
+      label: Priority
+      options: [P0, P1, P2, P3]
+      default: 2
