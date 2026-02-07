@@ -1,0 +1,26 @@
+proof: branch-triad
+time_utc: 2026-02-07T17:00:05Z
+branch: hotfix/triad-proof
+head: 4f6860e4f01d8332660f7a5f54e3ddcbaaf3eaf9
+
+# local heads
+ci/fix-hee-preflight-main-branch
+docs/live-examples-pr119
+docs/patching-links-and-gates
+feature/general-audit
+feature/udpate-schema-files
+feature/update-dric-and-gpt-workflows
+hee-go/demo-hello
+hee-go/demo-hello-fixpatch-20260205-0854
+hotfix/triad-proof
+main
+ops/shellboss-mutators-lib
+p0/governance-pretty-template-and-placeholder-postmortem
+phase/finalize-pr99
+phase/next-go-green
+recover/reflect-stasis
+staging/butter-20260207T154138Z
+topic/fix-blueprint-yml-headers
+topic/fix-yml-string-refs
+topic/hee-contract-sysadmin-terse
+topic/hee-work-continue-j01-appname-v0
