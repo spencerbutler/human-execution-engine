@@ -1,0 +1,18 @@
+apiVersion: hee/v1
+kind: Handoff
+metadata:
+  name: handoff-pr118-v1
+  description: Canon handoff for PR118 (contracts + indices + evidence pointers)
+  labels:
+    pr: "pr118"
+spec:
+  pr:
+    number: 118
+    branch: "harden/shellboss-shfn-library-bash"
+    head_sha: "44efe105757b335d5d393597935a9b3eca53755a"
+    base: main
+  evidence:
+    outdir: "/tmp/hee.pr118.finish.lDbnhN"
+    indices:
+      canon_index_json: "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/hee/evidence/index/canon.index.v1.json"
+      repo_files_index_json: "https://raw.githubusercontent.com/spencerbutler/human-execution-engine/44efe105757b335d5d393597935a9b3eca53755a/hee/evidence/index/repo.files.v1.json"
