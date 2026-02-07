@@ -27,3 +27,5 @@ for f in "$LIB_SRC_DIR"/*.bash; do
   ok "installed: $dst"
 done
 ok "done"
+
+install -m 0644 tools/shellboss/library/bash/rg.scan.shfn.bash "$ROOT/library/bash/"
