@@ -30,6 +30,14 @@ spec:
       definition: 'When creating/updating GH issues: search by run_id/url first; record
         issue pointer to OUTDIR/issue.pointer.kv; include fenced METs YAML in operational
         comments when applicable.'
+    color_default_on:
+      must: true
+      definition: Color/pretty output MUST be default-on. Opt-out only via explicit
+        modifier HEE_COLOR=0. Evidence flows that pipe to tee MUST set GH_FORCE_TTY=1,
+        FORCE_COLOR=1, CLICOLOR_FORCE=1 or tool-specific always-color flags.
+    color_helpers_present:
+      must: true
+      path: library/bash/hee_color.sh
   decisions:
     evidence_pointer_exts_allowed:
     - md

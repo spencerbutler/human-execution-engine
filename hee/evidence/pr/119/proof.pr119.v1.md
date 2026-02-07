@@ -33,3 +33,15 @@ mets:
   evidence:
     outdir: /tmp/hee.pr119.prooftriplet.resume.7aq2EI
 ```
+
+## Terminal color evidence (tput/hex)
+
+Raw escape proof (hex):
+
+- GREEN: `1b 5b 33 32 6d 47 52 45 45 4e 1b 28 42 1b 5b 6d`
+- RED (via pipe/tee): `1b 5b 33 31 6d 52 45 44 1b 28 42 1b 5b 6d`
+
+Interpretation:
+
+- ANSI escapes are present (color is real).
+- Color suppression is a TTY-detection behavior; must force color/tty in tee pipelines.
