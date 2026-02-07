@@ -10,8 +10,12 @@ spec:
   authority:
     anchor:
       kind: soa
-      path: "$HOME/.hee"
-    chain: [soa, gcic, dric, shell]
+      path: $HOME/.hee
+    chain:
+    - soa
+    - gcic
+    - dric
+    - shell
   rules:
     yaml_first:
       must: true
@@ -21,11 +25,25 @@ spec:
       must: true
     evidence_capture:
       must: true
+    gh_issue_help:
+      must: true
+      definition: 'When creating/updating GH issues: search by run_id/url first; record
+        issue pointer to OUTDIR/issue.pointer.kv; include fenced METs YAML in operational
+        comments when applicable.'
   decisions:
-    evidence_pointer_exts_allowed: [md, json]
+    evidence_pointer_exts_allowed:
+    - md
+    - json
   artifacts:
-    contract_yaml: { path: pills/contracts/pr-handoff.v1.yaml }
+    contract_yaml:
+      path: pills/contracts/pr-handoff.v1.yaml
     handoff_yaml:
       required: true
       pattern: pills/handoff/handoff.pr<PRNUM>.v1.yaml
-      required_fields: [pr_number, branch, head_sha, base, ci_status, evidence_outdir]
+      required_fields:
+      - pr_number
+      - branch
+      - head_sha
+      - base
+      - ci_status
+      - evidence_outdir

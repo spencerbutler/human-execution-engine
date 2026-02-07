@@ -1,23 +1,39 @@
-# HEE Pull Request Template
+# 🎯 Purpose
+<!-- What does this PR do and why? -->
 
-## What changed
+## 📦 Scope
 
-## Why
+- Change type:
+  - [ ] fix
+  - [ ] feature
+  - [ ] contract
+  - [ ] docs
+  - [ ] refactor
+  - [ ] governance
 
-## How to verify
+## 🧪 Validation
 
-- [ ] Command(s) run:
+- [ ] CI green
+- [ ] hee-preflight pass
+- [ ] governance checks pass
 
-## Scope
+## 🧾 Evidence
 
-- Touches:
-- Does NOT touch:
+- OUTDIR:
 
-## Risk
+## 📊 METs
 
-- Risk level: low/med/high
-- Rollback plan:
+- commits:
+- files changed:
+- risk level: low / med / high
 
-## Evidence
+## 🔗 Links
 
-- Link(s) / out files:
+- Related issues:
+- Contracts touched:
+
+## ✅ Checklist
+
+- [ ] YAML-first respected
+- [ ] No placeholders in runnable commands
+- [ ] Canon paths used

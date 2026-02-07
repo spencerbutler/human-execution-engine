@@ -1,0 +1,20 @@
+apiVersion: hee/v1
+kind: Postmortem
+metadata:
+  name: placeholder-commands-v1
+  description: Placeholder in runnable command caused operator churn
+  labels:
+    severity: p0
+    domain: shellboss
+spec:
+  incident:
+    summary: Placeholder string in runnable command path was emitted and executed, causing immediate failure.
+    impact: Operator time + distraction; violates no-placeholders canon.
+  root_cause:
+    - Assistant emitted a runnable snippet containing an unresolved placeholder token.
+    - Command was executed as-is.
+  remediation:
+    - Deterministic ID discovery before mutation (search-by-run-id, etc.).
+    - Canon templates + contract for consistent GH updates.
+  prevention:
+    - Ban placeholder tokens in runnable commands (contract + CI check later).
