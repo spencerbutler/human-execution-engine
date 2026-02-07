@@ -1,7 +1,7 @@
 proof: branch-triad
-time_utc: 2026-02-07T17:06:27Z
+time_utc: 2026-02-07T17:10:37Z
 branch: hotfix/triad-proof
-head: d6fd7a436a0325cffd1f65bd674a398497315fe8
+head: 173452adb9e48adc6ebaf6317b10e12fa6098b84
 
 # local heads (sorted)
 ci/fix-hee-preflight-main-branch
