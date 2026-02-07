@@ -1,0 +1,7 @@
+version: v1
+name: mt-logo-play
+steps:
+  - id: fetch
+    desc: vendor upstream specimen
+  - id: index
+    desc: regenerate evidence indices
