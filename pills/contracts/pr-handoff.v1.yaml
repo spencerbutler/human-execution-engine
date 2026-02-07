@@ -1,0 +1,50 @@
+apiVersion: hee/v1
+kind: Contract
+metadata:
+  name: pr-handoff-v1
+  description: YAML-first contract for PR handling + handoffs + evidence capture
+  labels:
+    area: governance
+    domain: pr-handoff
+spec:
+  authority:
+    anchor:
+      kind: soa
+      path: "$HOME/.hee"
+    chain:
+      - soa
+      - gcic
+      - dric
+      - shell
+  rules:
+    yaml_first:
+      must: true
+      definition: >
+        Official artifacts MUST originate as YAML. Markdown/JSON are derived.
+    non_yaml_first_gate:
+      must: true
+      definition: >
+        Before PR create/update or handoff, scan for non-YAML official artifacts.
+        Convert to YAML or record an explicit exemption in YAML.
+    ci_green_gate:
+      must: true
+      definition: >
+        No handoff eligible unless required CI checks are green.
+    evidence_capture:
+      must: true
+      definition: >
+        Evidence/logs MUST be captured to mktemp outdir. Oper paste is limited
+        to an OUTDIR pointer + short summary.
+  artifacts:
+    contract_yaml:
+      path: pills/contracts/pr-handoff.v1.yaml
+    handoff_yaml:
+      required: true
+      pattern: pills/handoff/handoff.pr<PRNUM>.v1.yaml
+      required_fields:
+        - pr_number
+        - branch
+        - head_sha
+        - base
+        - ci_status
+        - evidence_outdir
