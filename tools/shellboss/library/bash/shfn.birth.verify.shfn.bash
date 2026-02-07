@@ -1,7 +1,7 @@
 # shfn.birth.verify.shfn.bash
 # Guard: shfn births must land in tools/shellboss/library/bash in the same PR,
 # and must include wiring in install.sh + shellboss.
-shellboss_verify_shfn_birth() {
+shfn_birth_verify() {
   local OUT
   OUT="$(mktemp -t hee.shfn.birth.verify.XXXXXX.txt)" || return 1
   ln -sf "$OUT" /tmp/hee.shfn.birth.verify.latest.txt 2>/dev/null || true
@@ -27,7 +27,7 @@ shellboss_verify_shfn_birth() {
 
   # New/modified shfn files in this change range
   local shfns
-  shfns="$(git diff --name-only "$base..HEAD" | rg -n '\.shfn\.bash$' 2>/dev/null || true)"
+  shfns="$(git diff --name-only "$base..HEAD" | rg '\.shfn\.bash$' 2>/dev/null || true)"
 
   if [ -z "$shfns" ]; then
     echo "✅ SHFN-BIRTH verify: no shfn changes"

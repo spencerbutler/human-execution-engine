@@ -203,3 +203,7 @@ case "$cmd" in
 esac
 
 . '/home/spencer/.hee/library/bash/rg.scan.shfn.bash'
+
+. '/home/spencer/.hee/library/bash/pr.body.hotfix.shfn.bash'
+
+. '/home/spencer/.hee/library/bash/shfn.birth.verify.shfn.bash'
