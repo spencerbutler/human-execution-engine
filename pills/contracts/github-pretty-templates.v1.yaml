@@ -10,12 +10,17 @@ spec:
   authority:
     anchor:
       kind: soa
-      path: "$HOME/.hee"
-    chain: [soa, gcic, dric, shell]
+      path: $HOME/.hee
+    chain:
+    - soa
+    - gcic
+    - dric
+    - shell
   rules:
     yaml_first:
       must: true
-      definition: Official specs originate as YAML; derived markdown/templates are implementation.
+      definition: Official specs originate as YAML; derived markdown/templates are
+        implementation.
     templates_required:
       must: true
       definition: Repo MUST contain GitHub templates so OPER never hand-writes format.
@@ -25,6 +30,24 @@ spec:
     issue_templates_path:
       must: true
       path: .github/ISSUE_TEMPLATE/
+    proof_triplet_required:
+      must: true
+      definition: 'PR updates MUST include Proof Triplet v1: YAML+JSON+MD with real
+        outputs and pointers.'
   required_sections:
-    pr: [Purpose, Scope, Validation, Evidence, METs, Links, Checklist]
-    issue: [Summary, Evidence, Proposed Fix, Priority]
+    pr:
+    - Purpose
+    - Scope
+    - Validation
+    - Evidence
+    - METs
+    - Links
+    - Checklist
+    - Issues
+    - Live Output
+    - Proof Triplet (v1)
+    issue:
+    - Summary
+    - Evidence
+    - Proposed Fix
+    - Priority
