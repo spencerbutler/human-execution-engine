@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "🔍 Running HEE security checks..."
+if grep -R -nE '(password|secret|key|token)' \
+  --include="*.md" --include="*.py" --include="*.js" --include="*.json" . \
+  | grep -v "docs/HEE_POLICY.md" \
+  | grep -v "prompts/PROMPTING_RULES.md" \
+  | grep -vE '(test|example|demo)' \
+  | head -1 >/dev/null
+then
+  echo "⚠️  Potential sensitive information found"
+else
+  echo "✅ No obvious security issues"
+fi
