@@ -1,10 +1,6 @@
 apiVersion: hee/v1
 kind: ConvoIssues
 metadata:
-  generated_utc: "20260209T181426Z"
+  generated_utc: "20260209T182046Z"
 spec:
-  outstanding_in_convo:
-    - id: wu.http-9pane.autoupdate-rails.v1.no-pr
-      status: RED
-    - id: posture.verify-only.misapplied.blocks-pr
-      status: RED
+  note: "See repo issues"
