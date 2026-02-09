@@ -1,0 +1,16 @@
+apiVersion: hee/v1
+kind: GreenCard
+metadata:
+  mood: "over-the-moon"
+spec:
+  status: GREEN
+  why:
+    - "Convo state captured to disk"
+    - "Repo evidence written and committed"
+    - "Operator verified outputs on CLI"
+  signals:
+    - "Clean YAML artifacts"
+    - "Repeatable mdshell flow"
+    - "Improved signal over noise"
+  next:
+    - "Backfill pretty via jinja later"
