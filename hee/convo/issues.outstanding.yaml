@@ -1,6 +1,6 @@
 apiVersion: hee/v1
 kind: ConvoIssues
 metadata:
-  generated_utc: "20260209T182046Z"
+  generated: "manual"
 spec:
-  note: "See repo issues"
+  note: "See linked GitHub issues"
