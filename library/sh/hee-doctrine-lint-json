@@ -1,0 +1,100 @@
+# HEE IO CONTRACT: banners + subshell containment
+# - BANNERS (=== BEGIN/END) make output machine-parseable (shellboss-safe) and resumable.
+# - SUBSHELL ( ( ... ) ) containment prevents accidental `exit` from killing the parent shell/terminal.
+# - Prefer POSIX sh for rails: fewer footguns, more deterministic behavior across environments.
+
+#!/bin/sh
+# POSIX: bannered, deterministic, no false-green (files>0 gate)
+
+d="schemas/hee/v1"
+n=0
+fail=0
+warn=0
+
+count_pat () {
+  pat="$1"
+  file="$2"
+  grep -n "$pat" "$file" 2>/dev/null | wc -l | tr -d ' '
+}
+
+echo "=== BEGIN DOCTRINE_LINT_JSON ==="
+
+for f in "$d"/*.schema.json; do
+  [ -f "$f" ] || continue
+  n=$((n+1))
+
+  sz=$(wc -c <"$f" | tr -d ' ')
+  if [ "$sz" -eq 0 ]; then
+    echo "fail.zero_bytes=$f"
+    fail=1
+    continue
+  fi
+  if [ "$sz" -lt 80 ]; then
+    echo "warn.small_bytes=$f bytes=$sz"
+    warn=1
+  fi
+
+  has_brace=$(count_pat '{' "$f")
+  if [ "$has_brace" -eq 0 ]; then
+    echo "fail.no_brace=$f"
+    fail=1
+    continue
+  fi
+
+  ph=$(count_pat 'placeholder' "$f")
+  if [ "$ph" -gt 0 ]; then
+    echo "warn.placeholder=$f"
+    warn=1
+  fi
+
+  base=$(basename "$f")
+
+  # Enforce envelope shape only on hee-object schema for now (k8s-y: apiVersion/kind/metadata)
+  if [ "$base" = "hee-object.schema.json" ]; then
+    has_api=$(count_pat '"apiVersion"' "$f")
+    has_kind=$(count_pat '"kind"' "$f")
+    has_meta=$(count_pat '"metadata"' "$f")
+    has_req=$(count_pat '"required"' "$f")
+    if [ "$has_api" -eq 0 ] || [ "$has_kind" -eq 0 ] || [ "$has_meta" -eq 0 ] || [ "$has_req" -eq 0 ]; then
+      echo "fail.envelope.tokens=$f"
+      fail=1
+    fi
+  fi
+
+  # Inuid aliasing + trace/refs/signals separation (skip scalar evidence-pointer schema)
+  if [ "$base" != "evidence-pointer.schema.json" ]; then
+    has_gurlid=$(count_pat '"gurlid"' "$f")
+    has_inuid=$(count_pat '"inuid"' "$f")
+    if [ "$has_gurlid" -gt 0 ] && [ "$has_inuid" -eq 0 ]; then
+      echo "fail.inuid_alias=$f"
+      fail=1
+    fi
+
+    has_trace=$(count_pat '"trace"' "$f")
+    has_refs=$(count_pat '"refs"' "$f")
+    has_signals=$(count_pat '"signals"' "$f")
+    mix=0
+    [ "$has_trace" -gt 0 ] && mix=$((mix+1))
+    [ "$has_refs" -gt 0 ] && mix=$((mix+1))
+    [ "$has_signals" -gt 0 ] && mix=$((mix+1))
+    if [ "$mix" -gt 1 ]; then
+      echo "fail.mixed_trs=$f"
+      fail=1
+    fi
+  fi
+done
+
+echo "doctrine_lint.files=$n"
+echo "doctrine_lint.warn=$warn"
+
+if [ "$n" -eq 0 ]; then
+  echo "doctrine_lint=FAIL reason=no_schema_json_files"
+  rc=60
+elif [ "$fail" -ne 0 ]; then
+  rc=61
+else
+  rc=0
+fi
+
+echo "=== END DOCTRINE_LINT_JSON rc=$rc ==="
+exit "$rc"
