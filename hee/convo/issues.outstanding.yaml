@@ -1,0 +1,24 @@
+apiVersion: hee/v1
+kind: ConvoIssues
+metadata:
+  generated_utc: "20260209T181109Z"
+spec:
+  notes: "Auto-collected outstanding items + current GitHub issues (text)."
+  outstanding_in_convo:
+    - id: wu.http-9pane.autoupdate-rails.v1.no-pr
+      status: RED
+      note: "No PR shipped yet."
+    - id: posture.verify-only.misapplied.blocks-pr
+      status: RED
+      note: "Verify-only treated as blocking PR."
+    - id: gate.clear-requires.unmet
+      status: YELLOW
+      note: "Clear-requires list needs disk verification."
+    - id: screenshot.pending-import
+      status: YELLOW
+      note: "Pending import not completed."
+    - id: runnable-yaml.contract
+      status: YELLOW
+      note: "Runnable must be strict Run YAML + POSIX sh."
+  github_open_issues_text: |
+    120	OPEN	P2: main hee-preflight fails when forcing local main branch (run 21780526975)	p2	2026-02-07T14:18:01Z
