@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "🔍 Checking HEE formatting standards..."
+if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then
+  echo "✅ State capsule formatting check passed"
+else
+  echo "⚠️  State capsule formatting may need attention"
+fi

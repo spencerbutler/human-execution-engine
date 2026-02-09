@@ -59,32 +59,28 @@ repos:
 
       - id: hee-security-check
         name: HEE Security Check
-        entry: | 
-          bash -c 'echo "🔍 Running HEE security checks..." && if grep -r "password\|secret\|key\|token" --include="*.md" --include="*.py" --include="*.js" --include="*.json" . | grep -v "docs/HEE_POLICY.md" | grep -v "prompts/PROMPTING_RULES.md" | grep -v "test\|example\|demo" | head -1; then echo "⚠️  Potential sensitive information found"; else echo "✅ No obvious security issues"; fi'
+        entry: scripts/pre-commit/hee-security-check
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-formatting-check
         name: HEE Formatting Check
-        entry: | 
-          bash -c 'echo "🔍 Checking HEE formatting standards..." && if [ -f "docs/STATE_CAPSULES/2026-01-24/HEE-Current-Tasks.md" ]; then echo "✅ State capsule formatting check passed"; else echo "⚠️  State capsule formatting may need attention"; fi'
+        entry: scripts/pre-commit/hee-formatting-check
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-violation-check
         name: HEE Violation Prevention Check
-        entry: | 
-          bash -c 'echo "🔍 Running HEE violation prevention check..." && ./scripts/violation_checker.sh'
+        entry: scripts/pre-commit/hee-violation-check
         language: system
         files: '.*'
         pass_filenames: false
 
       - id: hee-agent-instruction-check
         name: HEE Agent Instruction Check
-        entry: | 
-          bash -c 'echo "📋 HEE Agent Instructions:" && echo "⚠️  If this pre-commit hook blocks your commit, it is working correctly!" && echo "📝 Report the violation in your output and document it in the state capsule" && echo "🔧 This is expected behavior - the system is preventing violations" && echo "✅ Always update the state capsule with violation reports before pushing" && echo "🎯 Violations should be documented, not bypassed"'
+        entry: scripts/pre-commit/hee-agent-instruction-check
         language: system
         files: '.*'
         pass_filenames: false

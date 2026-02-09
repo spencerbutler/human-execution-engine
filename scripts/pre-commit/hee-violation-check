@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "🔍 Running HEE violation prevention check..."
+./scripts/violation_checker.sh
