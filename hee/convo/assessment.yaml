@@ -1,0 +1,27 @@
+apiVersion: hee/v1
+kind: ConvoAssessment
+metadata:
+  generated: "manual"
+spec:
+  summary:
+    - "Snapshots created; no maintainer tooling present"
+    - "Admin PRs outnumber WU PRs"
+  findings:
+    issues:
+      - "Duplicate titles observed (e.g., WU http-9pane; Verify-only posture)"
+      - "No dedupe or linkage enforcement"
+    prs:
+      - "Multiple open sync PRs with similar intent"
+      - "Weak linkage to WU acceptance criteria"
+    branches:
+      - "Many chore/issues-sync* branches (sprawl)"
+      - "WU branch exists but not surfaced as active PR"
+    tooling_gaps:
+      - "No issues-dedupe tool"
+      - "No pretty PR templating"
+      - "No canonical convo-sync maintainer"
+      - "No branch prune automation"
+  next_checks:
+    - "gh issue list"
+    - "gh pr list"
+    - "git branch -a"
