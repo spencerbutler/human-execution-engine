@@ -1,6 +1,0 @@
-apiVersion: hee/v1
-kind: ConvoIssues
-metadata:
-  generated: "manual"
-spec:
-  note: "See linked GitHub issues"

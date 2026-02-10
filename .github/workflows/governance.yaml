@@ -15,12 +15,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-
     - name: Enforce frozen governance operations guardrails
-      run: ./ci/governance/ops_guard.sh
+      run: bash ci/governance/ops_guard.sh
+
     - name: Lint governance checker
       run: |
-        echo "🔍 Running governance-aware linting..."
+        echo "🔍 Running governance-aware linting...TODO(spencer) convert to script"
 
         # Ensure shellcheck is available
         if ! command -v shellcheck &> /dev/null; then
@@ -32,7 +32,7 @@ jobs:
         shellcheck ci/governance/check.sh
 
         # Enforce governance hygiene
-        echo "🔍 Checking governance hygiene..."
+        echo "🔍 Checking governance hygiene...TODO(spencer) convert to script"
 
         # Ensure set -euo pipefail is used
         if ! grep -q "set -euo pipefail" ci/governance/check.sh; then
@@ -65,7 +65,7 @@ jobs:
 
     - name: Run governance check on repository
       run: |
-        echo "🔍 Running governance check against real repository..."
+        echo "🔍 Running governance check against real repository...TODO(spencer) convert to script"
         bash ci/governance/check.sh --path .
 
   governance-fixtures:
@@ -79,7 +79,7 @@ jobs:
 
     - name: Test ok-minimal fixture (should pass)
       run: |
-        echo "🔍 Testing fixture: ok-minimal (expected: PASS)"
+        echo "🔍 Testing fixture: ok-minimal (expected: PASS)...TODO(spencer) convert to script"
         set +e
         output="$(bash ci/governance/check.sh --path governance/fixtures/ok-minimal 2>&1)"
         exit_code=$?
@@ -96,9 +96,9 @@ jobs:
 
     - name: Test bad-missing-prompts fixture (should fail with GOV-STRUCT-001)
       run: |
-        echo "🔍 Testing fixture: bad-missing-prompts (expected: FAIL with GOV-STRUCT-001)"
+        echo "🔍 Testing fixture: bad-missing-prompts (expected: FAIL with GOV-STRUCT-001)...TODO(spencer) convert to script"
         set +e
-        output="$(./ci/governance/check.sh --path governance/fixtures/bad-missing-prompts 2>&1)"
+        output="$(./ci/governance/check.sh --path hee/governance/fixtures/bad-missing-prompts 2>&1)"
         exit_code=$?
         set -e
 
@@ -117,7 +117,7 @@ jobs:
 
     - name: Test bad-missing-doctrine-doc fixture (should fail with GOV-STRUCT-001, GOV-DOC-001)
       run: |
-        echo "🔍 Testing fixture: bad-missing-doctrine-doc (expected: FAIL with GOV-STRUCT-001, GOV-DOC-001)"
+        echo "🔍 Testing fixture: bad-missing-doctrine-doc (expected: FAIL with GOV-STRUCT-001, GOV-DOC-001)...TODO(spencer) convert to script"
         set +e
         output="$(bash ci/governance/check.sh --path governance/fixtures/bad-missing-doctrine-doc 2>&1)"
         exit_code=$?
@@ -142,9 +142,9 @@ jobs:
 
     - name: Test bad-prompt-missing-authority fixture (should fail with GOV-PROMPT-001)
       run: |
-        echo "🔍 Testing fixture: bad-prompt-missing-authority (expected: FAIL with GOV-PROMPT-001)"
+        echo "🔍 Testing fixture: bad-prompt-missing-authority (expected: FAIL with GOV-PROMPT-001)...TODO(spencer) convert to script "
         set +e
-        output="$(bash ci/governance/check.sh --path governance/fixtures/bad-prompt-missing-authority 2>&1)"
+        output="$(bash ci/governance/check.sh --path hee/governance/fixtures/bad-prompt-missing-authority 2>&1)"
         exit_code=$?
         set -e
 

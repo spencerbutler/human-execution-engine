@@ -14,7 +14,7 @@ readonly SCRIPT_NAME="check.sh"
 readonly SCRIPT_VERSION="1.1.0"
 
 # Waiver file location (relative to target repo root)
-readonly WAIVER_FILE=".hee/governance/waivers.txt"
+readonly WAIVER_FILE="hee/governance/waivers.txt"
 
 usage() {
   cat << EOF2
