@@ -1,38 +1,45 @@
 # markdownlint-cli2 configuration (docs-heavy / low-churn profile)
 # CLI runner: https://github.com/DavidAnson/markdownlint-cli2
-# Rules docs:  https://github.com/DavidAnson/markdownlint
+# Rules:  https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#rules
 
 config:
-  # MD040 — fenced-code-language
-  # Require language tags on fenced code blocks (```bash, ```yaml, etc.).
-  # High-signal: improves readability + highlighting + tooling.
-  MD040: true
+  default: false # disable all rules by default
 
-  # MD025 — single-title
-  # Only one H1 per document.
-  MD025: true
-
-  # MD041 — first-line-heading
-  # File should start with an H1 heading.
-  MD041: true
-
-  # MD024 — no-duplicate-heading
-  # Duplicate headings are usually confusing. siblings_only reduces false positives.
-  MD024:
-    siblings_only: true
-
-  # MD003 — heading-style
-  # Keep headings consistent: prefer ATX style (## Heading).
   MD003:
     style: atx
+  # MD003 — heading-style
+  # Keep headings consistent: prefer ATX style (## Heading).
 
-  # MD029 — ordered-list-item-prefix
-  # Ordered list numbering style is mostly preference; tolerant mode reduces noise.
+  MD009: true  # trailing spaces
+  MD010: true  # hard tabs
+  MD012: true  # multiple blank lines
+
+  MD013:
+    line_length: 160
+    code_blocks: false
+    tables: false
+  # MD013 — line-length
+  # Line-length is noisy in docs; enforce only outside docs (see overrides).
+  # (If you want a global default anyway, set it here; override will disable in docs.)
+
+  MD022: true  # heading spacing
+
+  MD024:
+    siblings_only: true
+  # MD024 — no-duplicate-heading
+  # Duplicate headings are usually confusing. siblings_only reduces false positives.
+
+  MD025: true
+  # MD025 — single-title
+  # Only one H1 per document.
+
   MD029:
     style: one_or_ordered
+  # MD029 — ordered-list-item-prefix
+  # Ordered list numbering style is mostly preference; tolerant mode reduces noise.
 
-  # MD033 — no-inline-html
-  # Allow a small set of practical HTML elements commonly used in docs.
+  MD030: true  # list marker spacing
+
   MD033:
     allowed_elements:
       - br
@@ -40,23 +47,26 @@ config:
       - summary
       - kbd
       - img
+  # MD033 — no-inline-html
+  # Allow a small set of practical HTML elements commonly used in docs.
 
-  # MD060 — table-column-style
-  # Keep table formatting consistent; padded matches common editor output.
-  MD060:
-    style: padded
-
+  MD036: false
   # MD036 — no-emphasis-as-heading
   # Bold-as-heading is common in docs; disable to avoid churn.
-  MD036: false
 
-  # MD013 — line-length
-  # Line-length is noisy in docs; enforce only outside docs (see overrides).
-  # (If you want a global default anyway, set it here; override will disable in docs.)
-  MD013:
-    line_length: 160
-    code_blocks: false
-    tables: false
+  MD040: true
+  # MD040 — fenced-code-language
+  # Require language tags on fenced code blocks (```bash, ```yaml, etc.).
+  # High-signal: improves readability + highlighting + tooling.
+
+  MD041: true
+  # MD041 — first-line-heading
+  # File should start with an H1 heading.
+
+  MD060:
+    style: padded
+  # MD060 — table-column-style
+  # Keep table formatting consistent; padded matches common editor output.
 
 overrides:
   # Docs: disable line-length entirely (prose, URLs, templates, history capsules).

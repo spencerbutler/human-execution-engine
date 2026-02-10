@@ -21,7 +21,7 @@ This document makes them explicit.
 Before accepting this document as authoritative, the following MUST exist:
 
 - ci/governance/check.sh
-- governance/fixtures/
+- hee/governance/fixtures/
 - docs/doctrine/
 - .github/workflows/ (CI present)
 
@@ -143,7 +143,7 @@ After adoption of this document, the following MUST exist:
 
 - docs/doctrine/FROZEN_CONTRACTS.md   (this file)
 - ci/governance/check.sh              (enforcing parser + contracts)
-- governance/fixtures/               (covering waived and failing cases)
+- hee/governance/fixtures/               (covering waived and failing cases)
 - .github/workflows/*governance*      (CI enforcing exit codes)
 
 If any of the above are missing, governance correctness is not guaranteed.
