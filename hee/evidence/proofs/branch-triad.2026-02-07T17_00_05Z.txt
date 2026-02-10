@@ -4,6 +4,7 @@ branch: hotfix/triad-proof
 head_at_write: 65ab46247480226bf026fe99cbd21fc294debebd
 
 # local heads (sorted)
+
 ci/fix-hee-preflight-main-branch
 dev
 docs/live-examples-pr119
@@ -28,6 +29,7 @@ topic/hee-contract-sysadmin-terse
 topic/hee-work-continue-j01-appname-v0
 
 # origin heads (sorted)
+
 origin/dev
 origin/docs/live-examples-pr119
 origin/feature/general-audit
