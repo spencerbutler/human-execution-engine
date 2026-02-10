@@ -1,6 +1,0 @@
-apiVersion: hee/v1
-kind: GreenCard
-metadata:
-  mood: "over-the-moon"
-spec:
-  status: GREEN
