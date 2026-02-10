@@ -80,9 +80,9 @@ check_strict() {
   # Check that governance directory has content
   if [[ -d "governance" ]]; then
     local file_count
-    file_count=$(find governance -type f | wc -l 2>/dev/null || echo "0")
+    file_count=$(find .hee/governance -type f | wc -l 2>/dev/null || echo "0")
     if [[ "$file_count" -eq 0 ]]; then
-      echo "WARNING: governance/ directory exists but contains no files" >&2
+      echo "WARNING: .hee/governance/ directory exists but contains no files" >&2
     fi
   fi
 
@@ -122,7 +122,7 @@ main() {
   check_file "docs/doctrine/FROZEN_CONTRACTS.md" || ((violations++))
 
   # Required directories
-  check_dir "governance/fixtures" || ((violations++))
+  check_dir ".hee/governance/fixtures" || ((violations++))
   check_dir "docs/doctrine" || ((violations++))
   check_dir ".github/workflows" || ((violations++))
 
