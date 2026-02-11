@@ -1,0 +1,15 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: ecosystem-peer-refresh-2026-02-11_0340
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+spec:
+  purpose: checkpoint refresh for peers.
+  context:
+    sidebar_name: "ecosystem 698b879b-b778-832c-9527-af25c2534c32"
+    peers_count: 2
+    you_sidebar_name: "tcos 698bfb0a-9a14-8332-b12c-3a78bacdade6"
+  checkpoint:
+    pr: 140
+    branch: feature/hee-yaml-header-order-hook
+    note: "pre-commit config fixed; header-order hook added; evidence gating now truthful"
