@@ -1,0 +1,38 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: tcos-entity-transition-seed
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts:
+    type: hee/Ts@v1
+    human: { value: "2026-02-11_0359", params: { tz: America/Chicago, fmt: "%Y-%m-%d_%H%M" } }
+    unix:  { value: "1770803977", params: { units: seconds, tz: UTC } }
+spec:
+  purpose: retire legacy TCOS identity and declare new TCOS LLC identity as authoritative.
+  context:
+    sidebar_name: "tcos 698bfb0a-9a14-8332-b12c-3a78bacdade6"
+  entities:
+    legacy:
+      label: TCOS-LEGACY
+      status: superseded
+      effective_superseded: TBD
+      identifiers:
+        ein: TBD
+      policy:
+        - do_not_use_for_new_vendor_onboarding
+        - do_not_use_for_new_invoicing
+    current:
+      label: TCOS-LLC
+      status: active
+      effective_active: TBD
+      identifiers:
+        ein: TBD
+      policy:
+        - authoritative_for_vendor_onboarding
+        - authoritative_for_invoicing_and_tax_forms
+  notes:
+    - sensitive identifiers intentionally TBD until ROI pays
+  needs_iter: true
+  iter:
+    - fill effective dates
+    - confirm exact supersede language (superseded vs dissolved)

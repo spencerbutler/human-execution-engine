@@ -1,0 +1,26 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: tcos-public-naming-policy-seed
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts:
+    type: hee/Ts@v1
+    human: { value: "2026-02-11_0359", params: { tz: America/Chicago, fmt: "%Y-%m-%d_%H%M" } }
+    unix:  { value: "1770803977", params: { units: seconds, tz: UTC } }
+spec:
+  purpose: public-safe naming guidance; keep sensitive identifiers out of public repos.
+  public_repos:
+    include:
+      - "Twin Cities Open Systems (TCOS), LLC"
+      - "TCOS (LLC)"
+    avoid:
+      - ein
+      - tax_id
+      - legacy_entity_identifiers
+  references:
+    authority_lives_in: tcos-plan-private
+  notes:
+    - resume is P2; keep minimal but correct
+  needs_iter: true
+  iter:
+    - confirm exact public naming string

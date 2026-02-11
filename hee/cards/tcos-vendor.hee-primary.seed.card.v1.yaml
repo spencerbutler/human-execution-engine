@@ -1,0 +1,37 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: tcos-vendor-hee-primary-seed
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts:
+    type: hee/Ts@v1
+    human: { value: "2026-02-11_0359", params: { tz: America/Chicago, fmt: "%Y-%m-%d_%H%M" } }
+    unix:  { value: "1770803977", params: { units: seconds, tz: UTC } }
+spec:
+  purpose: declare HEE as primary vendor under contract with TCOS LLC (seed terms; expand later).
+  parties:
+    client:
+      label: TCOS-LLC
+      ref: "hee/cards/tcos-entity.transition.seed.card.v1.yaml#spec.entities.current"
+    vendor:
+      label: HEE
+      ref: TBD
+  relationship:
+    designation: primary_vendor
+    scope:
+      - TBD
+    effective: TBD
+    term: TBD
+  commercial:
+    invoicing: TBD
+    payment_terms: TBD
+  work_product:
+    ownership: TBD
+    confidentiality: TBD
+  termination:
+    for_cause: TBD
+    for_convenience: TBD
+  needs_iter: true
+  iter:
+    - decide scope bullets for primary_vendor (2–5 max)
+    - add signature blocks once parties are finalized
