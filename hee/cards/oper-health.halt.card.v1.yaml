@@ -1,0 +1,25 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: oper-health-halt
+  ts_human: 2026-02-10_1851
+spec:
+  purpose: oper health gate; reduce footguns when oper is not in a good state.
+  object:
+    halt:
+      hungry: unknown
+      angry: unknown
+      lonely: unknown
+      tired: unknown
+  guidance:
+    - if hungry is true, stop and eat
+    - if angry is true, stop and cool down
+    - if lonely is true, consider reaching out
+    - if tired is true, stop and rest
+  integration:
+    - preflight may print halt state
+    - wu may hard stop on halt state (needs dif)
+  needs_dif: true
+  dif:
+    - define allowed values and storage location
+    - define stop rules and override rules
