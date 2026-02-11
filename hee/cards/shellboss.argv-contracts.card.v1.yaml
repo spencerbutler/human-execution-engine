@@ -1,0 +1,67 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: shellboss-argv-contracts
+  ts_human: 2026-02-10_1851
+spec:
+  rule:
+    - all commands are argv arrays
+    - shellboss is the only runner
+    - no command strings
+  commands:
+    gh_link:
+      purpose: generate github raw links for a file or directory
+      defaults:
+        ref: main
+      argv_examples:
+        - - shellboss
+          - gh_link
+          - --ref
+          - main
+          - --path
+          - contracts/hee-sqz-roll-v1.contract.yaml
+        - - shellboss
+          - gh_link
+          - --path
+          - schemas/hee/v1/hee-object.schema.json
+      output:
+        file: raw link to file contents
+        dir: list raw links or browse link (needs dif)
+      needs_dif: true
+      dif:
+        - define directory behavior and flags: --raw, --browse, --recursive
+        - define stderr discipline and exit codes
+    trace_chain:
+      purpose: trace a simple key through legs and stools to source
+      argv_examples:
+        - - shellboss
+          - trace_chain
+          - --key
+          - hee://contracts/hee-sqz-roll-v1
+          - --verbose
+      output:
+        terse: single chain line
+        verbose: legs and stools explanation
+      needs_dif: true
+      dif:
+        - define key syntax and registry binding
+        - define traversal roots via dir-groups registry
+    registrar:
+      purpose: manage registries; first leg root
+      argv_examples:
+        - - shellboss
+          - registrar
+          - list
+          - --registry
+          - hee/registries/dir-groups.registry.v1.yaml
+        - - shellboss
+          - registrar
+          - validate
+          - --registry
+          - hee/registries/dir-groups.registry.v1.yaml
+      needs_dif: true
+      dif:
+        - define promotion chain for machgen outputs
+        - define uid token format and storage
+  runner:
+    only_runner: shellboss

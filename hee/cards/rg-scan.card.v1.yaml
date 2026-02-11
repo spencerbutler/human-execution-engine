@@ -1,0 +1,34 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: rg-scan
+  ts_human: 2026-02-10_1851
+spec:
+  purpose: fast locate; reduce search time; produce evidence; support governance and contracts adoption.
+  command_argv:
+    - rg
+    - governance/
+    - .github/
+    - ci/
+    - .pre-commit-config.yaml
+  evidence:
+    hits:
+      - file: .github/workflows/governance.yaml
+        line: 84
+        note: fixture ok minimal
+      - file: .github/workflows/governance.yaml
+        line: 122
+        note: fixture bad missing doctrine doc
+  followups:
+    - key: contractish_files_discovery
+      status: done
+      results:
+        - contracts/roles-trilateral-v1.contract.yaml
+        - contracts/outfile-evidence-v1.contract.yaml
+        - contracts/hee-sqz-roll-v1.contract.yaml
+        - contracts/dric.v1.md
+        - contracts/hee-schema-id-v1.contract.yaml
+        - contracts/validator-contract-v1.contract.yaml
+        - contracts/dric-v1.contract.yaml
+        - contracts/gcic.v1.md
+        - .hee/HEE-Heavy-Doctrine-artifacts/DRIC-v1-Contract-Specification.md

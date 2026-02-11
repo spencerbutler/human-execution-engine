@@ -1,0 +1,21 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: contracts-stack-gcic-dric
+  ts_human: 2026-02-10_1851
+spec:
+  status: wip
+  purpose: formal adoption path for gcic and dric artifacts; reduce need to update top stack; plug subcontracts.
+  discovered:
+    gcic_md: contracts/gcic.v1.md
+    dric_md: contracts/dric.v1.md
+    dric_yaml: contracts/dric-v1.contract.yaml
+  decisions:
+    - gcic is top level contract
+    - dric family is gpt related and must be renamed because it is broader than design to relay
+    - dric subs delegate; prefer plug in specific contracts rather than editing top stack repeatedly
+  needs_dif: true
+  dif:
+    - define new dric family name
+    - define dric sub naming: dric-v1-subNNNN
+    - define how gcic references dric family and subs

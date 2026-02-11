@@ -1,0 +1,19 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: hee-words-seed
+  ts_human: 2026-02-10_1851
+spec:
+  purpose: seed dictionary and thesaurus work; yaml first; render md via jinja later.
+  words:
+    opus:
+      definition: generated outputs hierarchy and working surface for machine friends.
+      note: place for rendered html, md, yaml, text, exif, img; grouped by cards, pills, contracts, plans, blueprints, evidence.
+    thesis:
+      definition: a proposition set down; etymology note is recorded in prior q.
+    thesaurus:
+      definition: a storehouse; etymology cousin note recorded in prior q.
+  needs_dif: true
+  dif:
+    - split into dictionary and thesaurus hee-objs
+    - add trace keys for each word
