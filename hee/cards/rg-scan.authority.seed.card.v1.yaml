@@ -1,0 +1,53 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: rg-scan-authority-seed
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts_human: 2026-02-11_0000
+spec:
+  purpose: >
+    Canonical ripgrep scan patterns (argv arrays) for common HEE signals.
+    Baby steps; expand later.
+  scans:
+    quotes_words:
+      purpose: find quote/lyrics references, incl common typos.
+      cmd_argv:
+        - rg
+        - -n
+        - --hidden
+        - --glob
+        - '!.git/'
+        - --glob
+        - '!**/node_modules/**'
+        - --glob
+        - '!**/vendor/**'
+        - --glob
+        - '!**/.venv/**'
+        - '(?i)\b(quote|qoute|guote|goute)\b'
+      notes:
+        - word scan only (no block parsing yet)
+        - add quote-block heuristics later if ROI pays
+    media_reference_words:
+      purpose: now-playing + album/song/lyric/music/movie reference markers.
+      cmd_argv:
+        - rg
+        - -n
+        - --hidden
+        - --glob
+        - '!.git/'
+        - --glob
+        - '!**/node_modules/**'
+        - --glob
+        - '!**/vendor/**'
+        - --glob
+        - '!**/.venv/**'
+        - '(?i)\b(album|song|lyric|lyrics|music|movie|film|soundtrack|now[ -]?playing)\b'
+      examples:
+        - "wu tang clan wu-tang forever :: reunited"
+      notes:
+        - treat as reference marker; more fields later (artist/title/year/etc)
+  needs_iter: true
+  iter:
+    - add globs for large binary dirs as they show up
+    - add allowlist mode per repo
+    - add structured "reference" hee-obj once shape is clear
