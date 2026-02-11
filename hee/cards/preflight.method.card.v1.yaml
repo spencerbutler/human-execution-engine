@@ -1,0 +1,27 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: preflight-method
+  ts_human: 2026-02-10_1851
+spec:
+  purpose: check and verify before any action; reduce footguns; improve oper visual scanning.
+  requirements:
+    - every wu begins with preflight block
+    - preflight is info only and inert
+    - preflight prints circle indicators
+    - preflight ends with exactly one evidence k:v line
+    - preflight separates info output from evidence report
+  indicators:
+    ok: "🟢"
+    warn: "🟡"
+    bad: "🔴"
+    pre: "🔵"
+  evidence_line:
+    format: "🟢 EVIDENCE key=value ..."
+    rule: single line only
+  runner:
+    only_runner: shellboss
+  needs_dif: true
+  dif:
+    - define preflight plugin system for env snapshots
+    - define halt gating integration

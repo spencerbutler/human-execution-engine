@@ -1,0 +1,46 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: opus-layout
+  ts_human: 2026-02-10_1851
+spec:
+  status: wip
+  purpose: define generated output layout; jinja renders yaml to md and other forms; shellboss directs.
+  dirs:
+    note: intended layout under generated; creation is separate from this card.
+    template:
+      - generated/html/cards
+      - generated/html/pills
+      - generated/html/contracts
+      - generated/html/plans
+      - generated/html/blueprints
+      - generated/html/evidence
+      - generated/md/cards
+      - generated/md/pills
+      - generated/md/contracts
+      - generated/md/plans
+      - generated/md/blueprints
+      - generated/md/evidence
+      - generated/yaml/cards
+      - generated/yaml/pills
+      - generated/yaml/contracts
+      - generated/yaml/plans
+      - generated/yaml/blueprints
+      - generated/yaml/evidence
+      - generated/text/cards
+      - generated/text/pills
+      - generated/text/contracts
+      - generated/text/plans
+      - generated/text/blueprints
+      - generated/text/evidence
+      - generated/exif/img
+      - generated/img/cards
+      - generated/img/pills
+      - generated/img/contracts
+      - generated/img/plans
+      - generated/img/blueprints
+      - generated/img/evidence
+  needs_dif: true
+  dif:
+    - define machgen create and machgen promote semantics
+    - define uid and promotion chain token format

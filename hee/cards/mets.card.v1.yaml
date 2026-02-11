@@ -1,0 +1,40 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: mets
+  ts_human: 2026-02-10_1851
+spec:
+  truth:
+    - preserving commits pays off only if commit quality is maintained
+    - preserve commits by default only if commits are meaningful and separable
+    - squash rate can signal fatigue, but needs context
+  key_quote:
+    text: Each commit is independently meaningful, and I would be happy to revert, cherry-pick, or bisect them individually.
+  suggested_mets:
+    merge_history:
+      - key: merge_strategy
+        values:
+          - squash
+          - merge
+          - rebase
+      - key: commit_count
+      - key: commit_quality_tag
+        values:
+          - separable
+          - dependent
+          - noisy
+      - key: green_commit_ratio
+      - key: reason_squash
+        values:
+          - mechanical
+          - policy
+          - churn
+          - fatigue
+          - unknown
+    fatigue_churn:
+      - key: ci_rerun_count
+      - key: time_to_green
+      - key: fixup_commit_count
+  infra_status:
+    status: wip
+    note: met infra is scattered; grave-digger tool is p0 oos; keep met capture lightweight for now.
