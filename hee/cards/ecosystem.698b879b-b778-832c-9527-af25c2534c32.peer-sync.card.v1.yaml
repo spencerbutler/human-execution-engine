@@ -1,0 +1,36 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: ecosystem-peer-sync
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts_human: 2026-02-11_0300
+spec:
+  purpose: quick checkpoint so peers can catch up fast.
+  context:
+    sidebar_name: "ecosystem 698b879b-b778-832c-9527-af25c2534c32"
+    peers_count: 2
+  checkpoint:
+    repo: human-execution-engine
+    branch: cards/rg-scan-authority-promote-human
+    pr:
+      number: 139
+    commits:
+      notes:
+        - branch history was rewritten to split commits cleanly
+        - latest cards commit includes: rg scan authority seed + promote human words seed (inuid)
+  status:
+    cards_added:
+      - hee/cards/rg-scan.authority.seed.card.v1.yaml
+      - hee/cards/hee-words.promote-human.seed.card.v1.yaml
+    docs_updated:
+      - hee/cards/gpt-prompting-guide.md
+    policy_present:
+      - waivers.txt
+  known_issues:
+    - pre-commit messaging printed a green success marker in a failure scenario earlier; needs P0 fix
+  local_notes:
+    - debug file observed: hee/pills/debug.debug (611 lines) (not part of PR)
+    - stray/unrelated files were stashed to keep PR clean
+  next:
+    - review/merge PR 139 using merge-commit policy
+    - fix pre-commit green-marker logic (honor rc + autofix rewrite)
