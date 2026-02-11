@@ -28,7 +28,14 @@ It is a lot of fun to watch the IN/OUT grow (number of stools) over time.
 ### OUTPUT
 
 - pill: a generic YAML file used to encapsulate session/idea/brainstorm data
-- card: markdown files used to capture moments in time
+- card: yaml files used to capture moments in time, and general knowledge
+- ui: new
+  - hee_epoch: 1770799033
+    ~~~hee
+    repo-only render; bind server to 127.0.0.1; uid/provenance planned; git_head=ecec43f
+    HEE Battle Center
+    v0: html render + tiny server. Next: registrar + trace_chain + gh_link.
+    ~~~
 
 ## Prompts
 
@@ -73,6 +80,12 @@ before we are done with this session (soon) I would like a card of this in the r
 ---
 
 #### Errata
+
+- TODO(spencer): update below - gpt will do fun times here
+  - sed -n '83,120' should do it
+  - chat header
+  - reconcile, merge and strip this bare and machgen a proper human facing doc, duh
+    - preserve provenance, duh
 
 ##### Quick Reference Links
 
