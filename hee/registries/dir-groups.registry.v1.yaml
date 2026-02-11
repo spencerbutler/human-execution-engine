@@ -1,0 +1,86 @@
+apiVersion: hee/v1
+kind: Registry
+metadata:
+  name: dir-groups
+  ts_human: 2026-02-10_1851
+spec:
+  managed_by:
+    runner: shellboss
+    command: registrar
+  needs_dif: true
+  dif:
+    - add silly hash-token for each entry
+    - add hee-acl filtering rules (phiera)
+    - add conflict resolution semantics
+  groups:
+    foundation:
+      ordered_dirs:
+        - key: contracts
+          path: contracts
+          role: foundation
+          trace: true
+          visibility: public
+        - key: schemas
+          path: schemas
+          role: foundation
+          trace: true
+          visibility: public
+        - key: blueprints
+          path: blueprints
+          role: foundation
+          trace: true
+          visibility: public
+        - key: plans
+          path: plans
+          role: foundation
+          trace: true
+          visibility: public
+    docs:
+      ordered_dirs:
+        - key: docs
+          path: docs
+          role: docs
+          trace: false
+          visibility: public
+        - key: hee
+          path: hee
+          role: docs
+          trace: true
+          visibility: public
+    code:
+      ordered_dirs:
+        - key: library
+          path: library
+          role: code
+          trace: false
+          visibility: public
+        - key: ci
+          path: ci
+          role: code
+          trace: false
+          visibility: public
+        - key: github
+          path: .github
+          role: code
+          trace: false
+          visibility: public
+    generated:
+      ordered_dirs:
+        - key: generated
+          path: generated
+          role: generated
+          trace: false
+          visibility: public
+    personal_planned:
+      ordered_dirs:
+        - key: system_local_hee
+          path: system/local/hee
+          role: private
+          trace: false
+          visibility: wip
+        - key: home_hee
+          path: home/.hee
+          role: private
+          trace: false
+          visibility: wip
+          note: home inclusion must be explicit allowlist; do not implicitly include.
