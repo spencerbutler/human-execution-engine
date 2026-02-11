@@ -1,0 +1,62 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: editor.vscode-specials
+  ts_human: 2026-02-11_????
+spec:
+  lifecycle:
+    stage: design
+  identity:
+    user: spencer
+    gh_user: spencerbutler
+  purpose: >
+    Track repo scoped VSCode or Cursor settings that improve heelang readability.
+    Goal is immediate YAML syntax highlight and schema assistance for hee objects.
+  scope:
+    repo_only: true
+    note: Do not write to home editor config from this card.
+  deliverable:
+    filepath: .vscode/settings.json
+    description: VSCode workspace settings for file associations and YAML schema mapping.
+  vscode_settings:
+    files_associations:
+      "*.card.v*.yaml": yaml
+      "*.pill.v*.yaml": yaml
+      "*.contract.yaml": yaml
+      "*.sqz.yaml": yaml
+      "hee/**/*.yaml": yaml
+      "contracts/**/*.yaml": yaml
+      "schemas/**/*.yaml": yaml
+    yaml_schemas:
+      "./schemas/hee/v1/hee-object.schema.json":
+        - "hee/**/*.yaml"
+        - "*.card.v*.yaml"
+        - "*.pill.v*.yaml"
+      "./schemas/hee/v1/sqz_roll_log.schema.json":
+        - "*.sqz.yaml"
+  runner:
+    only_runner: shellboss
+  apply_plan:
+    do_now:
+      - action: write_file
+        path: .vscode/settings.json
+        note: Keep minimal and repo scoped.
+      - action: validate_schema
+        argv:
+          - shellboss
+          - jsonschema_validate
+          - --schema
+          - schemas/hee/v1/hee-object.schema.json
+          - --in
+          - -
+    do_soon:
+      - action: add_editor_extensions_card
+        note: Track recommended extensions in a separate card.
+    do_later:
+      - action: heelang_true_language
+        note: >
+          If needed, create a real VSCode language id with a grammar.
+  needs_dif: true
+  dif:
+    - Decide canonical ts_human formatting for editor cards.
+    - Decide whether to include blueprint and plan schema mappings.
