@@ -1,0 +1,35 @@
+apiVersion: hee/v1
+kind: Card
+metadata:
+  name: hee-words-promote-human-seed
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
+  ts_human: 2026-02-11_0000
+spec:
+  purpose: >
+    Add high-signal words + explicit rejects. YAML first; render later.
+  words:
+    promote_human:
+      definition: "FULL STOP."
+      note: "Capture→pkg→sqz→sqz_roll; min power; max proof; human stays authority."
+      status: canon
+    min_power_max_proof:
+      definition: "Prefer smallest possible mechanism that still yields strong evidence."
+      status: canon
+    small_bets_immediate_evidence:
+      definition: "Make only small, observable bets; verify right away."
+      status: canon
+    automation_theater:
+      definition: "If no → it’s just automation theater."
+      status: canon
+    demote_magic:
+      definition: "demote magic"
+      status: reject
+      note: "explicit reject (cringe)"
+    tools_serve_humans_steer:
+      definition: "tools serve; humans steer"
+      status: reject
+      note: "explicit reject (cringe)"
+  needs_iter: true
+  iter:
+    - decide if rejects belong in the same dictionary or separate bucket
+    - add trace keys + sources once canonical system is landed
