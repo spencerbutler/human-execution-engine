@@ -21,7 +21,7 @@ repos:
 
       - id: hee-state-capsule-validation
         name: HEE State Capsule Validation
-        entry: | 
+        entry: |
           bash -c 'echo "🔍 Validating HEE state capsule format..." && if [ -d "docs/STATE_CAPSULES" ]; then echo "✅ State capsule directory found"; else echo "⚠️  No state capsule directory found"; fi'
         language: system
         files: 'docs/STATE_CAPSULES/.*\.md$'
@@ -29,7 +29,7 @@ repos:
 
       - id: hee-policy-compliance
         name: HEE Policy Compliance Check
-        entry: | 
+        entry: |
           bash -c 'echo "🔍 Checking HEE policy compliance..." && if [ -f "docs/HEE_POLICY.md" ]; then echo "✅ HEE policy file found"; else echo "❌ HEE policy file missing"; exit 1; fi && if [ -f "prompts/PROMPTING_RULES.md" ]; then echo "✅ Prompting rules found"; else echo "❌ Prompting rules missing"; exit 1; fi'
         language: system
         files: '.*'
@@ -43,7 +43,7 @@ repos:
 
       - id: hee-documentation-check
         name: HEE Documentation Check
-        entry: | 
+        entry: |
           bash -c 'echo "🔍 Checking HEE documentation..." && for doc in "docs/HEE.md" "docs/HEER.md" "docs/TROUBLESHOOTING.md" "prompts/INIT.md"; do if [ -f "$doc" ]; then echo "✅ $doc found"; else echo "⚠️  $doc missing"; fi; done'
         language: system
         files: '.*'
@@ -51,7 +51,7 @@ repos:
 
       - id: hee-branch-management-check
         name: HEE Branch Management Check
-        entry: | 
+        entry: |
           bash -c 'echo "🔍 Checking branch management compliance..." && if [ "$GITHUB_HEAD_REF" != "" ] && [ "$GITHUB_HEAD_REF" != "main" ] && [ "$GITHUB_HEAD_REF" != "master" ]; then if echo "$GITHUB_HEAD_REF" | grep -q "^feature/"; then echo "✅ Feature branch naming followed"; else echo "⚠️  Branch naming may not follow HEE conventions"; fi; else echo "✅ Main/master branch or no PR context"; fi'
         language: system
         files: '.*'
@@ -84,7 +84,7 @@ repos:
         language: system
         files: '.*'
         pass_filenames: false
-      
+
       - id: markdownlint-cli2-safe-fix
         name: markdownlint (safe autofix)
         entry: scripts/pre-commit/markdownlint-safe-fix
@@ -93,6 +93,11 @@ repos:
         stages: [manual]
 
 
+      - id: hee-yaml-header-order
+        name: HEE YAML header order (apiVersion then kind)
+        entry: scripts/check_hee_yaml_header_order.sh
+        language: system
+        files: ^hee/(cards|pills|contracts)/.*\.(yml|yaml)n
   # Standard pre-commit hooks for code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -140,3 +145,4 @@ exclude: |
       \.gitignore|
       \.pre-commit-config\.yaml
   )$
+
