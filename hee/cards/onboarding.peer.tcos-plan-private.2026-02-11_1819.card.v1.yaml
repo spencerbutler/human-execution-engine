@@ -1,26 +1,34 @@
 apiVersion: hee/v1
 kind: Card
 metadata:
-  name: onboarding-peer-tcos-plan-private-2026-02-11_1819
+  name: onboarding-peer-tcos-plan-private-consolidate-v0-20260211T124952Z
+  inuid: 698bfb0a-9a14-8332-b12c-3a78bacdade6
   ts:
     type: hee/Ts@v1
-    human: { value: "2026-02-11_1819", params: { tz: America/Chicago, fmt: "%Y-%m-%d_%H%M" } }
-    unix:  { value: "1770855575", params: { units: seconds, tz: UTC } }
+    human: { value: "2026-02-11_1823", params: { tz: America/Chicago, fmt: "%Y-%m-%d_%H%M" } }
+    unix:  { value: "1770855816", params: { units: seconds, tz: UTC } }
 spec:
-  purpose: peer rehydrate pointer set for newly created tcos-plan-private repo; one-click links + one-command clone/open.
-  route:
-    lead: "ecosystem 698b879b-b778-832c-9527-af25c2534c32"
+  purpose: WU-scoped peer rehydrate pointer set for consolidate v0 only (not a general onboarding doc).
+  scope:
+    wu_only: true
     route_id: "20260211T124952Z.consolidate.1770814192"
-  tcos_plan_private:
-    repo: "spencerbutler/tcos-plan-private"
-    remote_ssh: "git@github.com:spencerbutler/tcos-plan-private.git"
-    remote_web: "https://github.com/spencerbutler/tcos-plan-private"
-    seed_commit: "5a0fdad"
-    seed_files:
-      - hee/cards/tcos-entity.transition.seed.card.v1.yaml
-      - hee/cards/tcos-vendor.hee-primary.seed.card.v1.yaml
-      - hee/policy/tcos-public.naming-policy.seed.v1.yaml
-      - hee/cards/learn.repo-init.tcos-plan-private.2026-02-11_1358.card.v1.yaml
+    lead: "ecosystem 698b879b-b778-832c-9527-af25c2534c32"
+    return_to: "ecosystem 698b879b-b778-832c-9527-af25c2534c32"
+    anti_loop:
+      hop: 0
+      max_hop: 1
+      rule: "if hop != 0 then refuse forward"
+  checkpoint:
+    tcos_plan_private:
+      repo: "spencerbutler/tcos-plan-private"
+      remote_ssh: "git@github.com:spencerbutler/tcos-plan-private.git"
+      remote_web: "https://github.com/spencerbutler/tcos-plan-private"
+      seed_commit: "5a0fdad"
+      seed_files:
+        - hee/cards/tcos-entity.transition.seed.card.v1.yaml
+        - hee/cards/tcos-vendor.hee-primary.seed.card.v1.yaml
+        - hee/policy/tcos-public.naming-policy.seed.v1.yaml
+        - hee/cards/learn.repo-init.tcos-plan-private.2026-02-11_1358.card.v1.yaml
   peer_steps:
     - "gh repo clone spencerbutler/tcos-plan-private ~/git/tcos-plan-private"
     - "cd ~/git/tcos-plan-private && git log -1 --oneline"
