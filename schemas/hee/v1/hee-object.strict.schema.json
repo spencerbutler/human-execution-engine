@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HEE Object (strict)",
+  "description": "Strict overlay: enforces inuid + null-reason contract.",
+  "allOf": [
+    { "$ref": "hee-object.schema.json" },
+    {
+      "type": "object",
+      "required": ["metadata"],
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "required": ["annotations"],
+          "properties": {
+            "annotations": {
+              "type": "object",
+              "required": ["inuid"],
+              "properties": {
+                "inuid": { "oneOf": [ { "type": "string", "minLength": 1 }, { "type": "null" } ] },
+                "inuid_null_reason": { "type": "string", "enum": ["bootstrap", "test", "fixture"] }
+              },
+              "oneOf": [
+                { "properties": { "inuid": { "type": "string", "minLength": 1 } }, "required": ["inuid"] },
+                { "properties": { "inuid": { "type": "null" } }, "required": ["inuid", "inuid_null_reason"] }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
