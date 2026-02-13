@@ -1,0 +1,128 @@
+#!/bin/sh
+# hee-lint: fast lint gate for HEE-object YAML (apiVersion: hee/v1)
+# Modes:
+#   --mode warn|error   (default warn)
+# Behavior:
+#   Scans tracked *.yml/*.yaml; only checks files containing `apiVersion: hee/v1`.
+
+MODE="warn"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --mode) MODE="$2"; shift 2;;
+    *) shift;;
+  esac
+done
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "${REPO_ROOT}" ]; then
+  echo "🔴 🟦 b # ERROR: not in a git repo"
+  exit 2
+fi
+
+FAIL=0
+WARN=0
+
+# Only tracked YAML files (avoid untracked noise)
+FILES="$(cd "${REPO_ROOT}" && git ls-files '*.yml' '*.yaml' 2>/dev/null)"
+if [ -z "${FILES}" ]; then
+  echo "🟢 🟦 b # OK: no tracked YAML files"
+  exit 0
+fi
+
+check_file() {
+  f="$1"
+  # Only HEE objects
+  if ! rg -n --no-messages -q '^[[:space:]]*apiVersion:[[:space:]]*hee/v1[[:space:]]*$' "$f"; then
+    return 0
+  fi
+
+  perl -0777 -ne '
+    my $txt = $_;
+
+    # crude YAML block scan (indent-based) for metadata.annotations.inuid + optional null reason
+    my ($inuid, $inuid_val, $null_reason) = (0, "", 0);
+
+    # find metadata block
+    if ($txt !~ /(^|\n)\s*metadata:\s*\n/s) {
+      print "🔴 🟦 b # ERROR: missing metadata: $ARGV\n";
+      exit 3;
+    }
+
+    # find annotations block under metadata (best-effort, indent based)
+    if ($txt !~ /(^|\n)\s*metadata:\s*\n(.*?)(\n\S|$)/s) {
+      print "🔴 🟦 b # ERROR: cannot parse metadata block: $ARGV\n";
+      exit 3;
+    }
+    my $meta = $2;
+
+    if ($meta !~ /(^|\n)\s*annotations:\s*\n(.*?)(\n\s*\S|$)/s) {
+      print "🔴 🟦 b # ERROR: missing metadata.annotations: $ARGV\n";
+      exit 3;
+    }
+    my $ann = $2;
+
+    if ($ann =~ /(^|\n)\s*inuid:\s*(.*?)\s*(\n|$)/s) {
+      $inuid = 1;
+      $inuid_val = $2;
+      $inuid_val =~ s/#.*$//;  # strip inline comment
+      $inuid_val =~ s/^\s+|\s+$//g;
+    }
+
+    if ($ann =~ /(^|\n)\s*inuid_null_reason:\s*(.*?)\s*(\n|$)/s) {
+      $null_reason = 1;
+    }
+
+    if (!$inuid) {
+      print "🔴 🟦 b # ERROR: missing metadata.annotations.inuid: $ARGV\n";
+      exit 3;
+    }
+
+    # treat null/~ as null
+    if ($inuid_val eq "null" || $inuid_val eq "~") {
+      if (!$null_reason) {
+        print "🔴 🟦 b # ERROR: inuid is null but missing inuid_null_reason: $ARGV\n";
+        exit 3;
+      }
+    }
+
+    # if it exists and is quoted empty -> warn/error
+    if ($inuid_val =~ /^""$/ || $inuid_val =~ /^'\'''\''$/) {
+      print "🟡 🟦 b # WARN: inuid is empty string: $ARGV\n";
+      exit 4;
+    }
+
+    print "🟢 🟦 b # OK: $ARGV\n";
+    exit 0;
+  ' "$f"
+  rc=$?
+  if [ $rc -eq 3 ]; then
+    FAIL=$((FAIL+1))
+  elif [ $rc -eq 4 ]; then
+    WARN=$((WARN+1))
+  fi
+}
+
+cd "${REPO_ROOT}" || exit 2
+for f in $FILES; do
+  check_file "$f"
+done
+
+if [ "${MODE}" = "error" ]; then
+  if [ $FAIL -ne 0 ] || [ $WARN -ne 0 ]; then
+    echo "🔴 🟦 b # RESULT: fail=${FAIL} warn=${WARN} (mode=error)"
+    exit 1
+  fi
+fi
+
+if [ $FAIL -ne 0 ]; then
+  echo "🔴 🟦 b # RESULT: fail=${FAIL} warn=${WARN} (mode=warn)"
+  exit 1
+fi
+
+if [ $WARN -ne 0 ]; then
+  echo "🟡 🟦 b # RESULT: fail=${FAIL} warn=${WARN} (mode=warn)"
+  exit 0
+fi
+
+echo "🟢 🟦 b # RESULT: fail=0 warn=0"
+exit 0
