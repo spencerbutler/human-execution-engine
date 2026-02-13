@@ -17,7 +17,7 @@ def main() -> int:
     print(f"host={r.host}")
     print(f"host_short={r.host_short}")
     print(f"legs_path={r.legs_path}")
-    print(f"haml_path={r.haml_path}")
+    print(f"yaml_path={r.yaml_path}")
     print(f"expected_stool={r.expected_stool_full or 'MISSING'}")
     print(f"observed_stool={r.stool_full}")
     print(f"observed_show={r.stool_show}")
