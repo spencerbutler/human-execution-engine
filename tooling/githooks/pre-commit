@@ -1,0 +1,3 @@
+#!/bin/sh
+# Optional pre-commit hook (warn mode). Install via: ln -sf ../../tooling/githooks/pre-commit .git/hooks/pre-commit
+exec "tooling/bin/hee-lint" --mode warn
