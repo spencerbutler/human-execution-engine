@@ -1,0 +1,50 @@
+apiVersion: hee/v1
+kind: Contract
+metadata:
+  name: hee-kind-registry
+  description: "Authoritative registry of HEE object kinds (active + proposed + deprecated) with observed kinds from repo scan."
+  labels:
+    domain: hee
+    scope: governance
+    topic: kind-registry
+    artifact: contract
+  annotations:
+    inuid: "698e3412-47e8-832f-ad2d-25fb3c63f0af"
+    created-at: "2026-02-12T19:51:37-06:00"
+    note: "Kind set is intentionally tiny. Expand only via DIF + schema."
+
+spec:
+  invariants:
+    - "Kind is tiny and stable."
+    - "Registry is authoritative."
+    - "Observed kinds do not automatically become active kinds."
+
+  active_kinds:
+    - "Card"
+    - "Pill"
+    - "Delta"
+    - "Contract"
+    - "Blueprint"
+    - "Plan"
+
+  proposed_kinds:
+    - "WU"          # workflow unit (may become Plan sub-structure instead)
+    - "Step"        # ordered step (may become Plan sub-structure instead)
+    - "StepUnordered"
+
+  deprecated_kinds: []
+
+  observed_kinds_from_scan:
+    - "completion_marker"
+    - "GreenCard"
+    - "observation_marker"
+    - "Pill"
+    - "Registry"
+    - "release_baseline"
+    - "state_capsule"
+    - "state_capsule_addendum"
+
+  dif_questions:
+    - "Should WU/Step be true kinds, or Plan sub-structures only?"
+    - "Do we standardize case (Card vs card) or accept both with lint?"
+    - "Do we require metadata.annotations.inuid for all YAML objects (GPT + human origins)?"
