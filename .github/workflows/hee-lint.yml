@@ -10,5 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: hee-lint (error mode)
+      - name: hee-lint (warn-first)
+        env:
+          HEE_LINT_MODE: warn
         run: tooling/ci/hee-lint

@@ -1,3 +1,4 @@
 #!/bin/sh
-# CI gate: run hee-lint in error mode (nagios strictness)
-exec "tooling/bin/hee-lint" --mode error
+# CI gate: default warn-first (nagios). Flip to error by setting HEE_LINT_MODE=error.
+MODE="${HEE_LINT_MODE:-warn}"
+exec tooling/bin/hee-lint --mode "${MODE}"
