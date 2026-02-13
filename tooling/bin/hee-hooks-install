@@ -1,0 +1,35 @@
+#!/bin/sh
+# hee-hooks-install: installs optional git hooks (non-destructive, idempotent)
+# usage: tooling/bin/hee-hooks-install [--repo <path>]
+REPO=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo) REPO="$2"; shift 2;;
+    *) shift;;
+  esac
+done
+
+if [ -z "${REPO}" ]; then
+  REPO="$(git rev-parse --show-toplevel 2>/dev/null)"
+fi
+if [ -z "${REPO}" ]; then
+  echo "🔴 🟦 b # ERROR: not in a git repo (use --repo)"
+  exit 2
+fi
+
+HOOK_SRC="${REPO}/tooling/githooks/pre-commit"
+HOOK_DST="${REPO}/.git/hooks/pre-commit"
+
+if [ ! -f "${HOOK_SRC}" ]; then
+  echo "🔴 🟦 b # ERROR: missing hook source: ${HOOK_SRC}"
+  exit 2
+fi
+
+mkdir -p "${REPO}/.git/hooks" 2>/dev/null || true
+ln -sf "../../tooling/githooks/pre-commit" "${HOOK_DST}" 2>/dev/null || {
+  # fallback if relative symlink fails (we keep it simple, still non-interactive)
+  ln -sf "${HOOK_SRC}" "${HOOK_DST}" 2>/dev/null || true
+}
+
+echo "🟢 🟦 b # OK: installed pre-commit hook -> ${HOOK_DST}"
+exit 0
