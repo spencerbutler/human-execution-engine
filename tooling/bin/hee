@@ -1,6 +1,8 @@
 #!/bin/sh
-# hee: tiny POSIX router entrypoint (bootstrap stool)
-# Design: tiny built-ins + extensible fallback to tooling/bin/hee-<cmd>
+# hee: tiny POSIX router (global tool root + local target repo)
+# - TOOL_ROOT derived from this script location ($0)
+# - TARGET_ROOT derived from cwd (git repo) if available
+# - extension: try target repo tooling/bin/hee-<cmd>, then tool repo tooling/bin/hee-<cmd>
 
 set -u
 
@@ -13,18 +15,26 @@ usage:
   hee hooks install [--repo <path>]
   hee help
 
-extension:
-  hee <cmd> ... will exec tooling/bin/hee-<cmd> if it exists
-
-notes:
-  - default lint mode is warn
-  - hooks install is optional; it installs pre-commit symlink
+design:
+  - TOOL root comes from this script location
+  - TARGET root comes from current git repo (cwd)
+  - extension: hee <cmd> tries tooling/bin/hee-<cmd> in target repo first, then tool repo
 TXT
 }
 
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
-if [ -z "${REPO_ROOT}" ]; then
-  REPO_ROOT="."
+# resolve TOOL_ROOT from this script path
+SELF="$0"
+case "$SELF" in
+  /*) ;;
+  *) SELF="$(command -v -- "$SELF" 2>/dev/null || echo "$SELF")" ;;
+esac
+SELF_DIR="$(cd "$(dirname "$SELF")" 2>/dev/null && pwd)"
+TOOL_ROOT="$(cd "${SELF_DIR}/../.." 2>/dev/null && pwd)"
+
+# resolve TARGET_ROOT from cwd (best effort)
+TARGET_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -z "${TARGET_ROOT}" ]; then
+  TARGET_ROOT="."
 fi
 
 cmd="${1:-help}"
@@ -32,14 +42,20 @@ shift 2>/dev/null || true
 
 case "${cmd}" in
   lint)
-    exec "${REPO_ROOT}/tooling/bin/hee-lint" "$@"
+    # run lint TOOL in context of TARGET repo
+    ( cd "${TARGET_ROOT}" 2>/dev/null && exec "${TOOL_ROOT}/tooling/bin/hee-lint" "$@" )
+    exit 0
     ;;
   hooks)
     sub="${1:-help}"
     shift 2>/dev/null || true
     case "${sub}" in
       install)
-        exec "${REPO_ROOT}/tooling/bin/hee-hooks-install" "$@"
+        # if user did not pass --repo, default to TARGET repo
+        case " $* " in
+          *" --repo "*) exec "${TOOL_ROOT}/tooling/bin/hee-hooks-install" "$@" ;;
+          *) exec "${TOOL_ROOT}/tooling/bin/hee-hooks-install" --repo "${TARGET_ROOT}" "$@" ;;
+        esac
         ;;
       *)
         usage
@@ -52,11 +68,16 @@ case "${cmd}" in
     exit 0
     ;;
   *)
-    # fallback: tooling/bin/hee-<cmd>
-    ext="${REPO_ROOT}/tooling/bin/hee-${cmd}"
-    if [ -x "${ext}" ]; then
-      exec "${ext}" "$@"
+    ext_target="${TARGET_ROOT}/tooling/bin/hee-${cmd}"
+    ext_tool="${TOOL_ROOT}/tooling/bin/hee-${cmd}"
+
+    if [ -x "${ext_target}" ]; then
+      exec "${ext_target}" "$@"
     fi
+    if [ -x "${ext_tool}" ]; then
+      exec "${ext_tool}" "$@"
+    fi
+
     echo "🟡 🟦 b # WARN: unknown command: ${cmd}" 1>&2
     usage
     exit 0
