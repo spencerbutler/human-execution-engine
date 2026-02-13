@@ -1,0 +1,38 @@
+apiVersion: hee/v1
+kind: Contract
+metadata:
+  name: hee-validation-gates
+  description: "Validation/lint gates: same tiny stool invoked via CLI/CI/pre-commit. WARN->ERROR (nagios)."
+  labels:
+    domain: hee
+    scope: governance
+    topic: validation
+    artifact: contract
+  annotations:
+    inuid: "698e3412-47e8-832f-ad2d-25fb3c63f0af"
+    updated-at: "2026-02-12T21:21:46-06:00"
+
+spec:
+  goals:
+    - "Find clean from dirty (signal from noise)."
+    - "Put gates everywhere (or optional gates) without duplicating logic."
+
+  stool:
+    lint_cli: "tooling/bin/hee-lint"
+    ci_gate: "tooling/ci/hee-lint"
+    precommit_hook_optional: "tooling/githooks/pre-commit"
+
+  policy:
+    kind_case: "Kubernetes canon"
+    warn_then_error: true
+    strict_schema_overlay: "schemas/hee/v1/hee-object.strict.schema.json"
+    inuid_required:
+      required: true
+      null_allowed: true
+      null_requires_reason: true
+      allowed_null_reasons: ["bootstrap","test","fixture"]
+
+  enforcement:
+    default_mode: "warn"
+    ci_mode: "error"
+    note: "hee-lint is fast lint. Full JSONSchema validation is performed by validator CLI (future), but all gates call the same entrypoint(s)."
