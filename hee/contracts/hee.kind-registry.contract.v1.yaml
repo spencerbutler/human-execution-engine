@@ -2,7 +2,7 @@ apiVersion: hee/v1
 kind: Contract
 metadata:
   name: hee-kind-registry
-  description: "Authoritative registry of HEE object kinds (active + proposed + deprecated) with observed kinds from repo scan."
+  description: "Authoritative registry of HEE object kinds. Kind is tiny + stable. Case follows Kubernetes canon."
   labels:
     domain: hee
     scope: governance
@@ -10,14 +10,16 @@ metadata:
     artifact: contract
   annotations:
     inuid: "698e3412-47e8-832f-ad2d-25fb3c63f0af"
-    created-at: "2026-02-12T19:51:37-06:00"
-    note: "Kind set is intentionally tiny. Expand only via DIF + schema."
+    updated-at: "2026-02-12T20:14:57-06:00"
 
 spec:
   invariants:
     - "Kind is tiny and stable."
     - "Registry is authoritative."
     - "Observed kinds do not automatically become active kinds."
+    - "Kind case follows Kubernetes canon (PascalCase singular)."
+    - "metadata.annotations.inuid is required for all HEE-object YAML."
+    - "inuid may be null ONLY with a very good reason (bootstrap/test); reason must be recorded."
 
   active_kinds:
     - "Card"
@@ -27,15 +29,23 @@ spec:
     - "Blueprint"
     - "Plan"
 
-  proposed_kinds:
-    - "WU"          # workflow unit (may become Plan sub-structure instead)
-    - "Step"        # ordered step (may become Plan sub-structure instead)
+  non_kinds_plan_sub_structs:
+    - "WU"
+    - "Step"
     - "StepUnordered"
 
-  deprecated_kinds: []
+  inuid_rules:
+    required: true
+    allow_null: true
+    null_requires_reason: true
+    allowed_null_reasons:
+      - "bootstrap"
+      - "test"
+      - "fixture"
 
   observed_kinds_from_scan:
     - "completion_marker"
+    - "Contract"
     - "GreenCard"
     - "observation_marker"
     - "Pill"
@@ -44,7 +54,6 @@ spec:
     - "state_capsule"
     - "state_capsule_addendum"
 
-  dif_questions:
-    - "Should WU/Step be true kinds, or Plan sub-structures only?"
-    - "Do we standardize case (Card vs card) or accept both with lint?"
-    - "Do we require metadata.annotations.inuid for all YAML objects (GPT + human origins)?"
+  next_dif_questions:
+    - "Do we lint non-canonical kind case as WARN first, then ERROR later?"
+    - "Should schema enforce inuid null-reason contract (oneOf) in strict mode?"
