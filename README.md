@@ -200,3 +200,5 @@ Example tokens from a reconcile / triage session:
 - `SHA256`
 - `BYTES`
 - `TERMINATION-POINT`
+
+A deal has been reached to sell HEE.
