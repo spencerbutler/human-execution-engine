@@ -10,7 +10,7 @@ metadata:
     artifact: contract
   annotations:
     inuid: "698e3412-47e8-832f-ad2d-25fb3c63f0af"
-    updated-at: "2026-02-12T20:14:57-06:00"
+    updated-at: "2026-02-12T20:42:56-06:00"
 
 spec:
   invariants:
@@ -19,41 +19,23 @@ spec:
     - "Observed kinds do not automatically become active kinds."
     - "Kind case follows Kubernetes canon (PascalCase singular)."
     - "metadata.annotations.inuid is required for all HEE-object YAML."
-    - "inuid may be null ONLY with a very good reason (bootstrap/test); reason must be recorded."
+    - "inuid may be null ONLY with a very good reason; reason must be recorded."
 
-  active_kinds:
-    - "Card"
-    - "Pill"
-    - "Delta"
-    - "Contract"
-    - "Blueprint"
-    - "Plan"
+  active_kinds: ["Card","Pill","Delta","Contract","Blueprint","Plan"]
 
-  non_kinds_plan_sub_structs:
-    - "WU"
-    - "Step"
-    - "StepUnordered"
+  plan_sub_structs_not_kinds: ["WU","Step","StepUnordered"]
+
+  lint_policy:
+    kind_case:
+      current: "WARN"
+      future: "ERROR"
+      style: "nagios"
+    inuid_null_reason:
+      strict_schema: "schemas/hee/v1/hee-object.strict.schema.json"
+      rule: "Strict mode requires inuid; if null then require inuid_null_reason."
 
   inuid_rules:
     required: true
     allow_null: true
     null_requires_reason: true
-    allowed_null_reasons:
-      - "bootstrap"
-      - "test"
-      - "fixture"
-
-  observed_kinds_from_scan:
-    - "completion_marker"
-    - "Contract"
-    - "GreenCard"
-    - "observation_marker"
-    - "Pill"
-    - "Registry"
-    - "release_baseline"
-    - "state_capsule"
-    - "state_capsule_addendum"
-
-  next_dif_questions:
-    - "Do we lint non-canonical kind case as WARN first, then ERROR later?"
-    - "Should schema enforce inuid null-reason contract (oneOf) in strict mode?"
+    allowed_null_reasons: ["bootstrap","test","fixture"]
