@@ -27,9 +27,9 @@ def _read_text(p: Path) -> str:
     return p.read_text(encoding="utf-8", errors="strict")
 
 
-def _parse_expected_stool_from_haml(haml_text: str) -> Optional[str]:
+def _parse_expected_stool_from_yaml(yaml_text: str) -> Optional[str]:
     # expects: stool_hash_full: "64hex"
-    m = re.search(r'stool_hash_full:\s*\"([0-9a-f]{64})\"', haml_text)
+    m = re.search(r'stool_hash_full:\s*\"([0-9a-f]{64})\"', yaml_text)
     return m.group(1) if m else None
 
 
@@ -99,7 +99,7 @@ class SoaResult:
     host: str
     host_short: str
     legs_path: str
-    haml_path: str
+    yaml_path: str
     hash_spec_id: str
     hash_algo: str
 
@@ -156,12 +156,12 @@ def verify_current_host(
     hs = _host_short(hostf)
 
     legs_path = home / ".hee" / "current" / "soa" / f"{hs}.legs.kv"
-    haml_path = home / ".hee" / "index" / "_.haml"
+    yaml_path = home / ".hee" / "index" / "_.yaml"
 
     legs_text = _read_text(legs_path)
-    haml_text = _read_text(haml_path)
+    yaml_text = _read_text(yaml_path)
 
-    expected = _parse_expected_stool_from_haml(haml_text)
+    expected = _parse_expected_stool_from_yaml(yaml_text)
 
     hasher = SoaHasher()
     h_home, h_repo, h_user, d_hr, d_hu, d_ru, stool = hasher.compute_from_legs_text(legs_text)
@@ -172,7 +172,7 @@ def verify_current_host(
         host=hostf,
         host_short=hs,
         legs_path=str(legs_path),
-        haml_path=str(haml_path),
+        yaml_path=str(yaml_path),
         hash_spec_id=HASH_SPEC_ID,
         hash_algo=HASH_ALGO,
 
