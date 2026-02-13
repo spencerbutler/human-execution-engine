@@ -1,0 +1,3 @@
+#!/bin/sh
+# CI gate: run hee-lint in error mode (nagios strictness)
+exec "tooling/bin/hee-lint" --mode error
