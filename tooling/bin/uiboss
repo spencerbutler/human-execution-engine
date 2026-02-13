@@ -1,0 +1,219 @@
+#!/usr/bin/env sh
+# uiboss: actions + runs + static site + server mode (hee_webserver)
+
+: "${HOME:=/home/$USER}"
+export HOME
+
+ACTIONS_DIR="${UIBOSS_ACTIONS_DIR:-$HOME/.hee/uiboss/actions.d}"
+SITE_ROOT="${UIBOSS_SITE_ROOT:-$HOME/.hee/uiboss/site}"
+RUNS_DIR="$SITE_ROOT/runs"
+
+py_server() {
+  # hee_webserver module lives in the repo; serve SITE_ROOT
+  PYTHONPATH="$HOME/git/human-execution-engine/library/py:${PYTHONPATH:-}" \
+    exec python3 -m hee_webserver --root "$SITE_ROOT" "$@"
+}
+
+html_escape() {
+  # escape stdin to HTML-safe text
+  /usr/bin/perl -pe 's/&/&amp;/g; s/</&lt;/g; s/>/&gt;/g'
+}
+
+build_run_page() {
+  runid="$1"
+  run_dir="$RUNS_DIR/$runid"
+  out_txt="$run_dir/out.txt"
+
+  out_html="$run_dir/out.html"
+  idx_html="$run_dir/index.html"
+
+  # pre-escape once
+  html_escape <"$out_txt" >"$out_html"
+
+  # list copied files
+  files_html=""
+  if [ -d "$run_dir/files" ]; then
+    files_html="$(/usr/bin/find "$run_dir/files" -maxdepth 2 -type f -printf '%P\n' 2>/dev/null | /usr/bin/sort | /usr/bin/awk '
+      { printf("<li><a href=\"files/%s\">%s</a></li>\n", $0, $0) }
+    ')"
+  fi
+
+  cat >"$idx_html" <<EOF
+<!doctype html>
+<html>
+<head>
+  <base href="./">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>uiboss run $runid</title>
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; margin: 16px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>uiboss run: $runid</h1>
+  <div class="card">
+    <div><a href="../index.html">← home</a></div>
+  </div>
+
+  <div class="card">
+    <h2>Artifacts</h2>
+    <ul>
+      $files_html
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Output</h2>
+    <pre>$(cat "$out_html")</pre>
+  </div>
+</body>
+</html>
+EOF
+}
+
+build_home_page() {
+  # newest run = highest runid (we name runid as YYYYMMDD-HHMMSS)
+  newest="$(/usr/bin/find "$RUNS_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | /usr/bin/sort | /usr/bin/tail -n 1)"
+  runs_list="$(/usr/bin/find "$RUNS_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | /usr/bin/sort -r | /usr/bin/head -n 50 | /usr/bin/awk '
+    { printf("<li><a href=\"runs/%s/index.html\">%s</a></li>\n", $0, $0) }
+  ')"
+
+  latest_block=""
+  if [ -n "$newest" ] && [ -f "$RUNS_DIR/$newest/out.txt" ]; then
+    latest_block="$(html_escape <"$RUNS_DIR/$newest/out.txt")"
+  fi
+
+  cat >"$SITE_ROOT/index.html" <<EOF
+<!doctype html>
+<html>
+<head>
+  <base href="./">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>uiboss</title>
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; margin: 16px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 980px) { .grid { grid-template-columns: 360px 1fr; } }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+  </style>
+</head>
+<body>
+  <h1>uiboss</h1>
+  <div class="grid">
+    <div class="card">
+      <h2>Recent runs</h2>
+      <ul>
+        $runs_list
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Latest output</h2>
+      <pre>$latest_block</pre>
+    </div>
+  </div>
+</body>
+</html>
+EOF
+}
+
+usage() {
+  cat <<'USAGE'
+uiboss
+
+USAGE:
+  uiboss ls
+  uiboss run <action-id> [args...]
+  uiboss serve [--bind IP] [--port N]
+
+ENV:
+  UIBOSS_ACTIONS_DIR  default: ~/.hee/uiboss/actions.d
+  UIBOSS_SITE_ROOT    default: ~/.hee/uiboss/site
+
+NOTES:
+  - run captures output to a run dir and generates HTML
+  - serve hosts SITE_ROOT via python -m hee_webserver
+USAGE
+}
+
+cmd="${1:-}"
+case "$cmd" in
+  ""|-h|--help|help) usage; exit 0 ;;
+  ls)
+    /usr/bin/find "$ACTIONS_DIR" -maxdepth 1 -type f -perm -111 -printf '%f\n' 2>/dev/null | /usr/bin/sort
+    ;;
+  run)
+    action="${2:-}"
+    shift 2 || true
+
+    if [ -z "$action" ]; then
+      echo "ERR: missing action-id"
+      exit 0
+    fi
+
+    script=""
+    if [ -x "$ACTIONS_DIR/$action" ]; then
+      script="$ACTIONS_DIR/$action"
+    elif command -v "$action" >/dev/null 2>&1; then
+      script="$(command -v "$action")"
+    fi
+
+    if [ -z "$script" ]; then
+      echo "ERR: action not found: $action"
+      exit 0
+    fi
+
+    mkdir -p "$RUNS_DIR"
+    runid="$(/bin/date +%Y%m%d-%H%M%S)"
+    run_dir="$RUNS_DIR/$runid"
+    mkdir -p "$run_dir"
+
+    out_txt="$run_dir/out.txt"
+    # capture stdout+stderr
+    "$script" "$@" >"$out_txt" 2>&1
+
+    # best-effort: copy any OUT_* files into run_dir/files for web serving
+    mkdir -p "$run_dir/files"
+    out_raw="$(/usr/bin/awk -F= '/^OUT_RAW=/{print $2}' "$out_txt" | /usr/bin/tail -n 1)"
+    out_yaml="$(/usr/bin/awk -F= '/^OUT_YAML=/{print $2}' "$out_txt" | /usr/bin/tail -n 1)"
+    out_md="$(/usr/bin/awk -F= '/^OUT_MD=/{print $2}' "$out_txt" | /usr/bin/tail -n 1)"
+
+    [ -n "$out_raw" ] && [ -f "$out_raw" ] && /bin/cp -a "$out_raw" "$run_dir/files/" 2>/dev/null || true
+    [ -n "$out_yaml" ] && [ -f "$out_yaml" ] && /bin/cp -a "$out_yaml" "$run_dir/files/" 2>/dev/null || true
+    [ -n "$out_md" ] && [ -f "$out_md" ] && /bin/cp -a "$out_md" "$run_dir/files/" 2>/dev/null || true
+
+    build_run_page "$runid"
+    build_home_page
+
+    echo "RUNID=$runid"
+    echo "RUN_URL=runs/$runid/index.html"
+    echo "HOME_URL=index.html"
+    ;;
+  serve)
+    shift 1 || true
+    bind="127.0.0.1"
+    port="8000"
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --bind) bind="${2:-127.0.0.1}"; shift 2 ;;
+        --port) port="${2:-8000}"; shift 2 ;;
+        *) shift 1 ;;
+      esac
+    done
+    mkdir -p "$SITE_ROOT" "$RUNS_DIR"
+    build_home_page
+    echo "Serving uiboss site: $SITE_ROOT"
+    echo "Bind: $bind  Port: $port"
+    py_server --bind "$bind" --port "$port"
+    ;;
+  *)
+    echo "ERR: unknown cmd: $cmd"
+    usage
+    exit 0
+    ;;
+esac
