@@ -1,133 +1,58 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+# hee: tiny POSIX router entrypoint (bootstrap stool)
+# Later: replaced by cmd/hee (go/rust) with identical UX.
 
-die() { echo "hee: $*" >&2; exit 2; }
-
-repo_root() {
-  git rev-parse --show-toplevel 2>/dev/null || pwd
-}
-
-ROOT="$(repo_root)"
-HEE_HOME="${HEE_HOME:-$ROOT/.hee}"
-SPOOL="${HEE_SPOOL_DIR:-$HEE_HOME/spool}"
+set -u
 
 usage() {
-  cat <<'EOF'
-hee - Human Execution Engine operator CLI (repo-local)
+  cat <<'TXT'
+hee — tiny router (POSIX sh)
 
-Usage:
-  hee dash [--watch] [--home PATH] [--spool PATH]
-  hee q <ready|running|done|failed> [--tail N]
+usage:
+  hee lint [--mode warn|error]
+  hee hooks install [--repo <path>]
   hee help
 
-Environment:
-  HEE_HOME      default: <repo>/.hee
-  HEE_SPOOL_DIR default: $HEE_HOME/spool
-EOF
+notes:
+  - default lint mode is warn
+  - hooks install is optional; it installs pre-commit symlink
+TXT
 }
 
-ensure_dirs() {
-  mkdir -p "$SPOOL"/{ready,running,done,failed}
-}
+# resolve repo root if possible (best-effort)
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -z "${REPO_ROOT}" ]; then
+  REPO_ROOT="."
+fi
 
-count_dir() {
-  local d="$1"
-  [ -d "$d" ] || { echo 0; return; }
-  find "$d" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' '
-}
+cmd="${1:-help}"
+shift 2>/dev/null || true
 
-tail_dir() {
-  local d="$1" n="$2"
-  [ -d "$d" ] || die "missing dir: $d"
-  ls -1t "$d" 2>/dev/null | head -n "$n"
-}
-
-dash_once() {
-  ensure_dirs
-  local ready running done failed
-  ready="$(count_dir "$SPOOL/ready")"
-  running="$(count_dir "$SPOOL/running")"
-  done="$(count_dir "$SPOOL/done")"
-  failed="$(count_dir "$SPOOL/failed")"
-
-  printf "\n"
-  printf "HEE DASH  (home=%s)\n" "$HEE_HOME"
-  printf "──────────────────────────────────────────────\n"
-  printf "  Queue:  ready=%s  running=%s  failed=%s  done=%s\n" "$ready" "$running" "$failed" "$done"
-  printf "──────────────────────────────────────────────\n"
-
-  if [ "$running" != "0" ]; then
-    printf "  Running (latest 8):\n"
-    tail_dir "$SPOOL/running" 8 | sed 's/^/    - /'
-  else
-    printf "  Running: (none)\n"
-  fi
-
-  if [ "$failed" != "0" ]; then
-    printf "\n  Failed (latest 8):\n"
-    tail_dir "$SPOOL/failed" 8 | sed 's/^/    - /'
-  fi
-
-  if [ "$ready" != "0" ]; then
-    printf "\n  Ready (latest 8):\n"
-    tail_dir "$SPOOL/ready" 8 | sed 's/^/    - /'
-  fi
-
-  printf "\n"
-}
-
-dash_watch() {
-  while true; do
-    printf "\033[H\033[2J"
-    dash_once
-    sleep 2
-  done
-}
-
-cmd_q() {
-  ensure_dirs
-  local which="$1"; shift
-  local n=50
-  while [ $# -gt 0 ]; do
-    case "$1" in
-      --tail) n="${2:-}"; shift 2 ;;
-      *) die "unknown arg: $1" ;;
+case "${cmd}" in
+  lint)
+    # pass-through
+    exec "${REPO_ROOT}/tooling/bin/hee-lint" "$@"
+    ;;
+  hooks)
+    sub="${1:-help}"
+    shift 2>/dev/null || true
+    case "${sub}" in
+      install)
+        exec "${REPO_ROOT}/tooling/bin/hee-hooks-install" "$@"
+        ;;
+      *)
+        usage
+        exit 0
+        ;;
     esac
-  done
-  case "$which" in
-    ready|running|done|failed) ;;
-    *) die "q expects one of: ready running done failed" ;;
-  esac
-  tail_dir "$SPOOL/$which" "$n"
-}
-
-main() {
-  if [ $# -eq 0 ]; then usage; exit 2; fi
-
-  while [ $# -gt 0 ]; do
-    case "$1" in
-      --home) HEE_HOME="${2:-}"; SPOOL="${HEE_SPOOL_DIR:-$HEE_HOME/spool}"; shift 2 ;;
-      --spool) SPOOL="${2:-}"; shift 2 ;;
-      *) break ;;
-    esac
-  done
-
-  local sub="${1:-}"; shift || true
-  case "$sub" in
-    dash)
-      if [ "${1:-}" = "--watch" ]; then shift; dash_watch; else dash_once; fi
-      ;;
-    q)
-      [ $# -ge 1 ] || die "q requires a queue name"
-      cmd_q "$@"
-      ;;
-    help|-h|--help)
-      usage
-      ;;
-    *)
-      die "unknown subcommand: $sub (try: hee help)"
-      ;;
-  esac
-}
-
-main "$@"
+    ;;
+  help|--help|-h|"")
+    usage
+    exit 0
+    ;;
+  *)
+    echo "🟡 🟦 b # WARN: unknown command: ${cmd}" 1>&2
+    usage
+    exit 0
+    ;;
+esac
