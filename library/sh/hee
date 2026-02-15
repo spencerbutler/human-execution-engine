@@ -18,7 +18,7 @@ USAGE:
 
 NOTES:
   - Runtime truth is ~/.hee/bin (installed).
-  - This is upstream source in repo: library/sh/hee.
+  - This file is upstream source in repo: library/sh/hee.
 TXT
 }
 
@@ -43,6 +43,7 @@ case "$sub" in
     echo "  serve"
     exit 0
     ;;
+
   print)      exec hee-print "$@";;
   fileident)  exec hee-fileident "$@";;
   pathcheck)  exec hee-pathcheck "$@";;
@@ -66,21 +67,36 @@ case "$sub" in
     LOG="$DOCROOT/server.access.log"
     mkdir -p "$DOCROOT"
 
-    # Deterministic: test module availability first, then choose serve path.
+    # preflight: if already listening, mark expected + rc=3
+    if python3 - <<PY >/dev/null 2>&1
+import socket
+s=socket.socket()
+s.settimeout(0.2)
+try:
+  s.connect(("${BIND}", int("${PORT}")))
+  raise SystemExit(0)  # open
+except Exception:
+  raise SystemExit(2)  # not open
+finally:
+  try: s.close()
+  except Exception: pass
+PY
+    then
+      echo "🟦 serve: already listening (expected) bind=$BIND port=$PORT url=http://$BIND:$PORT/" | tee -a "$LOG" >&2
+      exit 3
+    fi
+
+    # choose implementation
     if python3 - <<'PY' >/dev/null 2>&1
 import importlib.util
 raise SystemExit(0 if importlib.util.find_spec("hee_webserver") else 2)
 PY
     then
-      # hee_webserver is present -> delegate to uiboss serve
       exec uiboss serve --bind "$BIND" --port "$PORT"
     fi
 
-    # Fallback: stdlib server, but emit the failure into the log stream for parsers.
-    {
-      echo "🟠 hee serve: hee_webserver missing; fallback to python3 -m http.server (bind=$BIND port=$PORT docroot=$DOCROOT)"
-    } | tee -a "$LOG" >&2
-
+    # fallback: stdlib server; emit into log stream for parsers
+    echo "🟠 hee serve: hee_webserver missing; fallback to python3 -m http.server (bind=$BIND port=$PORT docroot=$DOCROOT)" | tee -a "$LOG" >&2
     exec python3 -m http.server "$PORT" --bind "$BIND" --directory "$DOCROOT" 2>&1 | tee -a "$LOG"
     ;;
 
