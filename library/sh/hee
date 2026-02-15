@@ -1,0 +1,79 @@
+#!/bin/sh
+set -eu
+
+usage() {
+  cat <<'TXT'
+hee
+
+USAGE:
+  hee help
+  hee print <path|->                # hee-print
+  hee fileident <path|->            # hee-fileident
+  hee pathcheck <cmd>               # hee-pathcheck
+  hee http404 [opts] <access.log>   # hee-http404
+
+  hee uiboss <args...>              # pass-through to uiboss
+  hee serve [--bind IP] [--port N]  # serve UIBOSS_DOCROOT; fallback if hee_webserver missing
+
+NOTES:
+  - Runtime truth is ~/.hee/bin (installed).
+  - This is upstream source in repo: library/sh/hee.
+TXT
+}
+
+if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ] || [ "${1-}" = "help" ] || [ $# -eq 0 ]; then
+  usage
+  exit 0
+fi
+
+sub="$1"
+shift
+
+case "$sub" in
+  print)      exec hee-print "$@";;
+  fileident)  exec hee-fileident "$@";;
+  pathcheck)  exec hee-pathcheck "$@";;
+  http404)    exec hee-http404 "$@";;
+
+  uiboss)     exec uiboss "$@";;
+
+  serve)
+    BIND="127.0.0.1"
+    PORT="7777"
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --bind) BIND="${2-}"; shift 2;;
+        --port) PORT="${2-}"; shift 2;;
+        -h|--help) usage; exit 0;;
+        *) break;;
+      esac
+    done
+
+    DOCROOT="${UIBOSS_DOCROOT:-${UIBOSS_SITE_ROOT:-$HOME/.hee/uiboss/site}}"
+    LOG="$DOCROOT/server.access.log"
+    mkdir -p "$DOCROOT"
+
+    # Deterministic: test module availability first, then choose serve path.
+    if python3 - <<'PY' >/dev/null 2>&1
+import importlib.util
+raise SystemExit(0 if importlib.util.find_spec("hee_webserver") else 2)
+PY
+    then
+      # hee_webserver is present -> delegate to uiboss serve
+      exec uiboss serve --bind "$BIND" --port "$PORT"
+    fi
+
+    # Fallback: stdlib server, but emit the failure into the log stream for parsers.
+    {
+      echo "🟠 hee serve: hee_webserver missing; fallback to python3 -m http.server (bind=$BIND port=$PORT docroot=$DOCROOT)"
+    } | tee -a "$LOG" >&2
+
+    exec python3 -m http.server "$PORT" --bind "$BIND" --directory "$DOCROOT" 2>&1 | tee -a "$LOG"
+    ;;
+
+  *)
+    echo "🔴 unknown subcommand: $sub" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
