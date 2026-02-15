@@ -4,7 +4,7 @@ _hee() {
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-  local subs="help ls print fileident pathcheck http404 uiboss serve"
+  local subs="help ls print fileident pathcheck http404 uiboss serve version"
 
   # subcommand completion
   if [ $COMP_CWORD -eq 1 ]; then
