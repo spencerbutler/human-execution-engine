@@ -1,0 +1,189 @@
+#!/bin/sh
+set -eu
+
+usage() {
+  echo "hee-fileident"
+  echo
+  echo "USAGE:"
+  echo "  hee-fileident <path|->"
+  echo "  hee-fileident --out <yaml-path> <path|->"
+  echo
+  echo "EMITS:"
+  echo "  YAML evidence: stat/file/wc/sha256/head+tail + jq/yq parse checks when available."
+}
+
+yaml_dq() {
+  # Escape for YAML double-quoted strings
+  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+emit_kv() {
+  # indent=2 spaces
+  k="$1"; v="$2"
+  printf '  %s: "%s"\n' "$k" "$(yaml_dq "$v")"
+}
+
+emit_num() {
+  k="$1"; v="$2"
+  printf '  %s: %s\n' "$k" "$v"
+}
+
+emit_block() {
+  # key + block scalar, indent 2 for key, 4 for content
+  k="$1"
+  printf '  %s: |\n' "$k"
+  # indent each line by 4 spaces
+  sed 's/^/    /'
+}
+
+OUT=""
+if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then usage; exit 0; fi
+if [ "${1-}" = "--out" ]; then
+  OUT="${2-}"
+  shift 2
+fi
+
+if [ $# -ne 1 ]; then usage; exit 2; fi
+ARG="$1"
+
+TMP=""
+PATH_IN="$ARG"
+if [ "$ARG" = "-" ]; then
+  TMP="${TMPDIR:-/tmp}/hee-fileident.$$.in"
+  cat >"$TMP"
+  PATH_IN="$TMP"
+fi
+
+if [ ! -f "$PATH_IN" ]; then
+  echo "error: not a file: $ARG" >&2
+  [ -n "$TMP" ] && rm -f "$TMP"
+  exit 2
+fi
+
+# measures
+EXT="${PATH_IN##*.}"
+BASENAME="$(basename "$PATH_IN")"
+DIRNAME="$(dirname "$PATH_IN")"
+
+LINES="$(wc -l <"$PATH_IN" 2>/dev/null | tr -d ' ')"
+BYTES="$(wc -c <"$PATH_IN" 2>/dev/null | tr -d ' ')"
+
+SHA256=""
+if command -v sha256sum >/dev/null 2>&1; then
+  SHA256="$(sha256sum "$PATH_IN" | awk '{print $1}')"
+elif command -v shasum >/dev/null 2>&1; then
+  SHA256="$(shasum -a 256 "$PATH_IN" | awk '{print $1}')"
+fi
+
+MIME=""
+FILE_DESC=""
+if command -v file >/dev/null 2>&1; then
+  MIME="$(file -b --mime "$PATH_IN" 2>/dev/null || true)"
+  FILE_DESC="$(file -b "$PATH_IN" 2>/dev/null || true)"
+fi
+
+IS_BINARY="false"
+echo "$MIME $FILE_DESC" | grep -qi 'charset=binary\|application/octet-stream\| data' && IS_BINARY="true" || true
+
+# stat (best-effort structured, else raw)
+STAT_STRUCT_OK="false"
+STAT_PATH=""
+STAT_SIZE=""
+STAT_MODE=""
+STAT_USER=""
+STAT_GROUP=""
+STAT_MTIME=""
+STAT_BTIME=""
+
+if stat -c 'path=%n size=%s mode=%a user=%U group=%G mtime=%y btime=%w' "$PATH_IN" >/dev/null 2>&1; then
+  STAT_STRUCT_OK="true"
+  STAT_PATH="$(stat -c '%n' "$PATH_IN")"
+  STAT_SIZE="$(stat -c '%s' "$PATH_IN")"
+  STAT_MODE="$(stat -c '%a' "$PATH_IN")"
+  STAT_USER="$(stat -c '%U' "$PATH_IN")"
+  STAT_GROUP="$(stat -c '%G' "$PATH_IN")"
+  STAT_MTIME="$(stat -c '%y' "$PATH_IN")"
+  STAT_BTIME="$(stat -c '%w' "$PATH_IN")"
+fi
+
+HEAD2=""
+TAIL2=""
+if [ "$IS_BINARY" = "false" ]; then
+  HEAD2="$(sed -n '1,2p' "$PATH_IN" 2>/dev/null || true)"
+  TAIL2="$(tail -n 2 "$PATH_IN" 2>/dev/null || true)"
+fi
+
+JSON_VALID="na"
+YAML_VALID="na"
+
+if command -v jq >/dev/null 2>&1; then
+  case "$EXT $MIME" in
+    json*|*application/json*|*text/json*)
+      if jq -e . "$PATH_IN" >/dev/null 2>&1; then JSON_VALID="true"; else JSON_VALID="false"; fi
+      ;;
+  esac
+fi
+
+if command -v yq >/dev/null 2>&1; then
+  case "$EXT $MIME" in
+    yaml*|yml*|*yaml*)
+      if yq -e '.' "$PATH_IN" >/dev/null 2>&1; then YAML_VALID="true"; else YAML_VALID="false"; fi
+      ;;
+  esac
+fi
+
+emit_yaml() {
+  echo "fileident:"
+  emit_kv "arg" "$ARG"
+  emit_kv "path" "$PATH_IN"
+  emit_kv "dirname" "$DIRNAME"
+  emit_kv "basename" "$BASENAME"
+  emit_kv "ext" "$EXT"
+
+  echo "measures:"
+  emit_num "bytes" "${BYTES:-0}"
+  emit_num "lines" "${LINES:-0}"
+  emit_kv "sha256" "${SHA256:-}"
+  emit_kv "mime" "${MIME:-}"
+  emit_kv "file" "${FILE_DESC:-}"
+  emit_kv "is_binary" "$IS_BINARY"
+
+  echo "stat:"
+  emit_kv "structured" "$STAT_STRUCT_OK"
+  if [ "$STAT_STRUCT_OK" = "true" ]; then
+    emit_kv "path" "$STAT_PATH"
+    emit_num "size" "$STAT_SIZE"
+    emit_kv "mode" "$STAT_MODE"
+    emit_kv "user" "$STAT_USER"
+    emit_kv "group" "$STAT_GROUP"
+    emit_kv "mtime" "$STAT_MTIME"
+    emit_kv "btime" "$STAT_BTIME"
+  else
+    echo "  raw: |"
+    stat "$PATH_IN" 2>/dev/null | sed 's/^/    /' || true
+  fi
+
+  echo "checks:"
+  emit_kv "json_valid" "$JSON_VALID"
+  emit_kv "yaml_valid" "$YAML_VALID"
+
+  echo "snippets:"
+  if [ "$IS_BINARY" = "true" ]; then
+    emit_kv "note" "binary; head/tail suppressed"
+  else
+    printf '  head2: |\n'
+    printf '%s\n' "$HEAD2" | sed 's/^/    /'
+    printf '  tail2: |\n'
+    printf '%s\n' "$TAIL2" | sed 's/^/    /'
+  fi
+}
+
+if [ -n "$OUT" ]; then
+  mkdir -p "$(dirname "$OUT")"
+  emit_yaml >"$OUT"
+  echo "🟢 wrote: $OUT" >&2
+else
+  emit_yaml
+fi
+
+[ -n "$TMP" ] && rm -f "$TMP"

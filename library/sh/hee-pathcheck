@@ -1,0 +1,127 @@
+#!/bin/sh
+set -eu
+
+usage() {
+  echo "hee-pathcheck"
+  echo
+  echo "USAGE:"
+  echo "  hee-pathcheck <cmd>"
+  echo
+  echo "WHAT IT DOES (portable):"
+  echo "  - command -v (what would run)"
+  echo "  - scan \$PATH for all executable candidates"
+  echo "  - classify shell-provided vs PATH-backed (best-effort)"
+  echo "  - print RTFM quick commands (man/info/help) based on classification"
+  echo
+  echo "NOTE:"
+  echo "  Hash tables live in your interactive shell; this tool prints what to run there."
+}
+
+if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then usage; exit 0; fi
+if [ $# -ne 1 ]; then usage; exit 2; fi
+
+CMD="$1"
+
+echo "🔵 cmd: $CMD"
+echo "🟦 shell: ${SHELL:-unknown}"
+
+echo "🟦 command -v"
+RES="$(command -v "$CMD" 2>/dev/null || true)"
+if [ -n "$RES" ]; then
+  echo "$RES"
+else
+  echo "🟠 not found via PATH (or shell)"
+fi
+
+echo "🟦 candidates (scan PATH)"
+FOUND=0
+OLD_IFS="${IFS:- }"
+IFS=":"
+for d in ${PATH:-}; do
+  [ -n "$d" ] || d="."
+  p="$d/$CMD"
+  if [ -f "$p" ] && [ -x "$p" ]; then
+    echo "$p"
+    FOUND=1
+  fi
+done
+IFS="$OLD_IFS"
+if [ "$FOUND" -eq 0 ]; then
+  echo "🟠 none"
+fi
+
+KIND="missing"
+if [ -n "$RES" ]; then
+  if printf '%s' "$RES" | grep -q '/'; then
+    KIND="path"
+  else
+    KIND="shell"
+  fi
+fi
+
+BASH_T=""
+BASH_TYPE=""
+if command -v bash >/dev/null 2>&1; then
+  # Best-effort classification from bash (builtin/alias/function/keyword/file)
+  BASH_T="$(bash -lc "type -t $CMD" 2>/dev/null || true)"
+  BASH_TYPE="$(bash -lc "type $CMD" 2>/dev/null || true)"
+fi
+
+echo "🟦 classify"
+echo "kind: $KIND"
+if [ -n "$BASH_T" ]; then
+  echo "bash.type_t: $BASH_T"
+fi
+if [ -n "$BASH_TYPE" ]; then
+  echo "bash.type: $BASH_TYPE"
+fi
+
+echo "🟦 rtfm (quick cmds)"
+if [ -n "$BASH_T" ]; then
+  case "$BASH_T" in
+    builtin)
+      echo "  help $CMD"
+      echo "  help -m $CMD"
+      echo "  man bash   # see: SHELL BUILTIN COMMANDS"
+      ;;
+    alias|function|keyword)
+      echo "  type $CMD"
+      echo "  declare -f $CMD  # if function"
+      echo "  man bash   # see: aliases/functions/keywords"
+      ;;
+    file)
+      echo "  man $CMD"
+      echo "  $CMD --help"
+      echo "  info $CMD   # if available"
+      ;;
+    *)
+      echo "  type $CMD"
+      echo "  man $CMD"
+      echo "  $CMD --help"
+      ;;
+  esac
+else
+  # fallback when bash isn't present
+  case "$KIND" in
+    path)
+      echo "  man $CMD"
+      echo "  $CMD --help"
+      echo "  info $CMD   # if available"
+      ;;
+    shell)
+      echo "  help $CMD   # bash/zsh (interactive)"
+      echo "  man bash    # builtins section"
+      ;;
+    *)
+      echo "  man $CMD"
+      ;;
+  esac
+fi
+
+echo "🟦 hash-clear (run in your current shell)"
+if [ "$KIND" = "path" ]; then
+  echo "  bash: hash -d $CMD  || hash -r"
+  echo "  zsh : rehash"
+else
+  echo "  🟦 n/a (not PATH-backed)"
+fi

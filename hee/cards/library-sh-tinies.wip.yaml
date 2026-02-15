@@ -1,0 +1,25 @@
+apiVersion: hee/v1
+kind: Pill
+metadata:
+  name: library-sh-tinies-wip
+  description: "Promote proven tiny helpers into repo (library/sh) to reduce non-git drift; evidence-first, deterministic outputs."
+  labels:
+    hee.object: "true"
+spec:
+  why:
+    - "We were making lots of changes under ~/.hee/bin (outside git). This vendors proven helpers into the repo for auditability and repeatability."
+    - "Determinism rule: expected/no-op outcomes must be visually marked (not treated as errors). We dogfood filter policies by labeling outcomes."
+  promoted:
+    - name: library/sh/hee-print
+      note: "Console pretty-printer with jq/yq truth-tests; batcat/bat fallback."
+    - name: library/sh/hee-fileident
+      note: "Evidence probe -> YAML (stat/file/wc/sha256/head+tail + jq/yq checks)."
+    - name: library/sh/hee-pathcheck
+      note: "PATH resolution + candidates scan; hash/PATH footgun guardrail; prints what to run in interactive shell."
+    - name: library/sh/hee-http404
+      note: "Access-log 404 summarizer; top offenders + recent uniq; verbose/quiet toggles."
+  lifecycle:
+    - "hee-foo (incubate) → hee foo (promote) → library/{sh,bash,py,go,rust} (graduate; rust early-stage)."
+  next:
+    - "Wire UIBoss run pages to prefer structured artifacts (e.g., .yaml) and make download explicit; raw captures labeled as raw."
+    - "Move remaining outside-git mutations behind repo-driven install/deploy path (future: install script or symlink policy)."
