@@ -1,0 +1,36 @@
+apiVersion: hee/v1
+kind: Pill
+metadata:
+  name: uiboss-repohub-next-wip
+  description: "WIP evidence + direction: RepoHub/RepoBoss/UIBoss hydration, tiny helper lifecycle, and contracts promotion."
+  labels:
+    hee.object: "true"
+  annotations:
+    inuid.scope: "69914da3-a4f4-8331-a179-c8797888372d"
+    sidebar_name: "UIBoss-RepoHub-Next Scope 69914da3-a4f4-8331-a179-c8797888372d"
+spec:
+  direction:
+    - "UI layer name is UIBoss (BattleCenter is deprecated)."
+    - "Tiny helper lifecycle: hee-foo (incubate) → hee foo (promote) → library/{sh,bash,py,go,rust} (graduate; rust early-stage)."
+    - "Never assume / never trust: prefer evidence-first probes before relying on flags, PATH, or tool behavior."
+
+  evidence:
+    outside_git:
+      - "Installed incubating helpers under ~/.hee/bin: hee-fileident, hee-pathcheck."
+      - "Measured footgun: shell command hashing + PATH reorg causes 'I fixed it but nothing changed'. Guardrail: PATH/hash sanity checks (type -a / command -v + hash -d|hash -r / rehash)."
+    uiboss_snapshot:
+      - "uiboss ls --long currently reports multiple actions with desc/outputs unset; ui.site.generate is described and outputs <docroot>/gen/."
+
+  queue:
+    contracts_promotion:
+      - "Convert contracts/*.md to proper YAML hee-obj in-place for now (dric.v1, shellboss.v1, gcic.v1)."
+      - "Keep contracts/legacy_md as boneyard-handled legacy."
+      - "contracts/README.md TBD (leave until promotion pass)."
+    helpers:
+      - "hee-pathcheck: add quick RTFM hints (man/info/help) + classify shell-provided cmds; add -q/--quiet for automation; optionally highlight PATH match."
+      - "hee-fileident: keep raw YAML default; consider optional hee-obj wrapper later for ingestion (no new kinds)."
+    ui_dom_bug_signal:
+      - "If YAML keys show odd quoting/prefix artifacts (e.g., \"\\ merge_loop_close\"), treat as UI-dom-bug sickness signal; do not repeat pattern; use as bug-report evidence."
+
+  next:
+    - "Get UIBoss serving and view generated HTML in browser (ui.site.generate → uiboss serve)."
