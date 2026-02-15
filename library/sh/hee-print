@@ -6,96 +6,59 @@ usage() {
   echo
   echo "USAGE:"
   echo "  hee-print <path|->"
+  echo
+  echo "BEHAVIOR:"
+  echo "  - JSON: jq -C"
+  echo "  - YAML: yq -P"
+  echo "  - else: pretty via bat (NO wrap) if available; otherwise cat"
 }
 
 if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then usage; exit 0; fi
 if [ $# -ne 1 ]; then usage; exit 2; fi
 
 ARG="$1"
-
 TMP=""
-PATH_IN="$ARG"
+F="$ARG"
+
+cleanup() { [ -n "$TMP" ] && rm -f "$TMP" || true; }
+trap cleanup EXIT
+
 if [ "$ARG" = "-" ]; then
-  TMP="${TMPDIR:-/tmp}/hee-print.$$.in"
+  TMP="$(mktemp)"
   cat >"$TMP"
-  PATH_IN="$TMP"
+  F="$TMP"
 fi
 
-if [ ! -f "$PATH_IN" ]; then
-  echo "error: not a file: $ARG" >&2
-  [ -n "$TMP" ] && rm -f "$TMP"
-  exit 2
+# JSON?
+if command -v jq >/dev/null 2>&1 && jq -e . "$F" >/dev/null 2>&1; then
+  jq -C . "$F"
+  exit 0
 fi
 
-EXT="${PATH_IN##*.}"
-MIME=""
-if command -v file >/dev/null 2>&1; then
-  MIME="$(file -b --mime "$PATH_IN" 2>/dev/null || true)"
+# YAML?
+if command -v yq >/dev/null 2>&1 && yq -e . "$F" >/dev/null 2>&1; then
+  yq -P . "$F"
+  exit 0
 fi
 
-render_text() {
-  if command -v batcat >/dev/null 2>&1; then
-    batcat --paging=never "$PATH_IN"
-  elif command -v bat >/dev/null 2>&1; then
-    bat --paging=never "$PATH_IN"
-  else
-    cat "$PATH_IN"
-  fi
-}
-
-# refuse raw bytes
-case "$MIME" in
-  *charset=binary*|*application/octet-stream*)
-    echo "🔴 binary: refusing to print raw bytes: $ARG" >&2
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 2
+# SVG (local or piped): show raw, unless chafa exists (optional render)
+case "$F" in
+  *.svg)
+    if command -v chafa >/dev/null 2>&1; then
+      chafa "$F"
+      exit 0
+    fi
     ;;
 esac
 
-# 1) extension/mime fast-path
-case "$EXT $MIME" in
-  json*|*application/json*|*text/json*)
-    if command -v jq >/dev/null 2>&1; then
-      jq -S . "$PATH_IN"
-    else
-      render_text
-    fi
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 0
-    ;;
-  yaml*|yml*|*yaml*)
-    if command -v yq >/dev/null 2>&1; then
-      yq -P '.' "$PATH_IN"
-    else
-      render_text
-    fi
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 0
-    ;;
-  md*|markdown*|*text/markdown*)
-    render_text
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 0
-    ;;
-esac
-
-# 2) truth-tests (no clever sniffing): jq/yq validate => render as that
-if command -v jq >/dev/null 2>&1; then
-  if jq -e . "$PATH_IN" >/dev/null 2>&1; then
-    jq -S . "$PATH_IN"
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 0
-  fi
+# Markdown/text: bat is fine, but MUST NEVER wrap (wrap breaks URLs)
+if command -v batcat >/dev/null 2>&1; then
+  batcat --paging=never --wrap=never "$F"
+  exit 0
+fi
+if command -v bat >/dev/null 2>&1; then
+  bat --paging=never --wrap=never "$F"
+  exit 0
 fi
 
-if command -v yq >/dev/null 2>&1; then
-  if yq -e '.' "$PATH_IN" >/dev/null 2>&1; then
-    yq -P '.' "$PATH_IN"
-    [ -n "$TMP" ] && rm -f "$TMP"
-    exit 0
-  fi
-fi
-
-# 3) fallback
-render_text
-[ -n "$TMP" ] && rm -f "$TMP"
+cat "$F"

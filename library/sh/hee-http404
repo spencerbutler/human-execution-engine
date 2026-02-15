@@ -9,10 +9,10 @@ usage() {
   echo
   echo "OPTS:"
   echo "  -q, --quiet        machine-friendly (top list only)"
-  echo "  -v, --verbose      show raw recent 404 log lines (spammy)"
+  echo "  -v, --verbose      show raw 404 request lines (uniq; tail window)"
   echo "      --top-only     only show top paths"
   echo "      --top N        top N paths (default 25)"
-  echo "      --tail N       consider last N request lines for recent uniq (default 200)"
+  echo "      --tail N       tail window for recent uniq / verbose (default 200)"
 }
 
 QUIET=0
@@ -20,28 +20,46 @@ VERBOSE=0
 TOP_ONLY=0
 TOP_N=25
 TAIL_N=200
+LOG=""
 
+# opts-anywhere parsing: we accept switches in any position; one non-flag arg is LOG.
 while [ $# -gt 0 ]; do
   case "$1" in
-    -q|--quiet) QUIET=1; shift;;
-    -v|--verbose) VERBOSE=1; shift;;
-    --top-only) TOP_ONLY=1; shift;;
-    --top) TOP_N="${2-}"; shift 2;;
-    --tail) TAIL_N="${2-}"; shift 2;;
+    -q|--quiet) QUIET=1; shift; continue;;
+    -v|--verbose) VERBOSE=1; shift; continue;;
+    --top-only) TOP_ONLY=1; shift; continue;;
+    --top) TOP_N="${2-}"; shift 2; continue;;
+    --tail) TAIL_N="${2-}"; shift 2; continue;;
     -h|--help) usage; exit 0;;
     --) shift; break;;
-    -*) echo "error: unknown opt: $1" >&2; usage; exit 2;;
-    *) break;;
+    -*)
+      echo "error: unknown opt: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [ -z "$LOG" ]; then
+        LOG="$1"
+        shift
+        continue
+      fi
+      echo "error: extra arg (expected only one log): $1" >&2
+      exit 2
+      ;;
   esac
 done
 
-if [ $# -ne 1 ]; then usage; exit 2; fi
-LOG="$1"
+# If '--' was used, remaining args must contain exactly one LOG.
+if [ $# -gt 0 ]; then
+  if [ -z "$LOG" ] && [ $# -eq 1 ]; then
+    LOG="$1"
+    shift
+  fi
+fi
+
+if [ -z "$LOG" ]; then usage; exit 2; fi
 test -f "$LOG"
 
-rg_f() { rg -F "$1" "$LOG"; }
-
-# Extract 404 paths from request lines (GET/HEAD/POST...); fixed-string filter first.
 extract_404_paths() {
   rg -F '" ' "$LOG" \
   | awk '
@@ -51,12 +69,10 @@ extract_404_paths() {
 }
 
 top_404() {
-  extract_404_paths \
-    | sort | uniq -c | sort -nr | head -n "$TOP_N"
+  extract_404_paths | sort | uniq -c | sort -nr | head -n "$TOP_N"
 }
 
 recent_uniq_404() {
-  # only consider tail window of request lines to reduce noise
   rg -F '" ' "$LOG" | tail -n "$TAIL_N" \
   | awk '
       /" 404 / {
@@ -65,25 +81,27 @@ recent_uniq_404() {
   | sort | uniq
 }
 
-if [ "$QUIET" -eq 0 ]; then
-  echo "🟦 log: $LOG"
-fi
+last_fallback() {
+  rg -F "hee serve:" "$LOG" | tail -n 1 || true
+}
 
-# Top offenders is the main signal.
 TOP="$(top_404 || true)"
 
 if [ "$QUIET" -eq 1 ]; then
-  # machine-friendly: "<count> <path>"
   echo "$TOP" | awk '{c=$1; $1=""; sub(/^ /,""); print c " " $0}'
   exit 0
 fi
 
-echo "🟦 top 404 paths (top $TOP_N)"
-if [ -n "$TOP" ]; then
-  echo "$TOP"
-else
-  echo "🟠 none"
+echo "🟦 log: $LOG"
+
+FB="$(last_fallback)"
+if [ -n "$FB" ]; then
+  echo "🟠 serve fallback (last)"
+  echo "$FB"
 fi
+
+echo "🟦 top 404 paths (top $TOP_N)"
+if [ -n "$TOP" ]; then echo "$TOP"; else echo "🟢 none"; fi
 
 if [ "$TOP_ONLY" -eq 0 ]; then
   echo "🟦 recent uniq 404 paths (tail $TAIL_N request lines)"
@@ -91,7 +109,6 @@ if [ "$TOP_ONLY" -eq 0 ]; then
 fi
 
 if [ "$VERBOSE" -eq 1 ]; then
-  echo "🟦 verbose raw 404 lines (tail 50; spam)"
-  rg_f 'code 404' | tail -n 50 || true
-  rg_f '" 404 '   | tail -n 50 || true
+  echo "🟦 verbose raw 404 request lines (uniq; tail $TAIL_N)"
+  rg -F '" 404 ' "$LOG" | tail -n "$TAIL_N" | sort -u | sed -n '1,120p' || true
 fi

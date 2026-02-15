@@ -1,4 +1,4 @@
-# bash completion for hee
+# bash completion for hee (layered)
 _hee() {
   local cur prev
   cur="${COMP_WORDS[COMP_CWORD]}"
@@ -6,20 +6,54 @@ _hee() {
 
   local subs="help ls print fileident pathcheck http404 uiboss serve"
 
-  # complete subcommands
+  # subcommand completion
   if [ $COMP_CWORD -eq 1 ]; then
     COMPREPLY=( $(compgen -W "$subs" -- "$cur") )
     return 0
   fi
 
-  # file completion for these
+  # opts completion for http404 + serve
+  if [ "${COMP_WORDS[1]}" = "http404" ] && [[ "$cur" == -* ]]; then
+    COMPREPLY=( $(compgen -W "-q --quiet -v --verbose --top-only --top --tail --help" -- "$cur") )
+    return 0
+  fi
+  if [ "${COMP_WORDS[1]}" = "serve" ] && [[ "$cur" == -* ]]; then
+    COMPREPLY=( $(compgen -W "--bind --port --help" -- "$cur") )
+    return 0
+  fi
+
+  # print/fileident: prefer dirnames + files
   case "${COMP_WORDS[1]}" in
-    print|fileident|http404)
+    print|fileident)
+      compopt -o dirnames 2>/dev/null || true
       COMPREPLY=( $(compgen -f -- "$cur") )
       return 0
       ;;
     pathcheck)
       COMPREPLY=( $(compgen -c -- "$cur") )
+      return 0
+      ;;
+    http404)
+      compopt -o dirnames 2>/dev/null || true
+      COMPREPLY=( $(compgen -f -- "$cur") )
+      return 0
+      ;;
+    uiboss)
+      # hee uiboss <sub>
+      local uisubs="help ls run serve"
+      if [ $COMP_CWORD -eq 2 ]; then
+        COMPREPLY=( $(compgen -W "$uisubs" -- "$cur") )
+        return 0
+      fi
+      # hee uiboss run <action-id>
+      if [ "${COMP_WORDS[2]}" = "run" ] && [ $COMP_CWORD -eq 3 ]; then
+        if command -v uiboss >/dev/null 2>&1; then
+          local ids
+          ids="$(uiboss ls --long 2>/dev/null | awk 'NF{print $1}' | sed 's/[[:space:]].*//')"
+          COMPREPLY=( $(compgen -W "$ids" -- "$cur") )
+          return 0
+        fi
+      fi
       return 0
       ;;
     *)
