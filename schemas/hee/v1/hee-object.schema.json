@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "schemas/hee/v1/hee-object.schema.json",
   "title": "HEE Object Envelope Schema",
-  "description": "Envelope schema for all HEE objects with required metadata fields",
+  "description": "Envelope schema for all HEE objects. Designed to support kubectl-style label selectors. Guardrail: every HEE object MUST set metadata.labels.hee.object = \"true\" to prevent collisions with non-HEE Kubernetes objects.",
   "type": "object",
   "required": ["apiVersion", "kind", "metadata"],
   "properties": {
@@ -13,14 +13,14 @@
     },
     "kind": {
       "type": "string",
-      "description": "Kind of the HEE object",
+      "description": "Kind of the HEE object (e.g., Contract, Pill, Plan)",
       "minLength": 1,
       "pattern": "^[A-Z][A-Za-z0-9]*$"
     },
     "metadata": {
       "type": "object",
       "description": "Metadata for the HEE object",
-      "required": ["name"],
+      "required": ["name", "labels"],
       "properties": {
         "name": {
           "type": "string",
@@ -34,9 +34,27 @@
         },
         "labels": {
           "type": "object",
-          "description": "Labels for the HEE object",
+          "description": "Labels for kubectl-selector semantics. HEE objects MUST include hee.object=true. Contract objects MUST include hee.contract.type and hee.contract.phase.",
+          "required": ["hee.object"],
+          "properties": {
+            "hee.object": {
+              "type": "string",
+              "enum": ["true"],
+              "description": "Sentinel label marking this as a HEE object. Prevents selector collisions with non-HEE Kubernetes objects."
+            },
+            "hee.contract.type": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Contract type discriminator used for selectors (e.g., dir-layout). Required when kind=Contract."
+            },
+            "hee.contract.phase": {
+              "type": "string",
+              "enum": ["bootstrap", "foundation"],
+              "description": "Contract phase used for selectors. Required when kind=Contract."
+            }
+          },
           "patternProperties": {
-            "^[a-z][a-z0-9-]*[a-z0-9]$": {
+            "^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*/)?[A-Za-z0-9]([A-Za-z0-9_.-]{0,61}[A-Za-z0-9])?$": {
               "type": "string"
             }
           },
@@ -44,9 +62,9 @@
         },
         "annotations": {
           "type": "object",
-          "description": "Annotations for the HEE object",
+          "description": "Annotations for the HEE object (k8s-qualified key syntax: optional prefix/name).",
           "patternProperties": {
-            "^[a-z][a-z0-9-]*[a-z0-9]$": {
+            "^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*/)?[A-Za-z0-9]([A-Za-z0-9_.-]{0,61}[A-Za-z0-9])?$": {
               "type": "string"
             }
           },
@@ -60,16 +78,38 @@
       "description": "Specification for the HEE object"
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": { "const": "Contract" }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "labels": {
+                "required": ["hee.object", "hee.contract.type", "hee.contract.phase"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": false,
   "examples": [
     {
       "apiVersion": "hee/v1",
-      "kind": "Blueprint",
+      "kind": "Contract",
       "metadata": {
-        "name": "example-blueprint",
-        "description": "An example blueprint",
+        "name": "fs-layout",
+        "description": "Filesystem layout contract",
         "labels": {
-          "team": "ops"
+          "hee.object": "true",
+          "hee.contract.type": "dir-layout",
+          "hee.contract.phase": "bootstrap"
         }
       },
       "spec": {}
