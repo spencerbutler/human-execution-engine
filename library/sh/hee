@@ -33,6 +33,7 @@ USAGE:
   hee fileident <path|->            # hee-fileident
   hee pathcheck <cmd>               # hee-pathcheck
   hee http404 [opts] <access.log>   # hee-http404
+  hee pathwin <path> [path...]          # hee-pathwin
 
   hee uiboss <args...>              # pass-through to uiboss (except serve)
   hee serve [--bind IP] [--port N]  # serve UIBOSS_DOCROOT; fallback if hee_webserver missing
@@ -170,6 +171,11 @@ PY
       | tee -a "$LOG" >&2
     exec python3 -m http.server "$PORT" --bind "$BIND" --directory "$DOCROOT" 2>&1 | tee -a "$LOG"
     ;;
+  pathwin)
+    shift
+    exec hee-pathwin ""
+    ;;
+
 
   *)
     echo "🔴 unknown subcommand: $sub" >&2
