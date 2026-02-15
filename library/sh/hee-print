@@ -2,32 +2,72 @@
 set -eu
 
 usage() {
-  echo "hee-print"
-  echo
-  echo "USAGE:"
-  echo "  hee-print <path|->"
-  echo
-  echo "BEHAVIOR:"
-  echo "  - JSON: jq -C"
-  echo "  - YAML: yq -P"
-  echo "  - else: pretty via bat (NO wrap) if available; otherwise cat"
+  cat <<'TXT'
+hee-print
+
+USAGE:
+  hee-print <path|->
+
+COMPAT:
+  hee-print --stdin [--hint md|yaml|json|text|svg]
+  hee-print [--no-header] --stdin [--hint ...]    # --no-header ignored (compat)
+
+BEHAVIOR:
+  - JSON: jq -C
+  - YAML: yq -P
+  - SVG: chafa (if available) else raw
+  - else: bat/batcat with --wrap=never if available; otherwise cat
+TXT
 }
 
-if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then usage; exit 0; fi
-if [ $# -ne 1 ]; then usage; exit 2; fi
+NO_HEADER=0
+STDIN=0
+HINT=""
 
-ARG="$1"
+# opts (compat)
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --no-header) NO_HEADER=1; shift;;  # compat no-op
+    --stdin) STDIN=1; shift;;
+    --hint) HINT="${2-}"; shift 2;;
+    -h|--help) usage; exit 0;;
+    --) shift; break;;
+    *) break;;
+  esac
+done
+
 TMP=""
-F="$ARG"
-
 cleanup() { [ -n "$TMP" ] && rm -f "$TMP" || true; }
 trap cleanup EXIT
 
-if [ "$ARG" = "-" ]; then
+F="${1-}"
+
+if [ "$STDIN" -eq 1 ] || [ "$F" = "-" ]; then
   TMP="$(mktemp)"
   cat >"$TMP"
   F="$TMP"
+  # If hint given, we can short-circuit checks below.
 fi
+
+if [ -z "${F:-}" ] || [ ! -f "$F" ]; then
+  usage >&2
+  exit 2
+fi
+
+case "${HINT:-}" in
+  json)
+    if command -v jq >/dev/null 2>&1 && jq -e . "$F" >/dev/null 2>&1; then jq -C . "$F"; exit 0; fi
+    ;;
+  yaml)
+    if command -v yq >/dev/null 2>&1 && yq -e . "$F" >/dev/null 2>&1; then yq -P . "$F"; exit 0; fi
+    ;;
+  svg)
+    if command -v chafa >/dev/null 2>&1; then chafa "$F"; exit 0; fi
+    cat "$F"; exit 0
+    ;;
+  *)
+    ;;
+esac
 
 # JSON?
 if command -v jq >/dev/null 2>&1 && jq -e . "$F" >/dev/null 2>&1; then
@@ -41,17 +81,14 @@ if command -v yq >/dev/null 2>&1 && yq -e . "$F" >/dev/null 2>&1; then
   exit 0
 fi
 
-# SVG (local or piped): show raw, unless chafa exists (optional render)
+# SVG?
 case "$F" in
   *.svg)
-    if command -v chafa >/dev/null 2>&1; then
-      chafa "$F"
-      exit 0
-    fi
+    if command -v chafa >/dev/null 2>&1; then chafa "$F"; exit 0; fi
     ;;
 esac
 
-# Markdown/text: bat is fine, but MUST NEVER wrap (wrap breaks URLs)
+# NO WRAP (URLs must remain intact)
 if command -v batcat >/dev/null 2>&1; then
   batcat --paging=never --wrap=never "$F"
   exit 0

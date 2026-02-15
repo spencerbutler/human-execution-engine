@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+# determinism: always dispatch to sibling tools next to this script
+SELF_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
+
 usage() {
   cat <<'TXT'
 hee
@@ -8,6 +11,7 @@ hee
 USAGE:
   hee help
   hee ls
+  hee version
   hee print <path|->                # hee-print
   hee fileident <path|->            # hee-fileident
   hee pathcheck <cmd>               # hee-pathcheck
@@ -17,8 +21,8 @@ USAGE:
   hee serve [--bind IP] [--port N]  # serve UIBOSS_DOCROOT; fallback if hee_webserver missing
 
 NOTES:
-  - Runtime truth is ~/.hee/bin (installed).
-  - This file is upstream source in repo: library/sh/hee.
+  - Runtime truth is the installed toolset next to this hee binary.
+  - Installed prefix is typically ~/.hee/bin (but can be repo-local during test-drive).
 TXT
 }
 
@@ -35,6 +39,7 @@ case "$sub" in
     echo "subcommands:"
     echo "  help"
     echo "  ls"
+    echo "  version"
     echo "  print"
     echo "  fileident"
     echo "  pathcheck"
@@ -44,13 +49,34 @@ case "$sub" in
     exit 0
     ;;
 
-  print)      exec hee-print "$@";;
-  fileident)  exec hee-fileident "$@";;
-  pathcheck)  exec hee-pathcheck "$@";;
-  http404)    exec hee-http404 "$@";;
+  version)
+    HEE_PATH="$(command -v hee 2>/dev/null || true)"
+    VFILE="$SELF_DIR/hee.version"
+    echo "hee:"
+    echo "  path: \"${HEE_PATH:-$SELF_DIR/hee}\""
+    if command -v sha256sum >/dev/null 2>&1; then
+      echo "  sha256: \"$(sha256sum "$SELF_DIR/hee" | awk '{print $1}')\""
+    else
+      echo "  sha256: \"(sha256sum missing)\""
+    fi
+    echo "  toolset_dir: \"$SELF_DIR\""
+    if [ -f "$VFILE" ]; then
+      echo "  version_file: \"$VFILE\""
+      echo "  version:"
+      sed 's/^/    /' "$VFILE"
+    else
+      echo "  version_file: \"(none)\""
+    fi
+    exit 0
+    ;;
+
+  print)      exec "$SELF_DIR/hee-print" "$@";;
+  fileident)  exec "$SELF_DIR/hee-fileident" "$@";;
+  pathcheck)  exec "$SELF_DIR/hee-pathcheck" "$@";;
+  http404)    exec "$SELF_DIR/hee-http404" "$@";;
 
   uiboss)
-    # determinism: 'uiboss serve' must inherit hee serve fallback + port-preflight
+    # determinism: uiboss serve must inherit hee serve fallback + port-preflight
     if [ "${1-}" = "serve" ]; then
       shift || true
       exec "$0" serve "$@"
