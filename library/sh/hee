@@ -13,7 +13,7 @@ USAGE:
   hee pathcheck <cmd>               # hee-pathcheck
   hee http404 [opts] <access.log>   # hee-http404
 
-  hee uiboss <args...>              # pass-through to uiboss
+  hee uiboss <args...>              # pass-through to uiboss (except serve)
   hee serve [--bind IP] [--port N]  # serve UIBOSS_DOCROOT; fallback if hee_webserver missing
 
 NOTES:
@@ -49,7 +49,14 @@ case "$sub" in
   pathcheck)  exec hee-pathcheck "$@";;
   http404)    exec hee-http404 "$@";;
 
-  uiboss)     exec uiboss "$@";;
+  uiboss)
+    # determinism: 'uiboss serve' must inherit hee serve fallback + port-preflight
+    if [ "${1-}" = "serve" ]; then
+      shift || true
+      exec "$0" serve "$@"
+    fi
+    exec uiboss "$@"
+    ;;
 
   serve)
     BIND="127.0.0.1"
@@ -74,9 +81,9 @@ s=socket.socket()
 s.settimeout(0.2)
 try:
   s.connect(("${BIND}", int("${PORT}")))
-  raise SystemExit(0)  # open
+  raise SystemExit(0)
 except Exception:
-  raise SystemExit(2)  # not open
+  raise SystemExit(2)
 finally:
   try: s.close()
   except Exception: pass
@@ -86,7 +93,6 @@ PY
       exit 3
     fi
 
-    # choose implementation
     if python3 - <<'PY' >/dev/null 2>&1
 import importlib.util
 raise SystemExit(0 if importlib.util.find_spec("hee_webserver") else 2)
@@ -95,8 +101,8 @@ PY
       exec uiboss serve --bind "$BIND" --port "$PORT"
     fi
 
-    # fallback: stdlib server; emit into log stream for parsers
-    echo "🟠 hee serve: hee_webserver missing; fallback to python3 -m http.server (bind=$BIND port=$PORT docroot=$DOCROOT)" | tee -a "$LOG" >&2
+    echo "🟠 hee serve: hee_webserver missing; fallback to python3 -m http.server (bind=$BIND port=$PORT docroot=$DOCROOT)" \
+      | tee -a "$LOG" >&2
     exec python3 -m http.server "$PORT" --bind "$BIND" --directory "$DOCROOT" 2>&1 | tee -a "$LOG"
     ;;
 
