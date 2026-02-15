@@ -1,0 +1,29 @@
+# bash completion for hee
+_hee() {
+  local cur prev
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+  local subs="help ls print fileident pathcheck http404 uiboss serve"
+
+  # complete subcommands
+  if [ $COMP_CWORD -eq 1 ]; then
+    COMPREPLY=( $(compgen -W "$subs" -- "$cur") )
+    return 0
+  fi
+
+  # file completion for these
+  case "${COMP_WORDS[1]}" in
+    print|fileident|http404)
+      COMPREPLY=( $(compgen -f -- "$cur") )
+      return 0
+      ;;
+    pathcheck)
+      COMPREPLY=( $(compgen -c -- "$cur") )
+      return 0
+      ;;
+    *)
+      ;;
+  esac
+}
+complete -F _hee hee
