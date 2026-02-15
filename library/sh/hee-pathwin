@@ -1,0 +1,91 @@
+#!/usr/bin/env sh
+# hee-pathwin: convert a Linux path into a Windows-pasteable path.
+# - Under WSL: emits UNC like \\wsl.localhost\<Distro>\home\user\...
+# - Else if /mnt/<drive>/...: emits X:\...
+# - Else: echoes the original path
+
+usage() {
+  cat <<'EOF'
+USAGE:
+  hee pathwin [--dir] [--style localhost|wsl$] <path> [path...]
+  hee-pathwin [--dir] [--style localhost|wsl$] <path> [path...]
+
+OPTS:
+  --dir             convert the directory (dirname) of each input path
+  --style S         WSL UNC style: 'localhost' (default) or 'wsl$'
+EOF
+}
+
+mode="path"
+style="localhost"
+
+case "${1-}" in
+  -h|--help) usage; exit 0;;
+esac
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dir) mode="dir"; shift;;
+    --style) style="${2-}"; shift 2;;
+    --) shift; break;;
+    -h|--help) usage; exit 0;;
+    -*) echo "unknown opt: $1" >&2; usage; exit 2;;
+    *) break;;
+  esac
+done
+
+is_wsl() {
+  [ -n "${WSL_DISTRO_NAME-}" ] && return 0
+  [ -r /proc/version ] && grep -qi microsoft /proc/version 2>/dev/null && return 0
+  return 1
+}
+
+abs_path() {
+  p="$1"
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY' "$p"
+import os,sys
+print(os.path.abspath(sys.argv[1]))
+PY
+    return 0
+  fi
+  case "$p" in
+    /*) printf "%s\n" "$p";;
+    *) printf "%s/%s\n" "$(pwd)" "$p";;
+  esac
+}
+
+to_backslashes() { perl -pe 's|/|\\|g'; }
+
+emit_wsl_unc() {
+  distro="${WSL_DISTRO_NAME-}"
+  [ -z "$distro" ] && distro="Ubuntu"
+
+  prefix="\\\\wsl.localhost\\$distro"
+  [ "$style" = "wsl$" ] && prefix="\\\\wsl$\\$distro"
+
+  printf "%s%s\n" "$prefix" "$(printf "%s" "$1" | to_backslashes)"
+}
+
+emit_mnt_drive() {
+  perl -ne '
+    if(m{^/mnt/([a-zA-Z])/(.*)$}) {
+      my $d=uc($1); my $rest=$2; $rest =~ s|/|\\|g;
+      print "$d:\\\\$rest\n"; exit 0;
+    }
+    print $_;
+  '
+}
+
+[ $# -lt 1 ] && { usage; exit 2; }
+
+for arg in "$@"; do
+  p="$(abs_path "$arg")"
+  [ "$mode" = "dir" ] && p="$(dirname "$p")"
+
+  if is_wsl; then
+    emit_wsl_unc "$p"
+  else
+    printf "%s\n" "$p" | emit_mnt_drive
+  fi
+done
