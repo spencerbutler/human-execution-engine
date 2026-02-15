@@ -7,6 +7,7 @@ hee
 
 USAGE:
   hee help
+  hee ls
   hee print <path|->                # hee-print
   hee fileident <path|->            # hee-fileident
   hee pathcheck <cmd>               # hee-pathcheck
@@ -30,6 +31,18 @@ sub="$1"
 shift
 
 case "$sub" in
+  ls)
+    echo "subcommands:"
+    echo "  help"
+    echo "  ls"
+    echo "  print"
+    echo "  fileident"
+    echo "  pathcheck"
+    echo "  http404"
+    echo "  uiboss"
+    echo "  serve"
+    exit 0
+    ;;
   print)      exec hee-print "$@";;
   fileident)  exec hee-fileident "$@";;
   pathcheck)  exec hee-pathcheck "$@";;
