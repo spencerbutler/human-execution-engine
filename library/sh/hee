@@ -1,8 +1,25 @@
 #!/bin/sh
 set -eu
 
-# determinism: always dispatch to sibling tools next to this script
-SELF_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
+realpath_hee() {
+  # prefer coreutils; fallback to python
+  if command -v readlink >/dev/null 2>&1; then
+    p="$(readlink -f -- "$0" 2>/dev/null || true)"
+    [ -n "${p:-}" ] && { echo "$p"; return 0; }
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+    return 0
+  fi
+  # worst-case: raw
+  echo "$0"
+}
+
+HEE_REAL="$(realpath_hee)"
+SELF_DIR="$(CDPATH= cd -- "$(dirname -- "$HEE_REAL")" && pwd -P)"
 
 usage() {
   cat <<'TXT'
@@ -11,7 +28,7 @@ hee
 USAGE:
   hee help
   hee ls
-  hee version
+  hee version | --version
   hee print <path|->                # hee-print
   hee fileident <path|->            # hee-fileident
   hee pathcheck <cmd>               # hee-pathcheck
@@ -22,13 +39,17 @@ USAGE:
 
 NOTES:
   - Runtime truth is the installed toolset next to this hee binary.
-  - Installed prefix is typically ~/.hee/bin (but can be repo-local during test-drive).
 TXT
 }
 
 if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ] || [ "${1-}" = "help" ] || [ $# -eq 0 ]; then
   usage
   exit 0
+fi
+
+# alias
+if [ "${1-}" = "--version" ]; then
+  set -- version
 fi
 
 sub="$1"
@@ -50,16 +71,36 @@ case "$sub" in
     ;;
 
   version)
-    HEE_PATH="$(command -v hee 2>/dev/null || true)"
     VFILE="$SELF_DIR/hee.version"
     echo "hee:"
-    echo "  path: \"${HEE_PATH:-$SELF_DIR/hee}\""
+    echo "  path: \"$(command -v hee 2>/dev/null || echo "$HEE_REAL")\""
+    echo "  realpath: \"$HEE_REAL\""
     if command -v sha256sum >/dev/null 2>&1; then
-      echo "  sha256: \"$(sha256sum "$SELF_DIR/hee" | awk '{print $1}')\""
+      echo "  sha256: \"$(sha256sum "$HEE_REAL" | awk '{print $1}')\""
     else
       echo "  sha256: \"(sha256sum missing)\""
     fi
     echo "  toolset_dir: \"$SELF_DIR\""
+    echo "  tool_lang: \"sh\""
+    if command -v file >/dev/null 2>&1; then
+      echo "  file: \"$(file -b "$HEE_REAL" | sed 's/"/'\''/g')\""
+    fi
+
+    echo "  toolset:"
+    for t in hee hee-print hee-fileident hee-pathcheck hee-http404; do
+      p="$SELF_DIR/$t"
+      if [ -x "$p" ]; then
+        if command -v sha256sum >/dev/null 2>&1; then
+          h="$(sha256sum "$p" | awk '{print $1}')"
+        else
+          h="(sha256sum missing)"
+        fi
+        echo "    - name: \"$t\""
+        echo "      path: \"$p\""
+        echo "      sha256: \"$h\""
+      fi
+    done
+
     if [ -f "$VFILE" ]; then
       echo "  version_file: \"$VFILE\""
       echo "  version:"
@@ -76,7 +117,6 @@ case "$sub" in
   http404)    exec "$SELF_DIR/hee-http404" "$@";;
 
   uiboss)
-    # determinism: uiboss serve must inherit hee serve fallback + port-preflight
     if [ "${1-}" = "serve" ]; then
       shift || true
       exec "$0" serve "$@"
@@ -100,7 +140,6 @@ case "$sub" in
     LOG="$DOCROOT/server.access.log"
     mkdir -p "$DOCROOT"
 
-    # preflight: if already listening, mark expected + rc=3
     if python3 - <<PY >/dev/null 2>&1
 import socket
 s=socket.socket()
